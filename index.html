@@ -4,10 +4,101 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Resume Builder</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      margin-top: 80px;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #cbd5e1;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.05);
+      padding: 20px;
+      border-radius: 15px;
+      width: 300px;
+      margin: 20px auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    input, textarea {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+    }
+
+    button {
+      background: #3b82f6;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #2563eb;
+    }
+
+    .output {
+      margin-top: 20px;
+      text-align: left;
+      background: white;
+      color: black;
+      padding: 15px;
+      border-radius: 10px;
+    }
+  </style>
 </head>
-<body style="font-family: Arial; text-align: center; margin-top: 80px;">
-  <h1>🤖 AI Resume Builder</h1>
-  <p>Welcome to my website!</p>
-  <p>This site is hosted on Vercel.</p>
+
+<body>
+  <div class="container">
+    <h1>🤖 AI Resume Builder</h1>
+    <p>Create your professional resume in seconds</p>
+
+    <div class="card">
+      <input id="name" placeholder="Your Name">
+      <input id="job" placeholder="Job Title">
+      <textarea id="skills" placeholder="Skills (comma separated)"></textarea>
+      <button onclick="generate()">Generate Resume</button>
+
+      <div id="output" class="output" style="display:none;"></div>
+    </div>
+  </div>
+
+  <script>
+    function generate() {
+      let name = document.getElementById("name").value;
+      let job = document.getElementById("job").value;
+      let skills = document.getElementById("skills").value;
+
+      document.getElementById("output").style.display = "block";
+      document.getElementById("output").innerHTML = `
+        <h2>${name}</h2>
+        <h4>${job}</h4>
+        <p><b>Skills:</b> ${skills}</p>
+      `;
+    }
+  </script>
 </body>
 </html>
