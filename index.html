@@ -1,3 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JobAI Resume Builder</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: white;
+}
+
+.container {
+  max-width: 800px;
+  margin: 60px auto;
+  padding: 20px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 42px;
+}
+
+input, textarea {
+  width: 90%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+}
+
+button {
+  width: 45%;
+  padding: 12px;
+  margin: 10px 5px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #2563eb;
+}
+
+.resume {
+  margin-top: 25px;
+  background: white;
+  color: black;
+  padding: 25px;
+  border-radius: 12px;
+  text-align: left;
+}
+
+.badge {
+  display: inline-block;
+  background: #3b82f6;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  margin: 5px 5px 0 0;
+  font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🤖 JobAI Resume Builder</h1>
+
+<input id="name" placeholder="Your Name">
+<input id="job" placeholder="Job Title">
+<textarea id="skills" placeholder="Skills (comma separated)"></textarea>
+
+<br>
+
+<button onclick="generate()">Generate Resume</button>
+<button onclick="downloadPDF()">Download PDF</button>
+
+<div id="resume" class="resume" style="display:none;"></div>
+
+</div>
+
 <script>
 function generate() {
   let name = document.getElementById("name").value;
@@ -31,7 +121,7 @@ function downloadPDF() {
 }
 </script>
 
-<!-- دکمه باید اینجا داخل HTML باشد نه داخل script -->
-<button onclick="downloadPDF()">Download PDF</button>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+</body>
+</html>
