@@ -3,46 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JobAI SaaS</title>
+<title>JobAI SaaS Fixed</title>
 
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
 <style>
-body {
-  font-family: Arial;
-  margin: 0;
-  background: #0f172a;
-  color: white;
-  text-align: center;
-}
-
-.container {
-  max-width: 900px;
-  margin: 50px auto;
-}
-
-input, textarea {
-  width: 80%;
-  padding: 12px;
-  margin: 10px;
-}
-
-button {
-  padding: 12px 20px;
-  margin: 5px;
-  background: #3b82f6;
-  border: none;
-  color: white;
-  border-radius: 8px;
-}
-
-.card {
-  background: #1e293b;
-  padding: 20px;
-  margin-top: 20px;
-  border-radius: 10px;
-}
+body {font-family: Arial; background:#0f172a; color:white; text-align:center;}
+.container {max-width:800px; margin:50px auto;}
+input, textarea {width:80%; padding:10px; margin:8px;}
+button {padding:10px 15px; margin:5px; background:#3b82f6; color:white; border:none; border-radius:6px;}
+.card {background:#1e293b; padding:20px; margin-top:20px; border-radius:10px;}
 </style>
 </head>
 
@@ -55,16 +26,12 @@ button {
 <div id="auth">
   <input id="email" placeholder="Email">
   <input id="password" type="password" placeholder="Password">
-
   <br>
-
   <button onclick="signup()">Sign Up</button>
   <button onclick="login()">Login</button>
 </div>
 
 <div id="app" style="display:none;">
-
-  <h2>Dashboard</h2>
   <button onclick="logout()">Logout</button>
 
   <div class="card">
@@ -72,61 +39,52 @@ button {
     <input id="job" placeholder="Job Title">
     <textarea id="skills" placeholder="Skills"></textarea>
 
-    <button onclick="generate()">Generate AI Resume</button>
-    <button onclick="save()">Save Resume (Pro)</button>
-    <button onclick="download()">Download PDF (Pro)</button>
+    <button onclick="generate()">Generate Resume</button>
+    <button onclick="download()">Download (Pro)</button>
 
     <div id="resume"></div>
   </div>
-
 </div>
 
 </div>
 
 <script>
-// Firebase config (باید خودت بعداً پر کنی)
+// Firebase config
 const firebaseConfig = {
   apiKey: "YOUR_KEY",
   authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT",
+  projectId: "YOUR_PROJECT"
 };
 
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
-// SIGN UP
+// SIGNUP
 function signup() {
   auth.createUserWithEmailAndPassword(
-    email.value,
-    password.value
+    document.getElementById("email").value,
+    document.getElementById("password").value
   );
 }
 
 // LOGIN
 function login() {
   auth.signInWithEmailAndPassword(
-    email.value,
-    password.value
-  ).then(() => {
-    authUI(true);
-  });
+    document.getElementById("email").value,
+    document.getElementById("password").value
+  );
 }
 
 // LOGOUT
 function logout() {
   auth.signOut();
-  authUI(false);
 }
 
+// UI SWITCH
 auth.onAuthStateChanged(user => {
-  if (user) authUI(true);
-  else authUI(false);
+  document.getElementById("auth").style.display = user ? "none" : "block";
+  document.getElementById("app").style.display = user ? "block" : "none";
 });
-
-function authUI(loggedIn) {
-  document.getElementById("auth").style.display = loggedIn ? "none" : "block";
-  document.getElementById("app").style.display = loggedIn ? "block" : "none";
-}
 
 // AI Resume
 function generate() {
@@ -141,14 +99,9 @@ function generate() {
   `;
 }
 
-// SAVE (Pro feature placeholder)
-function save() {
-  alert("Pro feature - connect Firestore next step");
-}
-
-// DOWNLOAD (Pro feature placeholder)
+// PRO FEATURE LOCK
 function download() {
-  alert("Pro feature - connect Stripe + PDF engine next step");
+  alert("🔒 This is PRO feature. Add Stripe next step.");
 }
 </script>
 
