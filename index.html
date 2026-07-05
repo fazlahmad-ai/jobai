@@ -92,9 +92,14 @@ button:hover {
 function generate() {
   let name = document.getElementById("name").value;
   let job = document.getElementById("job").value;
-  let skills = document.getElementById("skills").value.split(",");
 
-  let skillsHTML = skills.map(s => `<span class="badge">${s.trim()}</span>`).join("");
+  let skills = document.getElementById("skills")
+    .value
+    .split(",")
+    .map(s => s.trim())
+    .filter(s => s !== "");
+
+  let skillsHTML = skills.map(s => `<span class="badge">${s}</span>`).join(" ");
 
   document.getElementById("resume").style.display = "block";
   document.getElementById("resume").innerHTML = `
