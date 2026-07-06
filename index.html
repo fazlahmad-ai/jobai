@@ -112,8 +112,15 @@ function generate() {
 
 // PRO FEATURE LOCK
 function download() {
-  alert("🔒 This is PRO feature. Add Stripe next step.");
-}
+  const element = document.getElementById("resume");
+
+  if (!element.innerHTML.trim()) {
+    alert("Please generate your resume first.");
+    return;
+  }
+
+  html2pdf().from(element).save("JobAI-Resume.pdf");
+    }
 </script>
 
 </body>
