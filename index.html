@@ -130,6 +130,37 @@ if (user) {
     <p>🤖 AI Resume Builder</p>
 </div>
 `;
+}// My Resumes
+function myResumes() {
+  const user = auth.currentUser;
+
+  if (!user) {
+    alert("Please login first");
+    return;
+  }
+
+  db.collection("resumes")
+    .where("userId", "==", user.uid)
+    .get()
+    .then(snapshot => {
+
+      let html = "<h3>📂 My Resumes</h3>";
+
+      snapshot.forEach(doc => {
+        let data = doc.data();
+
+        html += `
+        <div class="resume">
+          <h3>${data.name}</h3>
+          <p>${data.job}</p>
+          <p>${data.skills}</p>
+        </div>
+        `;
+      });
+
+      document.getElementById("myResumes").innerHTML = html;
+
+    });
 }
 
 // PRO FEATURE LOCK
