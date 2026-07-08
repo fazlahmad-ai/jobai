@@ -97,19 +97,30 @@ function generate() {
 const user = auth.currentUser;
 
 if (user) {
+  if (editingId) {
+
+  db.collection("resumes").doc(editingId).update({
+    name: name,
+    job: job,
+    skills: skills
+  }).then(() => {
+    editingId = null;
+    myResumes();
+  });
+
+} else {
+
   db.collection("resumes").add({
     userId: user.uid,
     name: name,
     job: job,
     skills: skills,
     createdAt: new Date()
-  })
-  .then(() => {
-    console.log("Resume saved successfully");
-  })
-  .catch((error) => {
-    console.log("Error saving resume:", error);
+  }).then(() => {
+    myResumes();
   });
+
+  }
 }
   document.getElementById("resume").innerHTML = `
 <div class="resume">
