@@ -183,7 +183,14 @@ function myResumes() {
 }
 function editResume(id, name, job, skills) {
   editingId = id;
-function deleteResume(id) {
+  
+  document.getElementById("name").value = name;
+  document.getElementById("job").value = job;
+  document.getElementById("skills").value = skills;
+
+  window.scrollTo(0, 0);
+}
+  function deleteResume(id) {
 
   if (!confirm("Are you sure you want to delete this resume?")) {
     return;
@@ -201,13 +208,7 @@ function deleteResume(id) {
       console.log(error);
     });
 
-}
-  document.getElementById("name").value = name;
-  document.getElementById("job").value = job;
-  document.getElementById("skills").value = skills;
-
-  window.scrollTo(0, 0);
-}
+  }
 // PRO FEATURE LOCK
 function download() {
   const element = document.getElementById("resume");
