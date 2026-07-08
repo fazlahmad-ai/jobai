@@ -183,7 +183,25 @@ function myResumes() {
 }
 function editResume(id, name, job, skills) {
   editingId = id;
+function deleteResume(id) {
 
+  if (!confirm("Are you sure you want to delete this resume?")) {
+    return;
+  }
+
+  db.collection("resumes")
+    .doc(id)
+    .delete()
+    .then(() => {
+      alert("Resume deleted successfully.");
+      myResumes();
+    })
+    .catch((error) => {
+      alert("Error deleting resume.");
+      console.log(error);
+    });
+
+}
   document.getElementById("name").value = name;
   document.getElementById("job").value = job;
   document.getElementById("skills").value = skills;
