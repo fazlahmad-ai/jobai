@@ -242,4 +242,55 @@ textarea::placeholder {
 #app {
   color: #111827;
 } 
+/* ===== Final Fix CSS ===== */
+
+body {
+  background: #f8fafc;
+  color: #111827;
+}
+
+header,
+.hero {
+  color: #111827;
+}
+
+.hero h1 {
+  color: #1f4e79;
+}
+
+.hero p {
+  color: #4b5563;
+}
+
+.logo {
+  color: #2563eb;
+}
+
+nav a {
+  color: #1f2937;
+}
+
+.card {
+  background: #ffffff;
+  color: #111827;
+}
+
+.card label {
+  color: #111827;
+}
+
+button {
+  font-size: 16px;
+}
+
+.resume {
+  color: #111827;
+}
+
+.resume p,
+.resume h2,
+.resume h3,
+.resume h4 {
+  color: #111827;
+}
 Fix CSS
