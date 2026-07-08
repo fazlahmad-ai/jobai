@@ -167,7 +167,15 @@ function myResumes() {
 
     });
 }
+function editResume(id, name, job, skills) {
+  editingId = id;
 
+  document.getElementById("name").value = name;
+  document.getElementById("job").value = job;
+  document.getElementById("skills").value = skills;
+
+  window.scrollTo(0, 0);
+}
 // PRO FEATURE LOCK
 function download() {
   const element = document.getElementById("resume");
