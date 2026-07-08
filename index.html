@@ -151,12 +151,16 @@ function myResumes() {
         let data = doc.data();
 
         html += `
-        <div class="resume">
-          <h3>${data.name}</h3>
-          <p>${data.job}</p>
-          <p>${data.skills}</p>
-        </div>
-        `;
+<div class="resume">
+  <h3>${data.name}</h3>
+  <p>${data.job}</p>
+  <p>${data.skills}</p>
+
+  <button onclick="editResume('${doc.id}','${data.name}','${data.job}','${data.skills}')">
+    ✏️ Edit
+  </button>
+</div>
+`;
       });
 
       document.getElementById("myResumes").innerHTML = html;
