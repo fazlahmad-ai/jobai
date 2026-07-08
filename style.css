@@ -226,3 +226,19 @@ button:hover {
   font-size: 18px;
   text-align: center;
 } 
+.subtitle {
+  color: #374151 !important;
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #6b7280 !important;
+}
+
+#auth,
+#app {
+  color: #111827;
+} 
