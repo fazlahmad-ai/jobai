@@ -298,3 +298,15 @@ textarea::placeholder {
     color: #888;
     opacity: 1;
 }
+input,
+textarea {
+    color: #111827;
+    background: #ffffff;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #374151;
+    opacity: 1;
+    font-weight: 600;
+}
