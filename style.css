@@ -83,14 +83,20 @@ nav a:hover{
 
 input,
 textarea,
-select{
-    width:100%;
-    padding:14px;
-    margin-top:15px;
-    border:none;
-    border-radius:10px;
-    background:#334155;
-    color:white;
+select {
+    width: 100%;
+    padding: 14px;
+    margin-top: 15px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #111827;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #6b7280;
+    opacity: 1;
 }
 
 button{
