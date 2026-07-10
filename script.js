@@ -3355,6 +3355,5 @@ function startJobAI(){
   );
 
 }
-}
 
 startJobAI(); 
