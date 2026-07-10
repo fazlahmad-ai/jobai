@@ -1,6 +1,6 @@
 // Firebase config
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "AIzaSyCbj3YJiKDLwoCfg1jmljd4ui9NTWgrrYY",
   authDomain: "jobai-c8a18.firebaseapp.com",
   projectId: "jobai-c8a18",
   storageBucket: "jobai-c8a18.firebasestorage.app",
