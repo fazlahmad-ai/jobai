@@ -118,7 +118,10 @@ skills
 .then(()=>{
 
 editingId=null;
+alert("Resume updated successfully");
 myResumes();
+
+}); 
 
 });
 
@@ -132,9 +135,12 @@ job,
 skills,
 createdAt:new Date()
 
-}).then(()=>{
+.then(()=>{
 
+alert("Resume saved successfully");
 myResumes();
+
+}); 
 
 });
 
@@ -210,8 +216,12 @@ db.collection("resumes")
 .doc(id)
 .delete()
 .then(()=>{
+
+editingId=null;
+alert("Resume updated successfully");
 myResumes();
-});
+
+}); 
 
 }
 
