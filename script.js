@@ -3337,9 +3337,21 @@ function refreshDashboard(){
 
 function startJobAI(){
 
+  initializePROSystem();
+
+  initializeDashboard();
+
+  initializeUserSystems();
+
+  createReferralCode();
+
+  createNotification(
+    "Welcome back to JobAI",
+    "success"
+  );
+
   console.log(
     "JobAI SaaS System Ready"
   );
-
 
 }
