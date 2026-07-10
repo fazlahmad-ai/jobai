@@ -133,12 +133,12 @@ job,
 skills,
 createdAt:new Date()
 
-.then(()=>{
+}).then(()=>{
 
 alert("Resume saved successfully");
 myResumes();
 
-}); 
+});
 
 }
   
@@ -214,7 +214,7 @@ db.collection("resumes")
 .then(()=>{
 
 editingId=null;
-alert("Resume updated successfully");
+alert("Resume deleted successfully");
 myResumes();
 
 }); 
