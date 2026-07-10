@@ -140,15 +140,6 @@ myResumes();
 
 }
 
-}).then(()=>{
-
-myResumes();
-
-});
-
-
-}
-
 // SHOW RESUMES
 function myResumes() {
 
