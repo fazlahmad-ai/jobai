@@ -3370,33 +3370,3 @@ function startJobAI(){
 
 
 }
-
-
-
-
-
-// Single Final Login Listener
-
-auth.onAuthStateChanged((user)=>{
-
-
-  currentUser = user;
-
-
-
-  if(user){
-
-
-    setTimeout(()=>{
-
-
-      startJobAI();
-
-
-    },1000);
-
-
-  }
-
-
-});
