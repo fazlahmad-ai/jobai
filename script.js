@@ -106,6 +106,24 @@ const user = auth.currentUser;
 if(!user) return;
 
 
+if(editingId){
+
+db.collection("resumes")
+.doc(editingId)
+.update({
+name,
+job,
+skills
+})
+.then(()=>{
+
+editingId=null;
+myResumes();
+
+});
+
+}else{
+
 db.collection("resumes").add({
 
 userId:user.uid,
@@ -113,6 +131,14 @@ name,
 job,
 skills,
 createdAt:new Date()
+
+}).then(()=>{
+
+myResumes();
+
+});
+
+}
 
 }).then(()=>{
 
