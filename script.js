@@ -139,6 +139,8 @@ myResumes();
 });
 
 }
+  
+} 
 
 // SHOW RESUMES
 function myResumes() {
