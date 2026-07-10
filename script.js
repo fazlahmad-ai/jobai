@@ -196,7 +196,7 @@ myResumes();
 
 }
 
-// DOWNLOAD PDF
+// DOWNLOAD PDF PRO
 function download(){
 
 const element=document.getElementById("resume");
