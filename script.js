@@ -123,8 +123,6 @@ myResumes();
 
 }); 
 
-});
-
 }else{
 
 db.collection("resumes").add({
@@ -141,8 +139,6 @@ alert("Resume saved successfully");
 myResumes();
 
 }); 
-
-});
 
 }
   
