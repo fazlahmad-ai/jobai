@@ -171,7 +171,7 @@ function myResumes() {
 
 <p>${data.skills}</p>
 
-<button onclick="editResume('${doc.id}','${data.name}','${data.job}','${data.skills}')">
+<button onclick="editResume('${doc.id}')">
 ✏️ Edit
 </button>
 
@@ -191,15 +191,24 @@ function myResumes() {
 }
 
 // EDIT
-function editResume(id,name,job,skills){
+function editResume(id){
 
 editingId=id;
 
-document.getElementById("name").value=name;
-document.getElementById("job").value=job;
-document.getElementById("skills").value=skills;
+db.collection("resumes")
+.doc(id)
+.get()
+.then(doc=>{
+
+const data=doc.data();
+
+document.getElementById("name").value=data.name;
+document.getElementById("job").value=data.job;
+document.getElementById("skills").value=data.skills;
 
 window.scrollTo(0,0);
+
+});
 
 }
 
