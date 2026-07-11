@@ -280,7 +280,10 @@ auth.onAuthStateChanged((user)=>{
 
 
     loadUserStatus();
-
+initializeResumeSystem();
+initializePROSystem();
+initializeDashboard();
+initializeUserSystems();
 
   }
 
