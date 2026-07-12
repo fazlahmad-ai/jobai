@@ -641,83 +641,31 @@ function deleteResume(id){
 
 function previewResume(){
 
+  const name = getValue("name");
+  const job = getValue("jobTitle");
+  const skills = getValue("skills");
+  const summary = getValue("summary");
 
-  const box =
-  document.getElementById("resume");
+  const previewName = document.getElementById("previewName");
+  const previewJob = document.getElementById("previewJob");
+  const previewSkills = document.getElementById("previewSkills");
+  const previewSummary = document.getElementById("previewSummary");
 
-
-
-  if(!box){
-
-    return;
-
+  if(previewName){
+    previewName.textContent = name || "Your Name";
   }
 
+  if(previewJob){
+    previewJob.textContent = job || "Job Title";
+  }
 
+  if(previewSkills){
+    previewSkills.textContent = skills || "";
+  }
 
-  const name =
-  getValue("name");
-
-
-  const job =
-  getValue("jobTitle");
-
-
-  const skills =
-  getValue("skills");
-
-
-  const summary =
-  getValue("summary");
-
-
-
-  box.innerHTML = `
-
-  <div class="resume-preview">
-
-    <h1>
-    ${name}
-    </h1>
-
-
-    <h2>
-    ${job}
-    </h2>
-
-
-    <hr>
-
-
-    <h3>
-    Skills
-    </h3>
-
-
-    <p>
-    ${skills}
-    </p>
-
-
-    <h3>
-    Summary
-    </h3>
-
-
-    <p>
-    ${summary}
-    </p>
-
-
-    <small>
-    Created with JobAI
-    </small>
-
-
-  </div>
-
-  `;
-
+  if(previewSummary){
+    previewSummary.textContent = summary || "";
+  }
 
 }
 
