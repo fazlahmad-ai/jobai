@@ -270,23 +270,24 @@ auth.onAuthStateChanged((user)=>{
 
 
 
-  if(user){
-
+ if(user){
 
     console.log(
       "Logged in:",
       user.email
     );
-document.getElementById("auth").style.display = "none";
-document.getElementById("app").style.display = "block";
+
+    document.getElementById("auth").style.display = "none";
+    document.getElementById("app").style.display = "block";
 
     loadUserStatus();
-initializeResumeSystem();
-initializePROSystem();
-initializeDashboard();
-initializeUserSystems();
+    initializeResumeSystem();
+    initializePROSystem();
+    initializeDashboard();
+    initializeUserSystems();
 
-  }
+
+ } 
 
   else{
 
