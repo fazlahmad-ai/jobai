@@ -525,12 +525,6 @@ function loadResumes(){
   )
 
 
-  .orderBy(
-    "createdAt",
-    "desc"
-  )
-
-
   .get()
 
 
