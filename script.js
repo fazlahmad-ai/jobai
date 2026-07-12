@@ -277,7 +277,8 @@ auth.onAuthStateChanged((user)=>{
       "Logged in:",
       user.email
     );
-
+document.getElementById("auth").style.display = "none";
+document.getElementById("app").style.display = "block";
 
     loadUserStatus();
 initializeResumeSystem();
