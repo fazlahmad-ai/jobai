@@ -389,8 +389,9 @@ html{
     padding:30px;
     border-radius:12px;
     border:1px solid #ddd;
-    min-height:500px;
-}
+    min-height:auto;
+    height:auto;
+} 
 
 .resume-preview h1,
 .resume-preview h2,
