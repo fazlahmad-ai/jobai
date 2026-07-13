@@ -381,3 +381,28 @@ button:hover{
 html{
   scroll-behavior:smooth;
 }
+/* Resume Preview */
+
+.resume-preview{
+    background:#ffffff !important;
+    color:#111827 !important;
+    padding:30px;
+    border-radius:12px;
+    border:1px solid #ddd;
+    min-height:500px;
+}
+
+.resume-preview h1,
+.resume-preview h2,
+.resume-preview h3,
+.resume-preview p,
+.resume-preview small{
+    color:#111827 !important;
+}
+
+#resume{
+    background:#ffffff !important;
+    color:#111827 !important;
+    padding:20px;
+    display:block;
+}
