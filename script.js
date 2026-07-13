@@ -1168,36 +1168,37 @@ function saveCoverLetter(){
 
 function downloadPDF(){
 
-  const resume = document.getElementById("resume");
+const element = document.getElementById("resume");
 
-  if(!resume){
-    showMessage("Resume not found");
-    return;
-  }
-
-  const opt = {
-    margin: 10,
-    filename: "JobAI-Resume.pdf",
-    image: {
-      type: "jpeg",
-      quality: 1
-    },
-    html2canvas: {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: "#ffffff"
-    },
-    jsPDF: {
-      unit: "mm",
-      format: "a4",
-      orientation: "portrait"
-    }
-  };
-
-  html2pdf().set(opt).from(resume).save();
-
+if(!element){
+alert("Resume not found");
+return;
 }
 
+const options = {
+margin: 10,
+filename: "JobAI-Resume.pdf",
+image: {
+type: "jpeg",
+quality: 0.98
+},
+html2canvas: {
+scale: 2,
+useCORS: true
+},
+jsPDF: {
+unit: "mm",
+format: "a4",
+orientation: "portrait"
+}
+};
+
+html2pdf()
+.set(options)
+.from(element)
+.save();
+
+}
 
 
 
