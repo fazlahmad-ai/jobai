@@ -674,29 +674,17 @@ document.addEventListener(
 "input",
 function(event){
 
-
   if(
-
     event.target.id === "name" ||
-
     event.target.id === "jobTitle" ||
-
     event.target.id === "skills" ||
-
     event.target.id === "summary" ||
-
     event.target.id === "education" ||
-
     event.target.id === "experience" ||
-
     event.target.id === "language"
-
-)
-
+  ){
     previewResume();
-
   }
-
 
 });
 
