@@ -4,132 +4,250 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>JobAI Professional Resume Builder</title>
+<title>JobAI - AI Professional Resume Builder</title>
+
+
+<!-- Main CSS -->
 
 <link rel="stylesheet" href="style.css">
 
+
+
 <!-- PDF Generator -->
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
+
+
 <!-- Firebase -->
+
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
 
 </head>
 
 
+
 <body>
+
 
 <div class="container">
 
-<header class="hero">
 
-<h1>🤖 JobAI</h1>
 
-<p>
-AI Professional Resume Builder
-</p>
+<!-- Header -->
+
+<header class="top-header">
+
+
+<div class="logo">
+
+🤖 JobAI
+
+</div>
+
+
+
+<nav>
+
+<a href="#create">
+Create Resume
+</a>
+
+
+<a href="#preview">
+Preview
+</a>
+
+
+<a href="#saved">
+My Resumes
+</a>
+
+
+</nav>
+
 
 </header>
 
 
-<section class="card">
-
-<h2>Create Your Resume</h2>
 
 
-<div class="form-group">
 
-<label>Full Name</label>
+<!-- Hero Section -->
+
+<section class="hero">
+
+
+<h1>
+Create Your Professional Resume With AI
+</h1>
+
+
+<p>
+Build modern ATS-friendly resumes in seconds with JobAI
+</p>
+
+
+</section>
+
+
+
+
+
+<!-- Authentication -->
+
+<section id="auth" class="card">
+
+
+<h2>
+Account
+</h2>
+
+
 
 <input 
-type="text" 
-id="name" 
+type="email"
+id="email"
+placeholder="Email Address">
+
+
+
+<input
+type="password"
+id="password"
+placeholder="Password">
+
+
+
+<button onclick="signup()">
+Create Account
+</button>
+
+
+<button onclick="login()">
+Login
+</button>
+
+
+
+</section>
+
+
+
+
+
+<!-- Resume Form -->
+
+<section id="create" class="card">
+
+
+<h2>
+Create Your Resume
+</h2>
+
+
+
+<label>
+Full Name
+</label>
+
+
+<input
+type="text"
+id="name"
 placeholder="Enter your full name">
 
-</div>
 
 
-<div class="form-group">
+<label>
+Job Title
+</label>
 
-<label>Job Title</label>
 
-<input 
-type="text" 
-id="jobTitle" 
+<input
+type="text"
+id="jobTitle"
 placeholder="Example: Software Developer">
 
-</div>
 
 
-<div class="form-group">
+<label>
+Professional Summary
+</label>
 
-<label>Professional Summary</label>
 
-<textarea 
+<textarea
 id="summary"
 placeholder="Write your professional summary">
 </textarea>
 
-</div>
 
 
-<div class="form-group">
+<label>
+Skills
+</label>
 
-<label>Skills</label>
 
-<textarea 
+<textarea
 id="skills"
 placeholder="HTML, CSS, JavaScript, Communication">
 </textarea>
-
-</div>
 <!-- Education -->
 
-<div class="form-group">
+<label>
+Education
+</label>
 
-<label>Education</label>
-
-<textarea 
+<textarea
 id="education"
 placeholder="Example: Bachelor Degree in Computer Science">
 </textarea>
 
-</div>
 
 
+<!-- Work Experience -->
 
-<!-- Experience -->
+<label>
+Work Experience
+</label>
 
-<div class="form-group">
-
-<label>Work Experience</label>
-
-<textarea 
+<textarea
 id="experience"
 placeholder="Describe your work experience">
 </textarea>
-
-</div>
 
 
 
 <!-- Languages -->
 
-<div class="form-group">
+<label>
+Languages
+</label>
 
-<label>Languages</label>
-
-<textarea 
+<textarea
 id="language"
 placeholder="Example: English, Persian">
 </textarea>
 
-</div>
 
+
+
+<!-- AI Actions -->
+
+<div class="actions">
+
+
+<button onclick="generateSummary()">
+🤖 AI Generate Summary
+</button>
 
 
 <button onclick="previewResume()">
@@ -137,18 +255,31 @@ placeholder="Example: English, Persian">
 </button>
 
 
+</div>
+
+
 </section>
 
 
 
-<!-- Resume Preview Section -->
 
-<section class="card">
 
-<h2>Resume Preview</h2>
+<!-- Resume Preview -->
+
+<section id="preview" class="card">
+
+
+<h2>
+Resume Preview
+</h2>
+
 
 
 <div id="resume" class="resume-preview">
+
+
+
+<div class="resume-header">
 
 
 <h1 id="previewName">
@@ -156,41 +287,77 @@ Your Name
 </h1>
 
 
+
 <h2 id="previewJob">
 Job Title
 </h2>
 
 
+</div>
+
+
+
 <hr>
 
 
-<h3>Professional Summary</h3>
-
-<p id="previewSummary"></p>
 
 
-
-<h3>Skills</h3>
-
-<p id="previewSkills"></p>
-
+<h3>
+Professional Summary
+</h3>
 
 
-<h3>Education</h3>
-
-<p id="previewEducation"></p>
+<p id="previewSummary">
+Professional Summary
+</p>
 
 
 
-<h3>Experience</h3>
 
-<p id="previewExperience"></p>
+<h3>
+Skills
+</h3>
+
+
+<p id="previewSkills">
+Skills
+</p>
 
 
 
-<h3>Languages</h3>
 
-<p id="previewLanguage"></p>
+<h3>
+Education
+</h3>
+
+
+<p id="previewEducation">
+Education
+</p>
+
+
+
+
+<h3>
+Experience
+</h3>
+
+
+<p id="previewExperience">
+Experience
+</p>
+
+
+
+
+<h3>
+Languages
+</h3>
+
+
+<p id="previewLanguage">
+Languages
+</p>
 
 
 
@@ -199,26 +366,37 @@ Created with JobAI
 </footer>
 
 
+
 </div>
 
 
+
 </section>
-id="9kq2m"
-<!-- Download PDF Section -->
+<!-- PDF Download -->
 
 <section class="card">
+
+
+<h2>
+Export Resume
+</h2>
+
 
 <button onclick="downloadPDF()">
 📄 Download PDF
 </button>
 
+
 </section>
 
 
 
-<!-- My Resumes -->
 
-<section class="card">
+
+<!-- Saved Resumes -->
+
+<section id="saved" class="card">
+
 
 <h2>
 My Resumes
@@ -227,9 +405,11 @@ My Resumes
 
 <div id="resumeList">
 
+
 <p>
 No saved resumes yet.
 </p>
+
 
 </div>
 
@@ -238,15 +418,26 @@ No saved resumes yet.
 
 
 
-<!-- User Account -->
+
+
+<!-- User Panel -->
 
 <section class="card">
+
+
+<h2>
+Account Settings
+</h2>
+
 
 <button onclick="logout()">
 Logout
 </button>
 
+
 </section>
+
+
 
 
 
@@ -254,11 +445,15 @@ Logout
 
 
 
-<!-- JavaScript -->
+
+
+<!-- Main JavaScript -->
 
 <script src="script.js"></script>
 
 
+
 </body>
+
 
 </html>
