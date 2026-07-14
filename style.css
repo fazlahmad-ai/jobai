@@ -407,3 +407,17 @@ html{
     padding:20px;
     display:block;
 }
+#resumePreview{
+    width: 100%;
+    max-width: 800px;
+    background: white;
+    padding: 30px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+@media print{
+    #resumePreview{
+        margin:0;
+    }
+}
