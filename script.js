@@ -645,27 +645,23 @@ function previewResume(){
   const job = getValue("jobTitle");
   const skills = getValue("skills");
   const summary = getValue("summary");
+  const education = getValue("education");
+  const experience = getValue("experience");
+  const language = getValue("language");
 
-  const previewName = document.getElementById("previewName");
-  const previewJob = document.getElementById("previewJob");
-  const previewSkills = document.getElementById("previewSkills");
-  const previewSummary = document.getElementById("previewSummary");
+  document.getElementById("previewName").textContent = name || "Your Name";
+  document.getElementById("previewJob").textContent = job || "Job Title";
+  document.getElementById("previewSkills").textContent = skills || "";
+  document.getElementById("previewSummary").textContent = summary || "";
 
-  if(previewName){
-    previewName.textContent = name || "Your Name";
-  }
+  const edu = document.getElementById("previewEducation");
+  if(edu) edu.textContent = education || "";
 
-  if(previewJob){
-    previewJob.textContent = job || "Job Title";
-  }
+  const exp = document.getElementById("previewExperience");
+  if(exp) exp.textContent = experience || "";
 
-  if(previewSkills){
-    previewSkills.textContent = skills || "";
-  }
-
-  if(previewSummary){
-    previewSummary.textContent = summary || "";
-  }
+  const lang = document.getElementById("previewLanguage");
+  if(lang) lang.textContent = language || "";
 
 }
 
@@ -687,9 +683,15 @@ function(event){
 
     event.target.id === "skills" ||
 
-    event.target.id === "summary"
+    event.target.id === "summary" ||
 
-  ){
+    event.target.id === "education" ||
+
+    event.target.id === "experience" ||
+
+    event.target.id === "language"
+
+)
 
     previewResume();
 
