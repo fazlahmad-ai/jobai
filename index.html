@@ -6,397 +6,259 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>JobAI AI Resume Builder</title>
+<title>JobAI Professional Resume Builder</title>
 
 <link rel="stylesheet" href="style.css">
+
+<!-- PDF Generator -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
-
-<!-- html2pdf -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 </head>
+
 
 <body>
 
 <div class="container">
 
-<h1>🤖 JobAI AI Resume Builder</h1>
+<header class="hero">
 
-<p class="subtitle">
-Create a professional resume with AI in seconds.
+<h1>🤖 JobAI</h1>
+
+<p>
+AI Professional Resume Builder
 </p>
 
-<!-- Authentication -->
+</header>
 
-<div id="auth">
 
-<input
-id="email"
-type="email"
-placeholder="Email">
+<section class="card">
 
-<input
-id="password"
-type="password"
-placeholder="Password">
+<h2>Create Your Resume</h2>
 
-<div class="buttons">
 
-<button onclick="signUp()">
-Sign Up
-</button>
+<div class="form-group">
 
-<button onclick="login()">
-Login
-</button>
+<label>Full Name</label>
+
+<input 
+type="text" 
+id="name" 
+placeholder="Enter your full name">
 
 </div>
 
-</div>
 
-<!-- Main App -->
+<div class="form-group">
 
-<div id="app" style="display:none;">
+<label>Job Title</label>
 
-<div class="topbar">
-
-<button onclick="logout()">
-Logout
-</button>
+<input 
+type="text" 
+id="jobTitle" 
+placeholder="Example: Software Developer">
 
 </div>
 
-<h2>Create Resume</h2>
 
-<input
-id="name"
-type="text"
-placeholder="Full Name">
+<div class="form-group">
 
-<input
-id="jobTitle"
-type="text"
-placeholder="Job Title">
+<label>Professional Summary</label>
 
-<textarea
+<textarea 
 id="summary"
-placeholder="Professional Summary">
+placeholder="Write your professional summary">
 </textarea>
 
-<input
-id="education"
-type="text"
-placeholder="Education">
+</div>
 
-<input
-id="experience"
-type="text"
-placeholder="Work Experience">
 
-<input
+<div class="form-group">
+
+<label>Skills</label>
+
+<textarea 
 id="skills"
-type="text"
-placeholder="Skills">
+placeholder="HTML, CSS, JavaScript, Communication">
+</textarea>
 
-<input
+</div>
+<!-- Education -->
+
+<div class="form-group">
+
+<label>Education</label>
+
+<textarea 
+id="education"
+placeholder="Example: Bachelor Degree in Computer Science">
+</textarea>
+
+</div>
+
+
+
+<!-- Experience -->
+
+<div class="form-group">
+
+<label>Work Experience</label>
+
+<textarea 
+id="experience"
+placeholder="Describe your work experience">
+</textarea>
+
+</div>
+
+
+
+<!-- Languages -->
+
+<div class="form-group">
+
+<label>Languages</label>
+
+<textarea 
 id="language"
-type="text"
-placeholder="Languages">
+placeholder="Example: English, Persian">
+</textarea>
 
-<div class="buttons">
+</div>
 
-<button onclick="generateAISummary()">
-✨ AI Summary
+
+
+<button onclick="previewResume()">
+✨ Generate Resume
 </button>
 
-<button onclick="generateResume()">
-Generate Resume
-</button>
+
+</section>
+
+
+
+<!-- Resume Preview Section -->
+
+<section class="card">
+
+<h2>Resume Preview</h2>
+
+
+<div id="resume" class="resume-preview">
+
+
+<h1 id="previewName">
+Your Name
+</h1>
+
+
+<h2 id="previewJob">
+Job Title
+</h2>
+
+
+<hr>
+
+
+<h3>Professional Summary</h3>
+
+<p id="previewSummary"></p>
+
+
+
+<h3>Skills</h3>
+
+<p id="previewSkills"></p>
+
+
+
+<h3>Education</h3>
+
+<p id="previewEducation"></p>
+
+
+
+<h3>Experience</h3>
+
+<p id="previewExperience"></p>
+
+
+
+<h3>Languages</h3>
+
+<p id="previewLanguage"></p>
+
+
+
+<footer>
+Created with JobAI
+</footer>
+
+
+</div>
+
+
+</section>
+id="9kq2m"
+<!-- Download PDF Section -->
+
+<section class="card">
 
 <button onclick="downloadPDF()">
 📄 Download PDF
 </button>
 
-</div>
+</section>
 
-<hr>
 
-<h2>Resume Preview</h2>
 
-<div id="resume" class="resume-preview">
+<!-- My Resumes -->
 
-<h1 id="previewName">Your Name</h1>
+<section class="card">
 
-<h2 id="previewJob">Job Title</h2>
+<h2>
+My Resumes
+</h2>
 
-<hr>
 
-<h3>Professional Summary</h3>
-<p id="previewSummary"></p>
-
-<h3>Education</h3>
-<p id="previewEducation"></p>
-
-<h3>Work Experience</h3>
-<p id="previewExperience"></p>
-
-<h3>Skills</h3>
-<p id="previewSkills"></p>
-
-<h3>Languages</h3>
-<p id="previewLanguage"></p>
-
-<hr>
-
-<small>Created with JobAI</small>
-
-</div>
-
-<button onclick="calculateResumeScore()">
-Resume Score
-</button>
-
-<button onclick="getResumeSuggestions()">
-AI Suggestions
-</button>
-
-</div>
-
-<hr>
-
-<h2>Cover Letter</h2>
-
-<textarea
-id="coverLetter"
-placeholder="Cover Letter">
-</textarea>
-
-<div class="buttons">
-
-<button onclick="generateCoverLetter()">
-Generate Cover Letter
-</button>
-
-<button onclick="saveCoverLetter()">
-Save Cover Letter
-</button>
-
-<button onclick="downloadCoverLetterPDF()">
-Download Cover Letter PDF
-</button>
-
-</div>
-
-<hr>
-
-<h2>📂 My Resumes</h2>
-
-<div id="resumeList"></div>
-
-<hr>
-
-<h2>👤 My Profile</h2>
-
-<input
-id="profileName"
-type="text"
-placeholder="Full Name">
-
-<input
-id="profilePhone"
-type="text"
-placeholder="Phone">
-
-<input
-id="profileLocation"
-type="text"
-placeholder="Location">
-
-<textarea
-id="profileBio"
-placeholder="Short Bio">
-</textarea>
-
-<input
-id="profileImage"
-type="file"
-accept="image/*">
-
-<div class="buttons">
-
-<button onclick="saveUserProfile()">
-Save Profile
-</button>
-
-<button onclick="uploadProfileImage()">
-Upload Photo
-</button>
-
-</div>
-
-<img
-id="profilePreview"
-width="120"
-height="120"
-style="border-radius:50%;margin-top:15px;">
-
-<hr>
-
-<h2>📊 Dashboard</h2>
+<div id="resumeList">
 
 <p>
-Email:
-<span id="dashboardEmail"></span>
+No saved resumes yet.
 </p>
 
-<p>
-Plan:
-<span id="dashboardPlan"></span>
-</p>
+</div>
 
-<p>
-Resumes:
-<span id="dashboardResumeCount"></span>
-</p>
 
-<div id="userReport"></div>
+</section>
 
-<hr>
 
-<h2>🔔 Notifications</h2>
 
-<div id="notifications"></div>
+<!-- User Account -->
 
-<hr>
+<section class="card">
 
-<h2>💬 Support</h2>
-
-<textarea
-id="supportMessage"
-placeholder="Write your message">
-</textarea>
-
-<button onclick="sendSupportMessage()">
-Send Message
+<button onclick="logout()">
+Logout
 </button>
 
-<div id="chatBox"></div>
-<hr>
+</section>
 
-<h2>🌍 Public Resume</h2>
 
-<input
-id="publicLink"
-type="text"
-readonly
-placeholder="Public Resume Link">
-
-<div class="buttons">
-
-<button onclick="createPublicResume()">
-Create Public Resume
-</button>
-
-<button onclick="copyResumeLink()">
-Copy Link
-</button>
 
 </div>
 
-<hr>
 
-<h2>🔍 SEO Profile</h2>
 
-<input
-id="profileLink"
-type="text"
-readonly
-placeholder="Professional Profile Link">
-
-<textarea
-id="seoDescription"
-placeholder="SEO Description">
-</textarea>
-
-<div class="buttons">
-
-<button onclick="createProfessionalProfile()">
-Create Profile
-</button>
-
-<button onclick="generateSEODescription()">
-Generate SEO
-</button>
-
-</div>
-
-<hr>
-
-<h2>🎁 Referral</h2>
-
-<input
-id="referralCode"
-type="text"
-readonly
-placeholder="Your Referral Code">
-
-<input
-id="enterReferral"
-type="text"
-placeholder="Enter Referral Code">
-
-<div class="buttons">
-
-<button onclick="createReferralCode()">
-Generate Code
-</button>
-
-<button onclick="applyReferralCode()">
-Apply Code
-</button>
-
-</div>
-
-<hr>
-
-<h2>⭐ Subscription</h2>
-
-<p id="userPlan">Free Plan</p>
-
-<div class="buttons">
-
-<button onclick="selectPROPlan('monthly')">
-Monthly PRO
-</button>
-
-<button onclick="selectPROPlan('yearly')">
-Yearly PRO
-</button>
-
-<button onclick="payWithUSDT()">
-Pay with USDT
-</button>
-
-<button onclick="payWithPayPal()">
-PayPal
-</button>
-
-<button onclick="payWithBank()">
-Bank Transfer
-</button>
-
-</div>
-
-</div>
-
-</div>
+<!-- JavaScript -->
 
 <script src="script.js"></script>
 
+
 </body>
+
 </html>
