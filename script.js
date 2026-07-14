@@ -643,25 +643,39 @@ function previewResume(){
 
   const name = getValue("name");
   const job = getValue("jobTitle");
-  const skills = getValue("skills");
   const summary = getValue("summary");
+  const skills = getValue("skills");
   const education = getValue("education");
   const experience = getValue("experience");
   const language = getValue("language");
 
-  document.getElementById("previewName").textContent = name || "Your Name";
-  document.getElementById("previewJob").textContent = job || "Job Title";
-  document.getElementById("previewSkills").textContent = skills || "";
-  document.getElementById("previewSummary").textContent = summary || "";
 
-  const edu = document.getElementById("previewEducation");
-  if(edu) edu.textContent = education || "";
+  document.getElementById("previewName").innerText =
+  name || "Your Name";
 
-  const exp = document.getElementById("previewExperience");
-  if(exp) exp.textContent = experience || "";
 
-  const lang = document.getElementById("previewLanguage");
-  if(lang) lang.textContent = language || "";
+  document.getElementById("previewJob").innerText =
+  job || "Job Title";
+
+
+  document.getElementById("previewSummary").innerText =
+  summary || "";
+
+
+  document.getElementById("previewSkills").innerText =
+  skills || "";
+
+
+  document.getElementById("previewEducation").innerText =
+  education || "";
+
+
+  document.getElementById("previewExperience").innerText =
+  experience || "";
+
+
+  document.getElementById("previewLanguage").innerText =
+  language || "";
 
 }
 
@@ -1158,28 +1172,39 @@ function saveCoverLetter(){
 
 function downloadPDF(){
 
-const element = document.getElementById("resume");
+  const element = document.getElementById("resume");
 
-const options = {
-  margin: 10,
-  filename: 'JobAI-Resume.pdf',
-  image: { type: 'jpeg', quality: 0.98 },
-  html2canvas: {
-    scale: 2,
-    useCORS: true,
-    scrollY: 0
-  },
-  jsPDF: {
-    unit: 'mm',
-    format: 'a4',
-    orientation: 'portrait'
-  }
-};
 
-html2pdf()
-.from(element)
-.set(options)
-.save();
+  const options = {
+
+    margin: 10,
+
+    filename: "JobAI-Professional-Resume.pdf",
+
+    image: {
+      type: "jpeg",
+      quality: 0.98
+    },
+
+    html2canvas: {
+      scale: 2,
+      useCORS: true,
+      logging: false
+    },
+
+    jsPDF: {
+      unit: "mm",
+      format: "a4",
+      orientation: "portrait"
+    }
+
+  };
+
+
+  html2pdf()
+  .set(options)
+  .from(element)
+  .save();
 
 }
 
