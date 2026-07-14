@@ -343,7 +343,7 @@ textarea::placeholder{
 }
 
 #name::placeholder,
-#job::placeholder,
+#jobTitle::placeholder,
 #skills::placeholder{
   color:#374151 !important;
   font-weight:600 !important;
@@ -458,3 +458,21 @@ html{
     }
 
 }
+.resume-preview{
+    display:block;
+    overflow:visible;
+}
+
+#resume{
+    page-break-inside:avoid;
+    overflow:hidden;
+}
+
+#resume h3{
+    page-break-after:avoid;
+}
+
+#resume p{
+    white-space:pre-wrap;
+    word-break:break-word;
+} 
