@@ -1158,7 +1158,7 @@ function saveCoverLetter(){
 
 function downloadPDF(){
 
-const element = document.getElementById("resumePreview");
+const element = document.getElementById("resume");
 
 const options = {
   margin: 10,
