@@ -205,17 +205,16 @@ button:hover{
 /* Resume Preview */
 
 .resume-preview{
-
-    width:210mm;
-    min-height:297mm;
+    width:100%;
+    max-width:800px;
+    min-height:auto;
     margin:20px auto;
     padding:35px;
-    background:white;
+    background:#fff;
     color:#111827;
     border-radius:8px;
     box-shadow:0 5px 20px rgba(0,0,0,.12);
-
-}
+} 
 
 
 
