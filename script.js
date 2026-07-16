@@ -412,7 +412,7 @@ function validateResume(){
 // ===============================
 
 function generateResume(){
-
+alert("generateResume started");
   if(!currentUser){
     showMessage("Please login first");
     return;
@@ -615,7 +615,7 @@ function deleteResume(id){
 
 
 function previewResume(){
-
+alert("previewResume started");
   const name = getValue("name");
   const job = getValue("jobTitle");
   const summary = getValue("summary");
