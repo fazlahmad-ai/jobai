@@ -1,4 +1,5 @@
 // =====================================
+alert("JS WORKING");
 // JobAI Professional Script.js
 // Part A: Firebase + Global Setup + Authentication
 // =====================================
