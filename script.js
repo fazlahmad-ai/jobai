@@ -3309,3 +3309,4 @@ function startJobAI(){
 
 }
 
+alert("script.js loaded");
