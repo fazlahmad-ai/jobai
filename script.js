@@ -1174,36 +1174,43 @@ function downloadPDF(){
 
   const element = document.getElementById("resume");
 
+  if(!element){
+    alert("Resume not found");
+    return;
+  }
+
 
   const options = {
-
     margin: 10,
+    filename: "JobAI-Resume.pdf",
 
-    filename: "JobAI-Professional-Resume.pdf",
-
-    image: {
-      type: "jpeg",
-      quality: 0.98
+    image:{
+      type:"jpeg",
+      quality:1
     },
 
-    html2canvas: {
-      scale: 2,
-      useCORS: true,
-      logging: false
+    html2canvas:{
+      scale:3,
+      useCORS:true,
+      backgroundColor:"#ffffff"
     },
 
-    jsPDF: {
-      unit: "mm",
-      format: "a4",
-      orientation: "portrait"
+    jsPDF:{
+      unit:"mm",
+      format:"a4",
+      orientation:"portrait"
     }
-
   };
 
 
   html2pdf()
   .set(options)
   .from(element)
+  .toPdf()
+  .get("pdf")
+  .then(function(pdf){
+      console.log("PDF created");
+  })
   .save();
 
 }
