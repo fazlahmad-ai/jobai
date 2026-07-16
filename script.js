@@ -1182,11 +1182,13 @@ function downloadPDF(){
 
   html2canvas(element, {
     scale: 2,
+    useCORS: true,
     backgroundColor: "#ffffff"
-  })
-  .then(canvas => {
+  }).then(canvas => {
+
 
     const imgData = canvas.toDataURL("image/png");
+
 
     const pdf = new jspdf.jsPDF(
       "p",
@@ -1194,25 +1196,55 @@ function downloadPDF(){
       "a4"
     );
 
-    const imgWidth = 190;
 
-    const imgHeight =
-    canvas.height * imgWidth / canvas.width;
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+
+
+    const imgWidth = pageWidth;
+    const imgHeight = canvas.height * imgWidth / canvas.width;
+
+
+    let heightLeft = imgHeight;
+    let position = 0;
 
 
     pdf.addImage(
       imgData,
       "PNG",
-      10,
-      10,
+      0,
+      position,
       imgWidth,
       imgHeight
     );
 
 
-    pdf.save(
-      "JobAI-Resume.pdf"
-    );
+    heightLeft -= pageHeight;
+
+
+    while(heightLeft > 0){
+
+      position = heightLeft - imgHeight;
+
+      pdf.addPage();
+
+
+      pdf.addImage(
+        imgData,
+        "PNG",
+        0,
+        position,
+        imgWidth,
+        imgHeight
+      );
+
+
+      heightLeft -= pageHeight;
+    }
+
+
+    pdf.save("JobAI-Resume.pdf");
+
 
   });
 
