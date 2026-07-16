@@ -4,276 +4,384 @@
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>JobAI - AI Professional Resume Builder</title>
+<title>JobAI | AI Professional Resume Builder</title>
 
-
-<!-- Main CSS -->
+<meta name="description"
+content="Create professional ATS-friendly resumes with AI in seconds.">
 
 <link rel="stylesheet" href="style.css">
 
+<!-- Font Awesome -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
+<!-- Google Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<!-- PDF Generator -->
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
 
 <!-- Firebase -->
-
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
+<!-- html2canvas -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 </head>
-
-
 
 <body>
 
 <div id="app">
 
-<div class="container">
-
-
-
-<!-- Header -->
-
-<header class="top-header">
-
+<header class="header">
 
 <div class="logo">
 
-🤖 JobAI
+🤖 <span>JobAI</span>
+
+</div>
+
+<nav>
+
+<a href="#home">Home</a>
+
+<a href="#features">Features</a>
+
+<a href="#create">Create Resume</a>
+
+<a href="#preview">Preview</a>
+
+<a href="#saved">My Resumes</a>
+
+</nav>
+
+<div class="header-buttons">
+
+<button class="login-btn" onclick="login()">
+Login
+</button>
+
+<button class="signup-btn" onclick="signUp()">
+Create Account
+</button>
+
+</div>
+
+</header>
+
+<section id="home" class="hero">
+
+<div class="hero-left">
+
+<h1>
+
+Create Your Professional Resume With AI
+
+</h1>
+
+<p>
+
+Build modern ATS-friendly resumes in seconds.
+
+Generate AI summaries, improve your resume score,
+download professional PDF files and manage
+all resumes in one place.
+
+</p>
+
+<div class="hero-buttons">
+
+<a href="#create" class="primary-btn">
+
+Create Resume
+
+</a>
+
+<a href="#features" class="secondary-btn">
+
+Learn More
+
+</a>
+
+</div>
+
+</div>
+
+<div class="hero-right">
+
+<img
+src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=700"
+alt="Resume">
+
+</div>
+
+</section>
+
+<section id="features" class="features">
+
+<h2>
+
+Why Choose JobAI?
+
+</h2>
+
+<div class="feature-grid">
+
+<div class="feature-card">
+
+<i class="fa-solid fa-robot"></i>
+
+<h3>AI Resume Builder</h3>
+
+<p>
+
+Generate professional resumes instantly using AI.
+
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<i class="fa-solid fa-file-pdf"></i>
+
+<h3>Professional PDF</h3>
+
+<p>
+
+Download clean ATS-friendly PDF resumes.
+
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<i class="fa-solid fa-chart-line"></i>
+
+<h3>Resume Score</h3>
+
+<p>
+
+Analyze your resume and improve your chances.
+
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<i class="fa-solid fa-cloud"></i>
+
+<h3>Cloud Storage</h3>
+
+<p>
+
+Save your resumes securely with Firebase.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- Create Resume Section Starts Here -->
+  <!-- Create Resume -->
+
+<section id="create" class="resume-builder">
+
+<div class="section-title">
+
+<h2>Create Your Resume</h2>
+
+<p>
+Fill your information and let JobAI build your professional resume.
+</p>
+
+</div>
+
+
+<div class="resume-form">
+
+
+<div class="form-group">
+
+<label>Profile Photo</label>
+
+<input 
+type="file"
+id="profilePhoto"
+accept="image/*">
 
 </div>
 
 
 
-<nav>
-
-<a href="#create">
-Create Resume
-</a>
+<div class="form-grid">
 
 
-<a href="#preview">
-Preview
-</a>
+<div class="form-group">
 
-
-<a href="#saved">
-My Resumes
-</a>
-
-
-</nav>
-
-
-</header>
-
-
-
-
-
-<!-- Hero Section -->
-
-<section class="hero">
-
-
-<h1>
-Create Your Professional Resume With AI
-</h1>
-
-
-<p>
-Build modern ATS-friendly resumes in seconds with JobAI
-</p>
-
-
-</section>
-
-
-
-
-
-<!-- Authentication -->
-
-<section id="auth" class="card">
-
-
-<h2>
-Account
-</h2>
-
-
-
-<input 
-type="email"
-id="email"
-placeholder="Email Address">
-
-
-
-<input
-type="password"
-id="password"
-placeholder="Password">
-
-
-
-<button onclick="signUp()">
-Create Account
-</button>
-
-
-<button onclick="login()">
-Login
-</button>
-
-
-
-</section>
-
-
-
-
-
-<!-- Resume Form -->
-
-<section id="create" class="card">
-
-
-<h2>
-Create Your Resume
-</h2>
-
-
-
-<label>
-Full Name
-</label>
-
+<label>Full Name</label>
 
 <input
 type="text"
 id="name"
 placeholder="Enter your full name">
 
+</div>
 
 
-<label>
-Job Title
-</label>
 
+<div class="form-group">
+
+<label>Job Title</label>
 
 <input
 type="text"
 id="jobTitle"
 placeholder="Example: Software Developer">
 
+</div>
 
 
-<label>
-Professional Summary
-</label>
+</div>
 
+
+
+
+<div class="form-group">
+
+<label>Email</label>
+
+<input
+type="email"
+id="resumeEmail"
+placeholder="example@email.com">
+
+</div>
+
+
+
+<div class="form-group">
+
+<label>Professional Summary</label>
 
 <textarea
 id="summary"
-placeholder="Write your professional summary">
-</textarea>
+placeholder="Write your professional summary"></textarea>
+
+</div>
 
 
 
-<label>
-Skills
-</label>
 
+<div class="form-group">
+
+<label>Skills</label>
 
 <textarea
 id="skills"
-placeholder="HTML, CSS, JavaScript, Communication">
-</textarea>
-<!-- Education -->
+placeholder="HTML, CSS, JavaScript, Communication"></textarea>
 
-<label>
-Education
-</label>
+</div>
+
+
+
+
+<div class="form-grid">
+
+
+<div class="form-group">
+
+<label>Education</label>
 
 <textarea
 id="education"
-placeholder="Example: Bachelor Degree in Computer Science">
-</textarea>
+placeholder="Bachelor Degree..."></textarea>
+
+</div>
 
 
 
-<!-- Work Experience -->
+<div class="form-group">
 
-<label>
-Work Experience
-</label>
+<label>Work Experience</label>
 
 <textarea
 id="experience"
-placeholder="Describe your work experience">
-</textarea>
+placeholder="Your work experience"></textarea>
+
+</div>
+
+
+</div>
 
 
 
-<!-- Languages -->
 
-<label>
-Languages
-</label>
+<div class="form-group">
+
+<label>Languages</label>
 
 <textarea
 id="language"
-placeholder="Example: English, Persian">
-</textarea>
+placeholder="English, Persian"></textarea>
+
+</div>
 
 
 
 
-<!-- AI Actions -->
-
-<div class="actions">
+<div class="ai-buttons">
 
 
 <button onclick="generateAISummary()">
+
 🤖 AI Generate Summary
+
 </button>
 
 
+
 <button onclick="generateResume()">
+
 ✨ Generate Resume
+
 </button>
 
 
 </div>
 
 
+</div>
+
 </section>
-
-
-
-
-
 <!-- Resume Preview -->
 
-<section id="preview" class="card">
+<section id="preview" class="preview-section">
 
 
-<h2>
-Resume Preview
-</h2>
+<div class="section-title">
+
+<h2>Resume Preview</h2>
+
+<p>
+Your professional resume preview will appear here.
+</p>
+
+</div>
 
 
 
@@ -281,7 +389,24 @@ Resume Preview
 
 
 
-<div class="resume-header">
+<div class="resume-top">
+
+
+<div class="profile-area">
+
+
+<img 
+id="previewPhoto"
+src=""
+alt="Profile Photo"
+style="display:none;">
+
+
+</div>
+
+
+
+<div class="name-area">
 
 
 <h1 id="previewName">
@@ -289,10 +414,17 @@ Your Name
 </h1>
 
 
-
 <h2 id="previewJob">
 Job Title
 </h2>
+
+
+<p id="previewEmail">
+Email Address
+</p>
+
+
+</div>
 
 
 </div>
@@ -302,6 +434,8 @@ Job Title
 <hr>
 
 
+
+<div class="resume-section">
 
 
 <h3>
@@ -314,6 +448,12 @@ Professional Summary
 </p>
 
 
+</div>
+
+
+
+
+<div class="resume-section">
 
 
 <h3>
@@ -326,6 +466,13 @@ Skills
 </p>
 
 
+</div>
+
+
+
+
+
+<div class="resume-section">
 
 
 <h3>
@@ -338,10 +485,17 @@ Education
 </p>
 
 
+</div>
+
+
+
+
+
+<div class="resume-section">
 
 
 <h3>
-Experience
+Work Experience
 </h3>
 
 
@@ -350,6 +504,13 @@ Experience
 </p>
 
 
+</div>
+
+
+
+
+
+<div class="resume-section">
 
 
 <h3>
@@ -362,9 +523,16 @@ Languages
 </p>
 
 
+</div>
+
+
+
+
 
 <footer>
-Created with JobAI
+
+Created with 🤖 JobAI
+
 </footer>
 
 
@@ -373,47 +541,58 @@ Created with JobAI
 
 
 
-</section>
-<!-- PDF Download -->
-
-<section class="card">
+<div class="export-box">
 
 
-<h2>
+<h3>
 Export Resume
-</h2>
+</h3>
 
 
 <button onclick="downloadPDF()">
+
 📄 Download PDF
+
 </button>
 
 
+</div>
+
+
 </section>
-
-
-
-
-
 <!-- Saved Resumes -->
 
-<section id="saved" class="card">
+<section id="saved" class="saved-section">
 
+
+<div class="section-title">
 
 <h2>
 My Resumes
 </h2>
 
+<p>
+Manage your saved professional resumes.
+</p>
 
-<div id="resumeList">
+</div>
 
+
+
+<div id="resumeList" class="resume-list">
+
+
+<div class="empty-state">
 
 <p>
 No saved resumes yet.
 </p>
 
+</div>
+
 
 </div>
+
 
 
 </section>
@@ -422,19 +601,44 @@ No saved resumes yet.
 
 
 
-<!-- User Panel -->
+<!-- Account Settings -->
 
-<section class="card">
+<section class="account-section">
 
+
+<div class="section-title">
 
 <h2>
 Account Settings
 </h2>
 
+<p>
+Manage your JobAI account.
+</p>
+
+</div>
+
+
+
+<div class="account-card">
+
+
+<p id="userEmail">
+
+User Account
+
+</p>
+
+
 
 <button onclick="logout()">
+
 Logout
+
 </button>
+
+
+</div>
 
 
 </section>
@@ -443,20 +647,44 @@ Logout
 
 
 
+<!-- Footer -->
+
+<footer class="main-footer">
+
+
+<h3>
+
+🤖 JobAI
+
+</h3>
+
+
+<p>
+
+AI Professional Resume Builder
+
+</p>
+
+
+<p>
+
+© 2026 JobAI. All rights reserved.
+
+</p>
+
+
+
+</footer>
+
+
+
+
 </div>
 
 
-
-
-
-<!-- Main JavaScript -->
-
-
-</div> <!-- پایان container -->
-
-</div> <!-- پایان app -->
-
 <script src="script.js"></script>
 
+
 </body>
+
 </html>
