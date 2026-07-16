@@ -1180,12 +1180,13 @@ function downloadPDF(){
   }
 
 
-  html2canvas(element, {
-    scale: 2,
-    useCORS: true,
-    backgroundColor: "#ffffff"
-  }).then(canvas => {
-
+  html2canvas(element,{
+    scale:3,
+    useCORS:true,
+    backgroundColor:"#ffffff",
+    windowWidth: element.scrollWidth,
+    windowHeight: element.scrollHeight
+})
 
     const imgData = canvas.toDataURL("image/png");
 
