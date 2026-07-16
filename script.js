@@ -413,7 +413,9 @@ function validateResume(){
 // ===============================
 
 function generateResume(){
-alert("generateResume started");
+
+  alert("generateResume started");
+
   if(!currentUser){
     showMessage("Please login first");
     return;
@@ -436,38 +438,26 @@ alert("generateResume started");
   };
 
 
-  // نمایش رزومه
   previewResume();
-
-}
 
 
   db.collection("resumes")
 
   .add(resumeData)
 
-
   .then(()=>{
-
 
     showMessage(
       "Resume created successfully!"
     );
 
-
-    previewResume();
-
     loadResumes();
-
 
   })
 
-
   .catch(error=>{
 
-
     showMessage(error.message);
-
 
   });
 
