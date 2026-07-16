@@ -413,57 +413,32 @@ function validateResume(){
 
 function generateResume(){
 
-
   if(!currentUser){
-
     showMessage("Please login first");
     return;
-
   }
-
-
 
   if(!validateResume()){
-
     return;
-
   }
-
-
 
   const resumeData = {
 
-
-    userId:
-    currentUser.uid,
-
-
-    name:
-    getValue("name"),
-
-
-    jobTitle:
-    getValue("jobTitle"),
-
-
-    skills:
-    getValue("skills"),
-
-
-    summary:
-    getValue("summary"),
-
-
-    template:
-    selectedTemplate,
-
-
-    createdAt:
-    new Date()
+    userId: currentUser.uid,
+    name: getValue("name"),
+    jobTitle: getValue("jobTitle"),
+    skills: getValue("skills"),
+    summary: getValue("summary"),
+    template: selectedTemplate,
+    createdAt: new Date()
 
   };
 
 
+  // نمایش رزومه
+  previewResume();
+
+}
 
 
   db.collection("resumes")
