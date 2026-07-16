@@ -1180,38 +1180,41 @@ function downloadPDF(){
   }
 
 
-  const options = {
-    margin: 10,
-    filename: "JobAI-Resume.pdf",
-
-    image:{
-      type:"jpeg",
-      quality:1
-    },
-
-    html2canvas:{
-      scale:3,
-      useCORS:true,
-      backgroundColor:"#ffffff"
-    },
-
-    jsPDF:{
-      unit:"mm",
-      format:"a4",
-      orientation:"portrait"
-    }
-  };
-
-
-  html2pdf()
-  .set(options)
-  .from(element)
-  .toPdf()
-  .get("pdf")
-  .then(function(pdf){
-      console.log("PDF created");
+  html2canvas(element, {
+    scale: 2,
+    backgroundColor: "#ffffff"
   })
-  .save();
+  .then(canvas => {
+
+    const imgData = canvas.toDataURL("image/png");
+
+    const pdf = new jspdf.jsPDF(
+      "p",
+      "mm",
+      "a4"
+    );
+
+    const imgWidth = 190;
+
+    const imgHeight =
+    canvas.height * imgWidth / canvas.width;
+
+
+    pdf.addImage(
+      imgData,
+      "PNG",
+      10,
+      10,
+      imgWidth,
+      imgHeight
+    );
+
+
+    pdf.save(
+      "JobAI-Resume.pdf"
+    );
+
+  });
 
 }
 
