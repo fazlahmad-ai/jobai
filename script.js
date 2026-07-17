@@ -1,7 +1,6 @@
 // =====================================
-alert("JS WORKING");
-// JobAI Professional Script.js
-// Part A: Firebase + Global Setup + Authentication
+// JobAI Script.js Version 2
+// Part 1: Firebase + Authentication + Core Resume System
 // =====================================
 
 
@@ -11,7 +10,7 @@ alert("JS WORKING");
 
 const firebaseConfig = {
 
-  apiKey: "AIzaSyCbj3YJiKDLwoCfg1jmljd4ui9NTWgrrYY",
+  apiKey: "AIzaSyCb3jYJiKDLwoCfg1jmljd4ui9NTWgrrYY",
 
   authDomain: "jobai-c8a18.firebaseapp.com",
 
@@ -28,7 +27,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 
-if (!firebase.apps.length) {
+if(!firebase.apps.length){
 
   firebase.initializeApp(firebaseConfig);
 
@@ -43,10 +42,10 @@ const storage = firebase.storage();
 
 
 
+
 // ===============================
 // Global Variables
 // ===============================
-
 
 let currentUser = null;
 
@@ -54,7 +53,6 @@ let isProUser = false;
 
 let selectedTemplate = "modern";
 
-const FREE_RESUME_LIMIT = 3;
 
 
 
@@ -63,9 +61,9 @@ const FREE_RESUME_LIMIT = 3;
 // ===============================
 
 
-function showMessage(message){
+function showMessage(msg){
 
-  alert(message);
+  alert(msg);
 
 }
 
@@ -73,13 +71,15 @@ function showMessage(message){
 
 function getValue(id){
 
-  const element =
-  document.getElementById(id);
+  const el=document.getElementById(id);
 
+  if(el){
 
-  return element
-  ? element.value.trim()
-  : "";
+    return el.value.trim();
+
+  }
+
+  return "";
 
 }
 
@@ -87,13 +87,11 @@ function getValue(id){
 
 function setValue(id,value){
 
-  const element =
-  document.getElementById(id);
+  const el=document.getElementById(id);
 
+  if(el){
 
-  if(element){
-
-    element.value = value;
+    el.value=value;
 
   }
 
@@ -101,85 +99,86 @@ function setValue(id,value){
 
 
 
-// ===============================
-// Authentication System
-// ===============================
 
+// Safe Text Update
+
+function setText(id,text){
+
+  const el=document.getElementById(id);
+
+  if(el){
+
+    el.innerText=text || "";
+
+  }
+
+}
+
+
+
+
+
+// ===============================
+// Authentication
+// ===============================
 
 
 function signUp(){
 
+ const email=getValue("email");
 
-  const email =
-  getValue("email");
-
-
-  const password =
-  getValue("password");
+ const password=getValue("password");
 
 
+ if(!email || !password){
 
-  if(!email || !password){
+   showMessage(
+    "Enter email and password"
+   );
 
-    showMessage(
-      "Enter email and password"
-    );
+   return;
 
-    return;
-
-  }
-
+ }
 
 
-  auth
-  .createUserWithEmailAndPassword(
-    email,
-    password
-  )
+ auth
+ .createUserWithEmailAndPassword(
+   email,
+   password
+ )
+
+ .then(result=>{
 
 
-  .then((result)=>{
+   return db.collection("users")
+   .doc(result.user.uid)
+   .set({
+
+     email:result.user.email,
+
+     pro:false,
+
+     createdAt:new Date()
+
+   });
 
 
-    const user =
-    result.user;
+ })
+
+ .then(()=>{
+
+   showMessage(
+    "Account created successfully"
+   );
+
+ })
 
 
+ .catch(error=>{
 
-    return db.collection("users")
-    .doc(user.uid)
-    .set({
+   showMessage(error.message);
 
-      email:user.email,
-
-      pro:false,
-
-      createdAt:new Date()
-
-    });
-
-
-  })
-
-
-  .then(()=>{
-
-
-    showMessage(
-      "Account created successfully!"
-    );
-
-
-  })
-
-
-  .catch(error=>{
-
-
-    showMessage(error.message);
-
-
-  });
+ });
 
 
 }
@@ -189,277 +188,329 @@ function signUp(){
 
 function login(){
 
+ const email=getValue("email");
 
-  const email =
-  getValue("email");
-
-
-  const password =
-  getValue("password");
+ const password=getValue("password");
 
 
+ auth
+ .signInWithEmailAndPassword(
+   email,
+   password
+ )
 
-  auth
-  .signInWithEmailAndPassword(
-    email,
-    password
-  )
+ .then(()=>{
 
+   showMessage(
+    "Login successful"
+   );
 
-  .then(()=>{
-
-
-    showMessage(
-      "Login successful!"
-    );
-
-
-  })
+ })
 
 
-  .catch(error=>{
+ .catch(error=>{
 
+   showMessage(error.message);
 
-    showMessage(error.message);
-
-
-  });
+ });
 
 
 }
+
 
 
 
 
 function logout(){
 
+ auth.signOut()
 
-  auth.signOut()
-
-  .then(()=>{
-
-
-    currentUser = null;
-
-    isProUser = false;
+ .then(()=>{
 
 
-    showMessage(
-      "Logged out successfully"
-    );
+   currentUser=null;
+
+   location.reload();
 
 
-    location.reload();
-
-
-  });
+ });
 
 
 }
 
 
 
+
+
 // ===============================
-// Single Global Auth Listener
+// Authentication Listener
 // ===============================
 
 
-auth.onAuthStateChanged((user)=>{
+auth.onAuthStateChanged(user=>{
 
 
-  currentUser = user;
-
+ currentUser=user;
 
 
  if(user){
 
-    console.log(
-      "Logged in:",
-      user.email
-    );
 
-    document.getElementById("auth").style.display = "none";
-    document.getElementById("app").style.display = "block";
+   const authBox=document.getElementById("auth");
 
-    loadUserStatus();
-    initializeResumeSystem();
-    initializePROSystem();
-    initializeDashboard();
-    initializeUserSystems();
+   const app=document.getElementById("app");
 
 
- } 
+   if(authBox){
 
-  else{
+     authBox.style.display="none";
 
-
-    console.log(
-      "No active user"
-    );
+   }
 
 
-  }
+   if(app){
+
+     app.style.display="block";
+
+   }
+
+
+   loadUserStatus();
+
+   loadResumes();
+
+
+ }
+
+ else{
+
+
+   console.log(
+    "User not logged in"
+   );
+
+
+ }
 
 
 });
 
 
 
+
+
+
 // ===============================
-// User PRO Status
+// User Status
 // ===============================
 
 
 function loadUserStatus(){
 
 
-  if(!currentUser){
+ if(!currentUser){
 
-    return;
+   return;
 
-  }
-
-
-
-  db.collection("users")
-
-  .doc(currentUser.uid)
-
-  .get()
+ }
 
 
-  .then((doc)=>{
+ db.collection("users")
+ .doc(currentUser.uid)
+ .get()
+
+ .then(doc=>{
 
 
-    if(doc.exists){
+   if(doc.exists){
+
+    const data=doc.data();
+
+    isProUser=data.pro===true;
 
 
-      const data =
-      doc.data();
+   }
 
 
-      isProUser =
-      data.pro === true;
-
-
-      console.log(
-        isProUser
-        ? "PRO User"
-        : "Free User"
-      );
-
-
-    }
-
-
-  });
+ });
 
 
 }
 
 
 
-console.log(
-"JobAI Professional Script Loaded"
-);// =====================================
-// JobAI Professional Script.js
-// Part B: Resume Builder + Templates
+
+
+
+// =====================================
+// Resume Validation
 // =====================================
 
 
-// ===============================
-// Resume Validation
-// ===============================
-
 function validateResume(){
 
-  const name = getValue("name");
-  const jobTitle = getValue("jobTitle");
-  const skills = getValue("skills");
+
+ const name=getValue("name");
+
+ const job=getValue("jobTitle");
+
+ const skills=getValue("skills");
 
 
-  if(!name){
 
-    showMessage("Please enter your name");
-    return false;
+ if(!name){
 
-  }
+   showMessage(
+    "Please enter your name"
+   );
 
+   return false;
 
-  if(!jobTitle){
-
-    showMessage("Please enter your job title");
-    return false;
-
-  }
+ }
 
 
-  if(!skills){
 
-    showMessage("Please add your skills");
-    return false;
+ if(!job){
 
-  }
+   showMessage(
+    "Please enter Job Title"
+   );
+
+   return false;
+
+ }
 
 
-  return true;
+
+ if(!skills){
+
+   showMessage(
+    "Please enter Skills"
+   );
+
+   return false;
+
+ }
+
+
+
+ return true;
+
 
 }
 
 
 
-// ===============================
-// Generate Resume
-// ===============================
+
+
+
+// =====================================
+// Generate Resume (Fixed)
+// =====================================
+
 
 function generateResume(){
 
- alert("دکمه کار می‌کند"); 
 
-  if(!currentUser){
-    showMessage("Please login first");
-    return;
-  }
-
-  if(!validateResume()){
-    return;
-  }
-
-  const resumeData = {
-
-    userId: currentUser.uid,
-    name: getValue("name"),
-    jobTitle: getValue("jobTitle"),
-    skills: getValue("skills"),
-    summary: getValue("summary"),
-    template: selectedTemplate,
-    createdAt: new Date()
-
-  };
+ console.log(
+  "Generate Resume Started"
+ );
 
 
-  previewResume();
+ if(!currentUser){
+
+   showMessage(
+    "Please login first"
+   );
+
+   return;
+
+ }
 
 
-  db.collection("resumes")
 
-  .add(resumeData)
+ if(!validateResume()){
 
-  .then(()=>{
+   return;
 
-    showMessage(
-      "Resume created successfully!"
-    );
+ }
 
-    loadResumes();
 
-  })
 
-  .catch(error=>{
+ previewResume();
 
-    showMessage(error.message);
 
-  });
+
+ const resumeData={
+
+
+   userId:currentUser.uid,
+
+
+   name:getValue("name"),
+
+
+   jobTitle:getValue("jobTitle"),
+
+
+   email:getValue("email"),
+
+
+   summary:getValue("summary"),
+
+
+   skills:getValue("skills"),
+
+
+   education:getValue("education"),
+
+
+   experience:getValue("experience"),
+
+
+   language:getValue("language"),
+
+
+   template:selectedTemplate,
+
+
+   createdAt:new Date()
+
+
+ };
+
+
+
+
+
+ db.collection("resumes")
+
+ .add(resumeData)
+
+
+ .then(()=>{
+
+
+   showMessage(
+    "Resume created successfully"
+   );
+
+
+   loadResumes();
+
+
+ })
+
+
+ .catch(error=>{
+
+
+   showMessage(
+    error.message
+   );
+
+
+ });
 
 
 }
@@ -467,183 +518,66 @@ function generateResume(){
 
 
 
-// ===============================
-// Load User Resumes
-// ===============================
 
-
-function loadResumes(){
-
-
-  if(!currentUser){
-
-    return;
-
-  }
-
-
-
-  db.collection("resumes")
-
-  .where(
-    "userId",
-    "==",
-    currentUser.uid
-  )
-
-
-  .get()
-
-
-  .then(snapshot=>{
-
-
-    const list =
-    document.getElementById(
-      "resumeList"
-    );
-
-
-    if(!list){
-
-      return;
-
-    }
-
-
-
-    list.innerHTML = "";
-
-
-
-    snapshot.forEach(doc=>{
-
-
-      const data =
-      doc.data();
-
-
-
-      list.innerHTML += `
-
-      <div class="resume-card">
-
-        <h3>
-        ${data.name}
-        </h3>
-
-
-        <p>
-        ${data.jobTitle}
-        </p>
-
-
-        <p>
-        ${data.skills}
-        </p>
-
-
-        <button onclick="deleteResume('${doc.id}')">
-        Delete
-        </button>
-
-
-      </div>
-
-      `;
-
-
-    });
-
-
-
-  });
-
-
-
-}
-
-
-
-
-// ===============================
-// Delete Resume
-// ===============================
-
-
-function deleteResume(id){
-
-
-  db.collection("resumes")
-
-  .doc(id)
-
-  .delete()
-
-
-  .then(()=>{
-
-
-    showMessage(
-      "Resume deleted"
-    );
-
-
-    loadResumes();
-
-
-  });
-
-
-}
-
-
-
-
-// ===============================
-// Live Preview
-// ===============================
+// =====================================
+// Preview Resume
+// =====================================
 
 
 function previewResume(){
-alert("previewResume started");
-  const name = getValue("name");
-  const job = getValue("jobTitle");
-  const summary = getValue("summary");
-  const skills = getValue("skills");
-  const education = getValue("education");
-  const experience = getValue("experience");
-  const language = getValue("language");
 
 
-  document.getElementById("previewName").innerText =
-  name || "Your Name";
+ setText(
+  "previewName",
+  getValue("name") || "Your Name"
+ );
 
 
-  document.getElementById("previewJob").innerText =
-  job || "Job Title";
+ setText(
+  "previewJob",
+  getValue("jobTitle") || "Job Title"
+ );
 
 
-  document.getElementById("previewSummary").innerText =
-  summary || "";
+ setText(
+  "previewEmail",
+  getValue("email")
+ );
 
 
-  document.getElementById("previewSkills").innerText =
-  skills || "";
+ setText(
+  "previewSummary",
+  getValue("summary")
+ );
 
 
-  document.getElementById("previewEducation").innerText =
-  education || "";
+ setText(
+  "previewSkills",
+  getValue("skills")
+ );
 
 
-  document.getElementById("previewExperience").innerText =
-  experience || "";
+ setText(
+  "previewEducation",
+  getValue("education")
+ );
 
 
-  document.getElementById("previewLanguage").innerText =
-  language || "";
+ setText(
+  "previewExperience",
+  getValue("experience")
+ );
+
+
+ setText(
+  "previewLanguage",
+  getValue("language")
+ );
+
 
 }
+
+
 
 
 
@@ -652,19 +586,31 @@ alert("previewResume started");
 
 document.addEventListener(
 "input",
-function(event){
+function(e){
 
-  if(
-    event.target.id === "name" ||
-    event.target.id === "jobTitle" ||
-    event.target.id === "skills" ||
-    event.target.id === "summary" ||
-    event.target.id === "education" ||
-    event.target.id === "experience" ||
-    event.target.id === "language"
-  ){
-    previewResume();
-  }
+
+ const ids=[
+
+ "name",
+ "jobTitle",
+ "email",
+ "summary",
+ "skills",
+ "education",
+ "experience",
+ "language"
+
+ ];
+
+
+ if(ids.includes(e.target.id)){
+
+
+   previewResume();
+
+
+ }
+
 
 });
 
@@ -672,45 +618,84 @@ function(event){
 
 
 
-// ===============================
-// Resume Templates
-// ===============================
+// =====================================
+// Load Resumes
+// =====================================
 
 
-const templates = {
+function loadResumes(){
 
 
-  modern:"modern",
+ if(!currentUser){
 
-  classic:"classic",
+  return;
 
-  creative:"creative"
-
-
-};
+ }
 
 
+ db.collection("resumes")
+
+ .where(
+ "userId",
+ "==",
+ currentUser.uid
+ )
+
+ .get()
+
+ .then(snapshot=>{
+
+
+ const box=document.getElementById(
+ "resumeList"
+ );
+
+
+ if(!box){
+
+  return;
+
+ }
+
+
+ box.innerHTML="";
+
+
+ snapshot.forEach(doc=>{
+
+
+ const data=doc.data();
+
+
+ box.innerHTML+=`
+
+ <div class="resume-card">
+
+ <h3>${data.name}</h3>
+
+ <p>${data.jobTitle}</p>
+
+ <p>${data.skills}</p>
+
+
+ <button onclick="deleteResume('${doc.id}')">
+
+ Delete
+
+ </button>
+
+
+ </div>
+
+
+ `;
+
+
+ });
 
 
 
-function selectTemplate(name){
-
-
-  if(templates[name]){
-
-
-    selectedTemplate = name;
-
-
-    previewResume();
-
-
-    showMessage(
-      "Template changed to " + name
-    );
-
-
-  }
+ });
 
 
 }
@@ -718,131 +703,151 @@ function selectTemplate(name){
 
 
 
-// Load Resumes After Login
-
-function initializeResumeSystem(){
 
 
-  if(currentUser){
-
-    loadResumes();
-
-  }
+function deleteResume(id){
 
 
-        }
+ db.collection("resumes")
+
+ .doc(id)
+
+ .delete()
+
+ .then(()=>{
+
+
+  showMessage(
+   "Resume deleted"
+  );
+
+
+  loadResumes();
+
+
+ });
+
+
+   }
 // =====================================
-// JobAI Professional Script.js
-// Part C: AI Assistant + Resume Score + Cover Letter + PDF
+// JobAI Script.js Version 2
+// Part 2: AI Assistant + Templates + Resume Score
 // =====================================
 
 
-// ===============================
+
+// =====================================
 // AI Resume Summary Generator
-// ===============================
+// =====================================
+
 
 function generateAISummary(){
 
-  const jobTitle =
-  getValue("jobTitle");
+
+ const jobTitle=getValue("jobTitle");
+
+ const skills=getValue("skills");
+
+ const box=document.getElementById(
+ "summary"
+ );
 
 
-  const skills =
-  getValue("skills");
+ if(!box){
 
+   return;
 
-  const summaryBox =
-  document.getElementById("summary");
-
-
-
-  if(!summaryBox){
-
-    return;
-
-  }
+ }
 
 
 
-  if(jobTitle && skills){
+ if(jobTitle && skills){
 
 
-    summaryBox.value =
-    `Professional ${jobTitle} with skills in ${skills}. 
-Experienced in problem solving, teamwork and continuous professional growth.`;
-
-  }
-
-  else{
+ box.value =
+ `Professional ${jobTitle} with skills in ${skills}. Experienced in teamwork, problem solving and continuous professional growth.`;
 
 
-    summaryBox.value =
-    "Motivated professional with strong skills and commitment to career development.";
 
-  }
+ }
+
+ else{
 
 
-  previewResume();
+ box.value =
+ "Motivated professional with strong skills and commitment to career development.";
+
+
+ }
+
+
+ previewResume();
+
 
 }
 
 
 
 
-// ===============================
-// AI Skill Suggestions
-// ===============================
+
+
+// =====================================
+// AI Skill Suggestion
+// =====================================
+
 
 function suggestSkills(){
 
 
-  const jobTitle =
-  getValue("jobTitle")
-  .toLowerCase();
+ const job=getValue("jobTitle")
+ .toLowerCase();
+
+
+ let skills =
+ "Communication, Teamwork, Problem Solving";
 
 
 
-  let skills =
-  "Communication, Teamwork, Problem Solving";
+ if(job.includes("developer")){
+
+
+ skills =
+ "HTML, CSS, JavaScript, React, Git";
+
+
+ }
 
 
 
-  if(jobTitle.includes("developer")){
+ else if(job.includes("teacher")){
 
 
-    skills =
-    "JavaScript, HTML, CSS, React, Git";
+ skills =
+ "Teaching, Research, Presentation, Communication";
 
 
-  }
-
-  else if(jobTitle.includes("teacher")){
-
-
-    skills =
-    "Teaching, Research, Presentation, Communication";
-
-
-  }
-
-  else if(jobTitle.includes("manager")){
-
-
-    skills =
-    "Leadership, Planning, Management, Organization";
-
-
-  }
+ }
 
 
 
-  setValue(
-    "skills",
-    skills
-  );
+ else if(job.includes("manager")){
 
 
-  previewResume();
+ skills =
+ "Leadership, Management, Planning, Organization";
+
+
+ }
+
+
+
+ setValue(
+ "skills",
+ skills
+ );
+
+
+ previewResume();
 
 
 }
@@ -850,51 +855,48 @@ function suggestSkills(){
 
 
 
-// ===============================
-// Resume Score System
-// ===============================
+
+// =====================================
+// Resume Score
+// =====================================
 
 
 function calculateResumeScore(){
 
 
-  let score = 0;
+ let score=0;
+
+
+ if(getValue("name")){
+
+  score+=25;
+
+ }
+
+
+ if(getValue("jobTitle")){
+
+  score+=25;
+
+ }
+
+
+ if(getValue("skills")){
+
+  score+=25;
+
+ }
+
+
+ if(getValue("summary")){
+
+  score+=25;
+
+ }
 
 
 
-  if(getValue("name")){
-
-    score += 25;
-
-  }
-
-
-
-  if(getValue("jobTitle")){
-
-    score += 25;
-
-  }
-
-
-
-  if(getValue("skills")){
-
-    score += 30;
-
-  }
-
-
-
-  if(getValue("summary")){
-
-    score += 20;
-
-  }
-
-
-
-  showResumeScore(score);
+ showResumeScore(score);
 
 
 }
@@ -906,42 +908,44 @@ function calculateResumeScore(){
 function showResumeScore(score){
 
 
-  const box =
-  document.getElementById(
-    "resumeScore"
-  );
+ const box=document.getElementById(
+ "resumeScore"
+ );
+
+
+ if(!box){
+
+  return;
+
+ }
 
 
 
-  if(!box){
+ box.innerHTML=`
 
-    return;
-
-  }
-
-
-
-  box.innerHTML = `
-
-  <h3>
-  AI Resume Score
-  </h3>
+ <h3>
+ AI Resume Score
+ </h3>
 
 
-  <h2>
-  ${score}%
-  </h2>
+ <h2>
+ ${score}%
+ </h2>
 
 
-  <p>
-  ${
-    score >= 80
-    ? "Excellent Resume"
-    : "Improve your resume"
-  }
-  </p>
+ <p>
 
-  `;
+ ${
+ score>=80
+ ?
+ "Excellent Resume"
+ :
+ "Improve Your Resume"
+ }
+
+ </p>
+
+ `;
 
 
 }
@@ -951,49 +955,51 @@ function showResumeScore(score){
 
 
 
-// ===============================
-// AI Resume Suggestions
-// ===============================
+
+// =====================================
+// AI Suggestions
+// =====================================
 
 
 function getResumeSuggestions(){
 
 
-  const box =
-  document.getElementById(
-    "suggestions"
-  );
+ const box=document.getElementById(
+ "suggestions"
+ );
+
+
+ if(!box){
+
+ return;
+
+ }
 
 
 
-  if(!box){
+ box.innerHTML=`
 
-    return;
-
-  }
-
-
-
-  box.innerHTML = `
-
-  <h3>
-  AI Suggestions
-  </h3>
+<h3>
+AI Suggestions
+</h3>
 
 
-  <ul>
+<ul>
 
-  <li>Add measurable achievements</li>
+<li>Add measurable achievements</li>
 
-  <li>Use professional keywords</li>
+<li>Use professional keywords</li>
 
-  <li>Highlight important skills</li>
+<li>Improve summary section</li>
 
-  <li>Keep resume clear and simple</li>
+<li>Add certifications</li>
 
-  </ul>
 
-  `;
+</ul>
+
+
+`;
+
 
 
 }
@@ -1003,54 +1009,46 @@ function getResumeSuggestions(){
 
 
 
-// ===============================
+// =====================================
 // Cover Letter Generator
-// ===============================
+// =====================================
 
 
 function generateCoverLetter(){
 
 
-  const name =
-  getValue("name");
+ const name=getValue("name");
+
+ const job=getValue("jobTitle");
+
+ const skills=getValue("skills");
 
 
-  const job =
-  getValue("jobTitle");
+ const box=document.getElementById(
+ "coverLetter"
+ );
 
 
-  const skills =
-  getValue("skills");
+ if(!box){
 
+ return;
 
-
-  const box =
-  document.getElementById(
-    "coverLetter"
-  );
-
-
-
-  if(!box){
-
-    return;
-
-  }
+ }
 
 
 
-  box.value = `
+ box.value=`
 
 Dear Hiring Manager,
 
 
-I am ${name}, applying for the position of ${job}.
+I am ${name} applying for the position of ${job}.
 
 
-I have strong skills in ${skills} and I believe my experience and dedication can bring value to your organization.
+I have skills in ${skills} and I believe my experience can bring value to your organization.
 
 
-I am motivated to learn, grow and contribute professionally.
+I am motivated to contribute, learn and grow professionally.
 
 
 Thank you for considering my application.
@@ -1060,7 +1058,8 @@ Sincerely,
 
 ${name}
 
-  `;
+`;
+
 
 
 }
@@ -1070,267 +1069,862 @@ ${name}
 
 
 
-// ===============================
+// =====================================
 // Save Cover Letter
-// ===============================
+// =====================================
 
 
 function saveCoverLetter(){
 
 
-  if(!currentUser){
+ if(!currentUser){
 
-    showMessage(
-      "Please login first"
-    );
-
-    return;
-
-  }
-
-
-
-  const content =
-  getValue("coverLetter");
-
-
-
-  db.collection("coverLetters")
-
-  .add({
-
-    userId:
-    currentUser.uid,
-
-
-    content:
-    content,
-
-
-    createdAt:
-    new Date()
-
-  })
-
-
-  .then(()=>{
-
-
-    showMessage(
-      "Cover letter saved"
-    );
-
-
-  });
-
-
-}
-
-
-
-
-
-
-
-// ===============================
-// PDF Download System
-// ===============================
-
-function downloadPDF(){
-
-  const element = document.getElementById("resume");
-
-  if(!element){
-    alert("Resume not found");
-    return;
-  }
-
-
-  html2canvas(element,{
-    scale:3,
-    useCORS:true,
-    backgroundColor:"#ffffff",
-    windowWidth: element.scrollWidth,
-    windowHeight: element.scrollHeight
-})
-
-    const imgData = canvas.toDataURL("image/png");
-
-
-    const pdf = new jspdf.jsPDF(
-      "p",
-      "mm",
-      "a4"
-    );
-
-
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-
-
-    const imgWidth = pageWidth;
-    const imgHeight = canvas.height * imgWidth / canvas.width;
-
-
-    let heightLeft = imgHeight;
-    let position = 0;
-
-
-    pdf.addImage(
-      imgData,
-      "PNG",
-      0,
-      position,
-      imgWidth,
-      imgHeight
-    );
-
-
-    heightLeft -= pageHeight;
-
-
-    while(heightLeft > 0){
-
-      position = heightLeft - imgHeight;
-
-      pdf.addPage();
-
-
-      pdf.addImage(
-        imgData,
-        "PNG",
-        0,
-        position,
-        imgWidth,
-        imgHeight
-      );
-
-
-      heightLeft -= pageHeight;
-    }
-
-
-    pdf.save("JobAI-Resume.pdf");
-
-
-  });
-
-}
-
-
-
-
-function downloadCoverLetterPDF(){
-
-
-  const letter =
-  document.getElementById(
-    "coverLetter"
+  showMessage(
+  "Please login first"
   );
 
+  return;
 
-
-  if(!letter){
-
-    return;
-
-  }
+ }
 
 
 
-  html2pdf()
+ db.collection("coverLetters")
 
-  .from(letter)
+ .add({
 
-  .save(
-    "JobAI-Cover-Letter.pdf"
-  );
+
+ userId:
+ currentUser.uid,
+
+
+ content:
+ getValue("coverLetter"),
+
+
+ createdAt:
+ new Date()
+
+
+ })
+
+
+ .then(()=>{
+
+
+ showMessage(
+ "Cover letter saved"
+ );
+
+
+ });
 
 
 }
+
+
+
+
+
+
+
 // =====================================
-// JobAI Professional Script.js
-// Part D: PRO System + Subscription + Payment
+// Resume Templates
 // =====================================
 
 
-// ===============================
-// PRO Plans
-// ===============================
-
-const proPlans = {
-
-  monthly: {
-
-    name:"JobAI PRO Monthly",
-
-    price:5,
-
-    days:30
-
-  },
+const templates={
 
 
-  yearly:{
+ modern:"modern",
 
-    name:"JobAI PRO Yearly",
+ classic:"classic",
 
-    price:50,
+ creative:"creative"
 
-    days:365
-
-  }
 
 };
 
 
 
 
-// ===============================
+
+function selectTemplate(name){
+
+
+ if(templates[name]){
+
+
+ selectedTemplate=name;
+
+
+ previewResume();
+
+
+ showMessage(
+ "Template changed: "+name
+ );
+
+
+ }
+
+
+}
+
+
+
+
+
+
+// =====================================
+// Image Preview
+// =====================================
+
+
+function previewProfileImage(input){
+
+
+ const img=document.getElementById(
+ "previewPhoto"
+ );
+
+
+ if(!img){
+
+ return;
+
+ }
+
+
+
+ if(input.files && input.files[0]){
+
+
+ const reader=new FileReader();
+
+
+
+ reader.onload=function(e){
+
+
+ img.src=e.target.result;
+
+
+ img.style.display="block";
+
+
+ };
+
+
+ reader.readAsDataURL(
+ input.files[0]
+ );
+
+
+ }
+
+
+}
+
+
+
+
+
+
+// =====================================
+// Update Preview Button
+// =====================================
+
+
+function updatePreview(){
+
+
+ previewResume();
+
+ calculateResumeScore();
+
+
+}
+// =====================================
+// JobAI Script.js Version 2
+// Part 3: PDF + Profile + Dashboard + Resume Management
+// =====================================
+
+
+// =====================================
+// Professional PDF Download (Fixed)
+// =====================================
+
+
+function downloadPDF(){
+
+
+ const element =
+ document.getElementById("resume");
+
+
+
+ if(!element){
+
+  showMessage(
+   "Resume not found"
+  );
+
+  return;
+
+ }
+
+
+
+ html2canvas(element,{
+
+ scale:3,
+
+ useCORS:true,
+
+ backgroundColor:"#ffffff"
+
+ })
+
+ .then(canvas=>{
+
+
+ const imgData =
+ canvas.toDataURL("image/png");
+
+
+
+ const pdf =
+ new jspdf.jsPDF(
+ "p",
+ "mm",
+ "a4"
+ );
+
+
+
+ const pageWidth =
+ pdf.internal.pageSize.getWidth();
+
+
+
+ const imgWidth =
+ pageWidth;
+
+
+
+ const imgHeight =
+ canvas.height *
+ imgWidth /
+ canvas.width;
+
+
+
+ pdf.addImage(
+
+ imgData,
+
+ "PNG",
+
+ 0,
+
+ 0,
+
+ imgWidth,
+
+ imgHeight
+
+ );
+
+
+
+ pdf.save(
+ "JobAI-Resume.pdf"
+ );
+
+
+ });
+
+
+}
+
+
+
+
+
+
+
+// =====================================
+// Upload Profile Image
+// =====================================
+
+
+function uploadProfileImage(){
+
+
+ if(!currentUser){
+
+  showMessage(
+  "Please login first"
+  );
+
+  return;
+
+ }
+
+
+
+ const input =
+ document.getElementById(
+ "profileImage"
+ );
+
+
+
+ if(!input || !input.files[0]){
+
+
+ showMessage(
+ "Select image first"
+ );
+
+
+ return;
+
+
+ }
+
+
+
+ const file =
+ input.files[0];
+
+
+
+ const ref =
+ storage.ref(
+ "profiles/"
+ +
+ currentUser.uid
+ );
+
+
+
+ ref.put(file)
+
+ .then(()=>{
+
+
+ return ref.getDownloadURL();
+
+
+ })
+
+
+ .then(url=>{
+
+
+ return db.collection("users")
+
+ .doc(currentUser.uid)
+
+ .set({
+
+ photoURL:url
+
+ },
+
+ {
+
+ merge:true
+
+ });
+
+
+ })
+
+
+ .then(()=>{
+
+
+ showMessage(
+ "Profile image uploaded"
+ );
+
+
+ loadProfileImage();
+
+
+ });
+
+
+
+}
+
+
+
+
+
+
+
+// =====================================
+// Load Profile Image
+// =====================================
+
+
+function loadProfileImage(){
+
+
+ if(!currentUser){
+
+ return;
+
+ }
+
+
+
+ db.collection("users")
+
+ .doc(currentUser.uid)
+
+ .get()
+
+
+ .then(doc=>{
+
+
+ if(doc.exists){
+
+
+ const data =
+ doc.data();
+
+
+
+ const img =
+ document.getElementById(
+ "profilePreview"
+ );
+
+
+
+ if(img && data.photoURL){
+
+
+ img.src =
+ data.photoURL;
+
+
+ }
+
+
+ }
+
+
+
+ });
+
+
+}
+
+
+
+
+
+
+
+// =====================================
+// Save User Profile
+// =====================================
+
+
+function saveUserProfile(){
+
+
+ if(!currentUser){
+
+ showMessage(
+ "Please login first"
+ );
+
+ return;
+
+ }
+
+
+
+ const profile={
+
+
+ name:
+ getValue("profileName"),
+
+
+ phone:
+ getValue("profilePhone"),
+
+
+ location:
+ getValue("profileLocation"),
+
+
+ bio:
+ getValue("profileBio"),
+
+
+ updatedAt:
+ new Date()
+
+
+ };
+
+
+
+
+
+ db.collection("users")
+
+ .doc(currentUser.uid)
+
+ .set(
+
+ profile,
+
+ {
+
+ merge:true
+
+ }
+
+
+ )
+
+
+ .then(()=>{
+
+
+ showMessage(
+ "Profile saved"
+ );
+
+
+ });
+
+
+}
+
+
+
+
+
+
+
+
+// =====================================
+// Load User Profile
+// =====================================
+
+
+function loadUserProfile(){
+
+
+ if(!currentUser){
+
+ return;
+
+ }
+
+
+
+ db.collection("users")
+
+ .doc(currentUser.uid)
+
+ .get()
+
+
+ .then(doc=>{
+
+
+ if(doc.exists){
+
+
+ const data =
+ doc.data();
+
+
+
+ setValue(
+ "profileName",
+ data.name || ""
+ );
+
+
+ setValue(
+ "profilePhone",
+ data.phone || ""
+ );
+
+
+ setValue(
+ "profileLocation",
+ data.location || ""
+ );
+
+
+ setValue(
+ "profileBio",
+ data.bio || ""
+ );
+
+
+ }
+
+
+
+ });
+
+
+}
+
+
+
+
+
+
+
+// =====================================
+// Dashboard
+// =====================================
+
+
+function loadDashboard(){
+
+
+ if(!currentUser){
+
+ return;
+
+ }
+
+
+
+ const emailBox =
+ document.getElementById(
+ "dashboardEmail"
+ );
+
+
+
+ if(emailBox){
+
+ emailBox.innerText =
+ currentUser.email;
+
+ }
+
+
+
+
+
+ db.collection("resumes")
+
+ .where(
+ "userId",
+ "==",
+ currentUser.uid
+ )
+
+
+ .get()
+
+
+ .then(snapshot=>{
+
+
+ const count =
+ document.getElementById(
+ "dashboardResumeCount"
+ );
+
+
+ if(count){
+
+ count.innerText =
+ snapshot.size;
+
+ }
+
+
+ });
+
+
+
+}
+
+
+
+
+
+
+
+// =====================================
+// Delete Account
+// =====================================
+
+
+function deleteAccount(){
+
+
+ if(!currentUser){
+
+ return;
+
+ }
+
+
+
+ const ok =
+ confirm(
+ "Delete account?"
+ );
+
+
+
+ if(ok){
+
+
+ currentUser.delete()
+
+ .then(()=>{
+
+
+ showMessage(
+ "Account deleted"
+ );
+
+
+ location.reload();
+
+
+ });
+
+
+ }
+
+
+
+}
+
+
+
+
+
+
+
+// =====================================
+// Initialize User Dashboard
+// =====================================
+
+
+function initializeDashboard(){
+
+
+ if(currentUser){
+
+
+ loadDashboard();
+
+
+ loadUserProfile();
+
+
+ loadProfileImage();
+
+
+ }
+
+
+}
+// =====================================
+// JobAI Script.js Version 2
+// Part 4: PRO System + Payment + Notifications + Support
+// =====================================
+
+
+// =====================================
+// PRO Plans
+// =====================================
+
+const proPlans = {
+
+ monthly:{
+  name:"JobAI PRO Monthly",
+  price:5,
+  days:30
+ },
+
+
+ yearly:{
+  name:"JobAI PRO Yearly",
+  price:50,
+  days:365
+ }
+
+};
+
+
+
+
+
+// =====================================
 // Check PRO Status
-// ===============================
+// =====================================
+
 
 function checkPROStatus(){
 
 
-  if(!currentUser){
+ if(!currentUser){
 
-    return;
+ return;
 
-  }
-
-
-
-  db.collection("users")
-
-  .doc(currentUser.uid)
-
-  .get()
-
-
-  .then(doc=>{
-
-
-    if(doc.exists){
-
-
-      const data =
-      doc.data();
+ }
 
 
 
-      isProUser =
-      data.pro === true;
+ db.collection("users")
+
+ .doc(currentUser.uid)
+
+ .get()
+
+
+ .then(doc=>{
+
+
+ if(doc.exists){
+
+
+ const data =
+ doc.data();
 
 
 
-      updatePlanDisplay();
+ isProUser =
+ data.pro === true;
 
 
-    }
+
+ updatePlanDisplay();
 
 
-  });
+ }
+
+
+
+ });
+
 
 
 }
@@ -1339,32 +1933,41 @@ function checkPROStatus(){
 
 
 
-// ===============================
-// Update Plan Display
-// ===============================
+
+
+// =====================================
+// Display User Plan
+// =====================================
+
 
 function updatePlanDisplay(){
 
 
-  const box =
-  document.getElementById(
-    "userPlan"
-  );
+ const box =
+ document.getElementById(
+ "userPlan"
+ );
 
 
 
-  if(!box){
+ if(!box){
 
-    return;
+ return;
 
-  }
+ }
 
 
 
-  box.innerHTML =
-  isProUser
-  ? "⭐ JobAI PRO"
-  : "Free Plan";
+ box.innerHTML =
+ isProUser
+
+ ?
+
+ "⭐ JobAI PRO"
+
+ :
+
+ "Free Plan";
 
 
 }
@@ -1374,61 +1977,66 @@ function updatePlanDisplay(){
 
 
 
-// ===============================
+
+// =====================================
 // Free Resume Limit
-// ===============================
+// =====================================
 
 
 function checkResumeLimit(){
 
 
-  if(!currentUser){
+ if(!currentUser){
 
-    return false;
+ return false;
 
-  }
-
-
-
-  if(isProUser){
-
-    return true;
-
-  }
+ }
 
 
 
-  return db.collection("resumes")
+ if(isProUser){
 
-  .where(
-    "userId",
-    "==",
-    currentUser.uid
-  )
+ return true;
 
-  .get()
+ }
 
 
-  .then(snapshot=>{
+
+ return db.collection("resumes")
+
+ .where(
+ "userId",
+ "==",
+ currentUser.uid
+ )
+
+ .get()
 
 
-    if(snapshot.size >= 3){
+ .then(snapshot=>{
 
 
-      showMessage(
-        "Free users can create only 3 resumes. Upgrade to PRO."
-      );
+ if(snapshot.size >= 3){
 
 
-      return false;
-
-    }
-
-
-    return true;
+ showMessage(
+ "Free users can create only 3 resumes. Upgrade to PRO."
+ );
 
 
-  });
+ return false;
+
+
+ }
+
+
+
+ return true;
+
+
+
+ });
+
 
 
 }
@@ -1438,46 +2046,48 @@ function checkResumeLimit(){
 
 
 
-// ===============================
+
+
+// =====================================
 // Select PRO Plan
-// ===============================
+// =====================================
 
 
 function selectPROPlan(plan){
 
 
-  const selected =
-  proPlans[plan];
+ const selected =
+ proPlans[plan];
 
 
 
-  if(!selected){
+ if(!selected){
 
-    showMessage(
-      "Invalid plan"
-    );
+ showMessage(
+ "Invalid plan"
+ );
 
-    return;
+ return;
 
-  }
+ }
 
 
 
-  showMessage(
+ showMessage(
 
-    selected.name +
+ selected.name +
 
-    "\nPrice: $" +
+ "\nPrice: $" +
 
-    selected.price +
+ selected.price +
 
-    "\nDuration: " +
+ "\nDuration: " +
 
-    selected.days +
+ selected.days +
 
-    " days"
+ " days"
 
-  );
+ );
 
 
 }
@@ -1487,66 +2097,70 @@ function selectPROPlan(plan){
 
 
 
-// ===============================
-// Save Payment Request
-// ===============================
+
+
+// =====================================
+// Payment Request
+// =====================================
 
 
 function createPaymentRequest(method){
 
 
-  if(!currentUser){
+ if(!currentUser){
 
-    showMessage(
-      "Please login first"
-    );
+ showMessage(
+ "Please login first"
+ );
 
-    return;
+ return;
 
-  }
-
-
-
-  db.collection("transactions")
-
-  .add({
-
-    userId:
-    currentUser.uid,
+ }
 
 
-    email:
-    currentUser.email,
+
+ db.collection("transactions")
+
+ .add({
 
 
-    method:
-    method,
+ userId:
+ currentUser.uid,
 
 
-    amount:
-    5,
+ email:
+ currentUser.email,
 
 
-    status:
-    "pending",
+ method:
+ method,
 
 
-    createdAt:
-    new Date()
+ amount:
+ 5,
 
 
-  })
+ status:
+ "pending",
 
 
-  .then(()=>{
+ createdAt:
+ new Date()
 
 
-    showMessage(
-      "Payment request submitted"
-    );
+ })
 
 
-  });
+ .then(()=>{
+
+
+ showMessage(
+ "Payment request submitted"
+ );
+
+
+ });
+
 
 
 }
@@ -1555,13 +2169,18 @@ function createPaymentRequest(method){
 
 
 
-// Payment Methods
+
+
+// Payment Buttons
+
 
 function payWithUSDT(){
 
-  createPaymentRequest(
-    "USDT"
-  );
+
+ createPaymentRequest(
+ "USDT"
+ );
+
 
 }
 
@@ -1569,9 +2188,11 @@ function payWithUSDT(){
 
 function payWithPayPal(){
 
-  createPaymentRequest(
-    "PayPal"
-  );
+
+ createPaymentRequest(
+ "PayPal"
+ );
+
 
 }
 
@@ -1579,9 +2200,11 @@ function payWithPayPal(){
 
 function payWithBank(){
 
-  createPaymentRequest(
-    "Bank Transfer"
-  );
+
+ createPaymentRequest(
+ "Bank Transfer"
+ );
+
 
 }
 
@@ -1590,148 +2213,70 @@ function payWithBank(){
 
 
 
-// ===============================
+
+// =====================================
 // Activate PRO
-// ===============================
+// =====================================
 
 
 function activatePRO(){
 
 
-  if(!currentUser){
+ if(!currentUser){
 
-    return;
+ return;
 
-  }
+ }
 
 
 
-  db.collection("users")
+ db.collection("users")
 
-  .doc(currentUser.uid)
+ .doc(currentUser.uid)
 
-  .set({
+ .set({
 
-    pro:true,
+ pro:true,
 
 
-    subscription:
-    "PRO",
+ subscription:"PRO",
 
 
-    activatedAt:
-    new Date(),
+ activatedAt:
+ new Date(),
 
 
-    expiryDate:
-    new Date(
-      Date.now()
-      +
-      30*24*60*60*1000
-    )
+ expiryDate:
+ new Date(
+ Date.now()
+ +
+ 30*24*60*60*1000
+ )
 
 
-  },{merge:true})
+ },{
 
+ merge:true
 
-  .then(()=>{
+ })
 
 
-    isProUser = true;
+ .then(()=>{
 
 
-    updatePlanDisplay();
+ isProUser=true;
 
 
-    showMessage(
-      "JobAI PRO activated!"
-    );
+ updatePlanDisplay();
 
 
-  });
+ showMessage(
+ "JobAI PRO Activated"
+ );
 
 
-}
+ });
 
-
-
-
-
-// ===============================
-// Check Subscription Expiry
-// ===============================
-
-
-function checkSubscription(){
-
-
-  if(!currentUser){
-
-    return;
-
-  }
-
-
-
-  db.collection("users")
-
-  .doc(currentUser.uid)
-
-  .get()
-
-
-  .then(doc=>{
-
-
-    if(doc.exists){
-
-
-      const data =
-      doc.data();
-
-
-
-      if(data.expiryDate){
-
-
-        const expiry =
-        data.expiryDate.toDate
-        ? data.expiryDate.toDate()
-        : new Date(data.expiryDate);
-
-
-
-        if(new Date() > expiry){
-
-
-          isProUser = false;
-
-
-
-          db.collection("users")
-
-          .doc(currentUser.uid)
-
-          .update({
-
-            pro:false
-
-          });
-
-
-          updatePlanDisplay();
-
-
-        }
-
-
-      }
-
-
-    }
-
-
-  });
 
 
 }
@@ -1741,638 +2286,55 @@ function checkSubscription(){
 
 
 
-// ===============================
-// Load PRO System After Login
-// ===============================
 
-
-function initializePROSystem(){
-
-
-  if(currentUser){
-
-
-    checkPROStatus();
-
-
-    checkSubscription();
-
-
-  }
-
-
-}
 // =====================================
-// JobAI Professional Script.js
-// Part E: Dashboard + Profile Management
+// Notifications
 // =====================================
 
 
-// ===============================
-// User Dashboard
-// ===============================
-
-function loadDashboard(){
-
-
-  if(!currentUser){
-
-    return;
-
-  }
+function createNotification(
+message,
+type="info"
+){
 
 
+ if(!currentUser){
 
-  const emailBox =
-  document.getElementById(
-    "dashboardEmail"
-  );
+ return;
+
+ }
 
 
 
-  if(emailBox){
+ db.collection("notifications")
 
-    emailBox.innerHTML =
-    currentUser.email;
+ .add({
 
-  }
-
-
+ userId:
+ currentUser.uid,
 
 
-  db.collection("resumes")
-
-  .where(
-    "userId",
-    "==",
-    currentUser.uid
-  )
-
-  .get()
+ message:
+ message,
 
 
-  .then(snapshot=>{
+ type:
+ type,
 
 
-    const countBox =
-    document.getElementById(
-      "dashboardResumeCount"
-    );
+ read:false,
 
 
-
-    if(countBox){
-
-      countBox.innerHTML =
-      snapshot.size;
-
-    }
+ createdAt:
+ new Date()
 
 
-  });
-
-
-
-  const planBox =
-  document.getElementById(
-    "dashboardPlan"
-  );
-
-
-
-  if(planBox){
-
-    planBox.innerHTML =
-    isProUser
-    ? "⭐ JobAI PRO"
-    : "Free Plan";
-
-  }
+ });
 
 
 }
 
 
-
-
-
-// ===============================
-// Save User Profile
-// ===============================
-
-
-function saveUserProfile(){
-
-
-  if(!currentUser){
-
-    showMessage(
-      "Please login first"
-    );
-
-    return;
-
-  }
-
-
-
-  const profile = {
-
-
-    name:
-    getValue("profileName"),
-
-
-    phone:
-    getValue("profilePhone"),
-
-
-    location:
-    getValue("profileLocation"),
-
-
-    bio:
-    getValue("profileBio"),
-
-
-    updatedAt:
-    new Date()
-
-
-  };
-
-
-
-
-
-  db.collection("users")
-
-  .doc(currentUser.uid)
-
-  .set(
-    profile,
-    {merge:true}
-  )
-
-
-  .then(()=>{
-
-
-    showMessage(
-      "Profile saved successfully"
-    );
-
-
-  });
-
-
-}
-
-
-
-
-
-
-// ===============================
-// Load User Profile
-// ===============================
-
-
-function loadUserProfile(){
-
-
-  if(!currentUser){
-
-    return;
-
-  }
-
-
-
-  db.collection("users")
-
-  .doc(currentUser.uid)
-
-  .get()
-
-
-  .then(doc=>{
-
-
-    if(doc.exists){
-
-
-      const data =
-      doc.data();
-
-
-
-      setValue(
-        "profileName",
-        data.name || ""
-      );
-
-
-      setValue(
-        "profilePhone",
-        data.phone || ""
-      );
-
-
-      setValue(
-        "profileLocation",
-        data.location || ""
-      );
-
-
-      setValue(
-        "profileBio",
-        data.bio || ""
-      );
-
-
-    }
-
-
-  });
-
-
-}
-
-
-
-
-
-
-// ===============================
-// Profile Image Upload
-// ===============================
-
-
-function uploadProfileImage(){
-
-
-  if(!currentUser){
-
-    showMessage(
-      "Please login first"
-    );
-
-    return;
-
-  }
-
-
-
-  const fileInput =
-  document.getElementById(
-    "profileImage"
-  );
-
-
-
-  if(!fileInput || !fileInput.files[0]){
-
-
-    showMessage(
-      "Select image first"
-    );
-
-    return;
-
-  }
-
-
-
-  const file =
-  fileInput.files[0];
-
-
-
-  const ref =
-  storage.ref(
-    "profileImages/"
-    +
-    currentUser.uid
-  );
-
-
-
-  ref.put(file)
-
-
-  .then(()=>{
-
-
-    return ref.getDownloadURL();
-
-
-  })
-
-
-  .then(url=>{
-
-
-    return db.collection("users")
-
-    .doc(currentUser.uid)
-
-    .set({
-
-      photoURL:url
-
-    },{merge:true});
-
-
-  })
-
-
-  .then(()=>{
-
-
-    showMessage(
-      "Profile image uploaded"
-    );
-
-
-    loadProfileImage();
-
-
-  });
-
-
-}
-
-
-
-
-
-
-// ===============================
-// Load Profile Image
-// ===============================
-
-
-function loadProfileImage(){
-
-
-  if(!currentUser){
-
-    return;
-
-  }
-
-
-
-  db.collection("users")
-
-  .doc(currentUser.uid)
-
-  .get()
-
-
-  .then(doc=>{
-
-
-    if(doc.exists){
-
-
-      const data =
-      doc.data();
-
-
-
-      const img =
-      document.getElementById(
-        "profilePreview"
-      );
-
-
-
-      if(img && data.photoURL){
-
-
-        img.src =
-        data.photoURL;
-
-
-      }
-
-
-    }
-
-
-  });
-
-
-}
-
-
-
-
-
-
-
-// ===============================
-// Delete Account
-// ===============================
-
-
-function deleteAccount(){
-
-
-  if(!currentUser){
-
-    return;
-
-  }
-
-
-
-  const confirmDelete =
-  confirm(
-    "Delete your account?"
-  );
-
-
-
-  if(confirmDelete){
-
-
-    currentUser.delete()
-
-
-    .then(()=>{
-
-
-      showMessage(
-        "Account deleted"
-      );
-
-
-      location.reload();
-
-
-    });
-
-
-  }
-
-
-}
-
-
-
-
-
-
-
-// ===============================
-// User Activity Report
-// ===============================
-
-
-function generateUserReport(){
-
-
-  if(!currentUser){
-
-    return;
-
-  }
-
-
-
-  db.collection("analytics")
-
-  .where(
-    "userId",
-    "==",
-    currentUser.uid
-  )
-
-  .get()
-
-
-  .then(snapshot=>{
-
-
-    const box =
-    document.getElementById(
-      "userReport"
-    );
-
-
-
-    if(box){
-
-
-      box.innerHTML = `
-
-      <h3>
-      JobAI Report
-      </h3>
-
-      <p>
-      Activities:
-      ${snapshot.size}
-      </p>
-
-      <p>
-      Account:
-      ${currentUser.email}
-      </p>
-
-      `;
-
-
-    }
-
-
-  });
-
-
-}
-
-
-
-
-
-
-// ===============================
-// Initialize Dashboard
-// ===============================
-
-
-function initializeDashboard(){
-
-
-  if(currentUser){
-
-
-    loadDashboard();
-
-    loadUserProfile();
-
-    loadProfileImage();
-
-    generateUserReport();
-
-
-  }
-
-
-}
-// =====================================
-// JobAI Professional Script.js
-// Part F: Notifications + Support + Security + Analytics
-// =====================================
-
-
-// ===============================
-// Notification System
-// ===============================
-
-
-function createNotification(message,type="info"){
-
-
-  if(!currentUser){
-
-    return;
-
-  }
-
-
-
-  db.collection("notifications")
-
-  .add({
-
-    userId:
-    currentUser.uid,
-
-
-    message:
-    message,
-
-
-    type:
-    type,
-
-
-    read:false,
-
-
-    createdAt:
-    new Date()
-
-
-  });
-
-
-
-}
 
 
 
@@ -2381,75 +2343,72 @@ function createNotification(message,type="info"){
 function loadNotifications(){
 
 
-  if(!currentUser){
+ if(!currentUser){
 
-    return;
+ return;
 
-  }
-
-
-
-  db.collection("notifications")
-
-  .where(
-    "userId",
-    "==",
-    currentUser.uid
-  )
-
-  .orderBy(
-    "createdAt",
-    "desc"
-  )
-
-  .get()
-
-
-  .then(snapshot=>{
-
-
-    const box =
-    document.getElementById(
-      "notifications"
-    );
+ }
 
 
 
-    if(!box){
+ db.collection("notifications")
 
-      return;
+ .where(
+ "userId",
+ "==",
+ currentUser.uid
+ )
 
-    }
-
-
-
-    box.innerHTML="";
-
-
-
-    snapshot.forEach(doc=>{
+ .get()
 
 
-      const data =
-      doc.data();
+ .then(snapshot=>{
+
+
+ const box =
+ document.getElementById(
+ "notifications"
+ );
+
+
+ if(!box){
+
+ return;
+
+ }
 
 
 
-      box.innerHTML += `
-
-      <div class="notification-card">
-
-        ${data.message}
-
-      </div>
-
-      `;
+ box.innerHTML="";
 
 
-    });
+
+ snapshot.forEach(doc=>{
 
 
-  });
+ const data =
+ doc.data();
+
+
+
+ box.innerHTML += `
+
+ <div class="notification-card">
+
+ ${data.message}
+
+ </div>
+
+
+ `;
+
+
+
+ });
+
+
+
+ });
 
 
 }
@@ -2458,191 +2417,106 @@ function loadNotifications(){
 
 
 
-// ===============================
-// Support Chat System
-// ===============================
+
+
+
+// =====================================
+// Support Chat
+// =====================================
 
 
 function sendSupportMessage(){
 
 
-  if(!currentUser){
+ if(!currentUser){
 
-    showMessage(
-      "Please login first"
-    );
+ showMessage(
+ "Please login first"
+ );
 
-    return;
+ return;
 
-  }
+ }
 
 
 
-  const box =
-  document.getElementById(
-    "supportMessage"
-  );
+ const box =
+ document.getElementById(
+ "supportMessage"
+ );
 
 
 
-  if(!box){
+ if(!box){
 
-    return;
+ return;
 
-  }
+ }
 
 
 
-  const message =
-  box.value.trim();
+ const message =
+ box.value.trim();
 
 
 
-  if(!message){
+ if(!message){
 
-    showMessage(
-      "Write a message"
-    );
+ showMessage(
+ "Write message"
+ );
 
-    return;
+ return;
 
-  }
+ }
 
 
 
-  db.collection("supportMessages")
+ db.collection("supportMessages")
 
-  .add({
+ .add({
 
-    userId:
-    currentUser.uid,
 
+ userId:
+ currentUser.uid,
 
-    email:
-    currentUser.email,
 
+ email:
+ currentUser.email,
 
-    message:
-    message,
 
+ message:
+ message,
 
-    sender:
-    "user",
 
+ sender:
+ "user",
 
-    status:
-    "open",
 
+ status:
+ "open",
 
-    createdAt:
-    new Date()
 
+ createdAt:
+ new Date()
 
-  })
 
+ })
 
-  .then(()=>{
 
+ .then(()=>{
 
-    box.value="";
 
+ box.value="";
 
-    showMessage(
-      "Message sent"
-    );
 
+ showMessage(
+ "Message sent"
+ );
 
-    loadSupportMessages();
 
+ });
 
-  });
-
-
-}
-
-
-
-
-
-
-function loadSupportMessages(){
-
-
-  if(!currentUser){
-
-    return;
-
-  }
-
-
-
-  db.collection("supportMessages")
-
-  .where(
-    "userId",
-    "==",
-    currentUser.uid
-  )
-
-  .orderBy(
-    "createdAt",
-    "asc"
-  )
-
-  .get()
-
-
-  .then(snapshot=>{
-
-
-    const chat =
-    document.getElementById(
-      "chatBox"
-    );
-
-
-
-    if(!chat){
-
-      return;
-
-    }
-
-
-
-    chat.innerHTML="";
-
-
-
-    snapshot.forEach(doc=>{
-
-
-      const data =
-      doc.data();
-
-
-
-      chat.innerHTML += `
-
-      <div class="chat-message">
-
-      <b>
-      ${data.sender}
-      </b>
-
-      <p>
-      ${data.message}
-      </p>
-
-      </div>
-
-      `;
-
-
-    });
-
-
-  });
 
 
 }
@@ -2653,33 +2527,34 @@ function loadSupportMessages(){
 
 
 
-// ===============================
-// Security System
-// ===============================
+// =====================================
+// Security Functions
+// =====================================
 
 
 function requireLogin(){
 
 
-  if(!currentUser){
+ if(!currentUser){
 
 
-    showMessage(
-      "Please login first"
-    );
+ showMessage(
+ "Please login first"
+ );
 
 
-    return false;
+ return false;
 
 
-  }
+ }
 
 
-
-  return true;
+ return true;
 
 
 }
+
+
 
 
 
@@ -2688,30 +2563,30 @@ function requireLogin(){
 function requirePRO(){
 
 
-  if(!requireLogin()){
+ if(!requireLogin()){
 
-    return false;
+ return false;
 
-  }
-
-
-
-  if(!isProUser){
-
-
-    showMessage(
-      "PRO feature only"
-    );
-
-
-    return false;
-
-
-  }
+ }
 
 
 
-  return true;
+ if(!isProUser){
+
+
+ showMessage(
+ "This feature is only for PRO users"
+ );
+
+
+ return false;
+
+
+ }
+
+
+
+ return true;
 
 
 }
@@ -2719,230 +2594,130 @@ function requirePRO(){
 
 
 
+
+
+
+// Secure PDF
 
 function secureDownloadPDF(){
 
 
-  if(requirePRO()){
+ if(requirePRO()){
 
 
-    downloadPDF();
+ downloadPDF();
 
 
-  }
-
-
-}
-
-
-
-
-
-
-
-// ===============================
-// Analytics System
-// ===============================
-
-
-function trackActivity(action){
-
-
-  if(!currentUser){
-
-    return;
-
-  }
-
-
-
-  db.collection("analytics")
-
-  .add({
-
-    userId:
-    currentUser.uid,
-
-
-    email:
-    currentUser.email,
-
-
-    action:
-    action,
-
-
-    createdAt:
-    new Date()
-
-
-  });
-
-
-}
-
-
-
-
-
-
-function trackResumeCreated(){
-
-
-  trackActivity(
-    "Created Resume"
-  );
-
-
-}
-
-
-
-
-
-function trackPDFDownload(){
-
-
-  trackActivity(
-    "Downloaded PDF"
-  );
-
-
-}
-
-
-
-
-
-
-// ===============================
-// Global Initializer
-// ===============================
-
-
-function initializeUserSystems(){
-
-
-  if(currentUser){
-
-
-    checkPROStatus();
-
-
-    loadDashboard();
-
-
-    loadNotifications();
-
-
-    loadSupportMessages();
-
-
-  }
+ }
 
 
 }
 // =====================================
-// JobAI Professional Script.js
-// Part G: Public Resume + Referral + SEO + Final SaaS
+// JobAI Script.js Version 2
+// Part 5: Public Resume + SEO + Referral + Analytics + Final Start
 // =====================================
 
 
-// ===============================
+
+// =====================================
 // Public Resume Sharing
-// ===============================
+// =====================================
 
 
 function createPublicResume(){
 
 
-  if(!currentUser){
+ if(!currentUser){
 
-    showMessage(
-      "Please login first"
-    );
+  showMessage(
+   "Please login first"
+  );
 
-    return;
+  return;
 
-  }
-
-
-
-  const data = {
-
-
-    userId:
-    currentUser.uid,
-
-
-    name:
-    getValue("name"),
-
-
-    jobTitle:
-    getValue("jobTitle"),
-
-
-    skills:
-    getValue("skills"),
-
-
-    summary:
-    getValue("summary"),
-
-
-    public:true,
-
-
-    createdAt:
-    new Date()
-
-
-  };
+ }
 
 
 
-  db.collection("publicResumes")
-
-  .add(data)
+ const data={
 
 
-  .then(doc=>{
+ userId:
+ currentUser.uid,
 
 
-    const link =
-    window.location.origin +
-    "/resume.html?id=" +
-    doc.id;
+ name:
+ getValue("name"),
+
+
+ jobTitle:
+ getValue("jobTitle"),
+
+
+ skills:
+ getValue("skills"),
+
+
+ summary:
+ getValue("summary"),
+
+
+ public:true,
+
+
+ createdAt:
+ new Date()
+
+
+ };
 
 
 
-    const box =
-    document.getElementById(
-      "publicLink"
-    );
+
+
+ db.collection("publicResumes")
+
+ .add(data)
+
+
+ .then(doc=>{
+
+
+ const link =
+ window.location.origin
+ +
+ "/resume.html?id="
+ +
+ doc.id;
 
 
 
-    if(box){
-
-      box.value =
-      link;
-
-    }
+ const box =
+ document.getElementById(
+ "publicLink"
+ );
 
 
 
-    showMessage(
-      "Public resume created"
-    );
+ if(box){
+
+  box.value=link;
+
+ }
 
 
-  });
+
+ showMessage(
+ "Public resume created"
+ );
+
+
+
+ });
+
 
 
 }
-
 
 
 
@@ -2952,27 +2727,28 @@ function createPublicResume(){
 function copyResumeLink(){
 
 
-  const box =
-  document.getElementById(
-    "publicLink"
-  );
+ const box =
+ document.getElementById(
+ "publicLink"
+ );
 
 
 
-  if(box){
+ if(box){
 
 
-    navigator.clipboard.writeText(
-      box.value
-    );
+ navigator.clipboard.writeText(
+ box.value
+ );
 
 
-    showMessage(
-      "Link copied"
-    );
+ showMessage(
+ "Link copied"
+ );
 
 
-  }
+ }
+
 
 
 }
@@ -2982,89 +2758,94 @@ function copyResumeLink(){
 
 
 
-// ===============================
-// Professional Profile SEO
-// ===============================
+
+// =====================================
+// Professional Profile
+// =====================================
 
 
 function createProfessionalProfile(){
 
 
-  if(!currentUser){
+ if(!currentUser){
 
-    return;
+ return;
 
-  }
-
-
-
-  const profile = {
-
-
-    userId:
-    currentUser.uid,
-
-
-    name:
-    getValue("profileName"),
-
-
-    title:
-    getValue("jobTitle"),
-
-
-    skills:
-    getValue("skills"),
-
-
-    public:true,
-
-
-    createdAt:
-    new Date()
-
-
-  };
+ }
 
 
 
-  db.collection("professionalProfiles")
-
-  .add(profile)
+ const profile={
 
 
-  .then(doc=>{
+ userId:
+ currentUser.uid,
 
 
-    const link =
-    window.location.origin +
-    "/profile.html?id=" +
-    doc.id;
+ name:
+ getValue("profileName"),
+
+
+ title:
+ getValue("jobTitle"),
+
+
+ skills:
+ getValue("skills"),
+
+
+ public:true,
+
+
+ createdAt:
+ new Date()
+
+
+ };
 
 
 
-    const box =
-    document.getElementById(
-      "profileLink"
-    );
+
+
+ db.collection("professionalProfiles")
+
+ .add(profile)
+
+
+ .then(doc=>{
+
+
+ const link =
+ window.location.origin
+ +
+ "/profile.html?id="
+ +
+ doc.id;
 
 
 
-    if(box){
-
-      box.value =
-      link;
-
-    }
+ const box =
+ document.getElementById(
+ "profileLink"
+ );
 
 
+ if(box){
 
-    showMessage(
-      "Professional profile created"
-    );
+ box.value=link;
+
+ }
 
 
-  });
+
+ showMessage(
+ "Professional profile created"
+ );
+
+
+
+ });
+
 
 
 }
@@ -3073,49 +2854,55 @@ function createProfessionalProfile(){
 
 
 
+
+
+// =====================================
+// SEO Description Generator
+// =====================================
 
 
 function generateSEODescription(){
 
 
-  const box =
-  document.getElementById(
-    "seoDescription"
-  );
+ const box =
+ document.getElementById(
+ "seoDescription"
+ );
 
 
 
-  if(!box){
+ if(!box){
 
-    return;
+ return;
 
-  }
+ }
 
 
 
-  box.value =
+ box.value =
 
-  getValue("name")
+ getValue("name")
 
-  +
+ +
 
-  " - "
+ " - "
 
-  +
+ +
 
-  getValue("jobTitle")
+ getValue("jobTitle")
 
-  +
+ +
 
-  ". Professional skills: "
+ ". Professional skills: "
 
-  +
+ +
 
-  getValue("skills")
+ getValue("skills")
 
-  +
+ +
 
-  ". Created with JobAI.";
+ ". Created with JobAI.";
+
 
 
 }
@@ -3125,54 +2912,66 @@ function generateSEODescription(){
 
 
 
-// ===============================
+
+// =====================================
 // Referral System
-// ===============================
+// =====================================
 
 
 function createReferralCode(){
 
 
-  if(!currentUser){
+ if(!currentUser){
 
-    return;
+ return;
 
-  }
-
-
-
-  const code =
-  "JOBAI-"
-  +
-  currentUser.uid
-  .substring(0,6)
-  .toUpperCase();
+ }
 
 
 
-  db.collection("users")
+ const code =
 
-  .doc(currentUser.uid)
+ "JOBAI-"
 
-  .set({
+ +
 
-    referralCode:
-    code
-
-  },{merge:true})
-
+ currentUser.uid
+ .substring(0,6)
+ .toUpperCase();
 
 
-  .then(()=>{
 
 
-    setValue(
-      "referralCode",
-      code
-    );
+
+ db.collection("users")
+
+ .doc(currentUser.uid)
+
+ .set({
+
+ referralCode:
+ code
 
 
-  });
+ },{
+
+ merge:true
+
+ })
+
+
+
+ .then(()=>{
+
+
+ setValue(
+ "referralCode",
+ code
+ );
+
+
+ });
+
 
 
 }
@@ -3185,62 +2984,66 @@ function createReferralCode(){
 function applyReferralCode(){
 
 
-  if(!currentUser){
+ if(!currentUser){
 
-    return;
+ return;
 
-  }
-
-
-
-  const code =
-  getValue(
-    "enterReferral"
-  );
+ }
 
 
 
-  if(!code){
-
-    showMessage(
-      "Enter referral code"
-    );
-
-    return;
-
-  }
+ const code =
+ getValue(
+ "enterReferral"
+ );
 
 
 
-  db.collection("referrals")
-
-  .add({
-
-    userId:
-    currentUser.uid,
+ if(!code){
 
 
-    code:
-    code,
+ showMessage(
+ "Enter referral code"
+ );
 
 
-    createdAt:
-    new Date()
+ return;
 
 
-  })
+ }
 
 
 
-  .then(()=>{
+ db.collection("referrals")
+
+ .add({
 
 
-    showMessage(
-      "Referral applied"
-    );
+ userId:
+ currentUser.uid,
 
 
-  });
+ code:
+ code,
+
+
+ createdAt:
+ new Date()
+
+
+ })
+
+
+ .then(()=>{
+
+
+ showMessage(
+ "Referral applied"
+ );
+
+
+ });
+
 
 
 }
@@ -3251,19 +3054,97 @@ function applyReferralCode(){
 
 
 
-// ===============================
-// SaaS Dashboard Refresh
-// ===============================
+// =====================================
+// Analytics
+// =====================================
+
+
+function trackActivity(action){
+
+
+ if(!currentUser){
+
+ return;
+
+ }
+
+
+
+ db.collection("analytics")
+
+ .add({
+
+
+ userId:
+ currentUser.uid,
+
+
+ email:
+ currentUser.email,
+
+
+ action:
+ action,
+
+
+ createdAt:
+ new Date()
+
+
+ });
+
+
+
+}
+
+
+
+
+
+function trackResumeCreated(){
+
+
+ trackActivity(
+ "Resume Created"
+ );
+
+
+}
+
+
+
+
+function trackPDFDownload(){
+
+
+ trackActivity(
+ "PDF Downloaded"
+ );
+
+
+}
+
+
+
+
+
+
+
+// =====================================
+// Refresh Dashboard
+// =====================================
 
 
 function refreshDashboard(){
 
 
-  loadDashboard();
+ loadDashboard();
 
-  generateUserReport();
 
-  loadNotifications();
+ loadNotifications();
+
+
+ loadResumes();
 
 
 }
@@ -3274,30 +3155,53 @@ function refreshDashboard(){
 
 
 
-// ===============================
-// Start Complete JobAI System
-// ===============================
+// =====================================
+// Final System Starter
+// =====================================
 
 
 function startJobAI(){
 
-  initializePROSystem();
 
-  initializeDashboard();
+ if(currentUser){
 
-  initializeUserSystems();
+
+  loadUserStatus();
+
+
+  loadResumes();
+
+
+  loadDashboard();
+
+
+  loadNotifications();
+
 
   createReferralCode();
 
-  createNotification(
-    "Welcome back to JobAI",
-    "success"
-  );
 
-  console.log(
-    "JobAI SaaS System Ready"
-  );
+ }
+
+
+
+ console.log(
+ "JobAI Version 2 System Ready"
+ );
+
 
 }
 
-alert("script.js loaded");
+
+
+
+
+
+// =====================================
+// Auto Start
+// =====================================
+
+
+console.log(
+"🚀 JobAI Script.js Version 2 Loaded Successfully"
+);
