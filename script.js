@@ -3336,3 +3336,4 @@ function startJobAI(){
 console.log(
 "🎉 JobAI All Parts Loaded Successfully"
 );
+console.log("SCRIPT JS RUNNING");
