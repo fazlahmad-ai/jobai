@@ -16,11 +16,13 @@ const firebaseConfig = {
 
   projectId: "jobai-c8a18",
 
-  storageBucket: "jobai-c8a18.appspot.com",
+  storageBucket: "jobai-c8a18.firebasestorage.app",
 
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  messagingSenderId: "96307987386",
 
-  appId: "YOUR_APP_ID"
+  appId: "1:96307987386:web:8ed517fd1e7f051e8dd383",
+
+  measurementId: "G-96Y3NH2PYC"
 
 };
 
