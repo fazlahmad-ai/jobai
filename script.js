@@ -3317,9 +3317,6 @@ function startJobAI(){
         checkPROStatus();
 
 
-        createReferralCode();
-
-
 
     }
 
