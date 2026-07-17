@@ -3338,30 +3338,6 @@ function startJobAI(){
 
 
 
-// Auto Start After Firebase Login
-
-
-auth.onAuthStateChanged(user=>{
-
-
-    if(user){
-
-
-        currentUser=user;
-
-
-        startJobAI();
-
-
-    }
-
-
-});
-
-
-
-
-
 
 console.log(
 "🎉 JobAI All Parts Loaded Successfully"
