@@ -414,7 +414,7 @@ function validateResume(){
 
 function generateResume(){
 
-  alert("generateResume started");
+ alert("دکمه کار می‌کند"); 
 
   if(!currentUser){
     showMessage("Please login first");
