@@ -335,9 +335,6 @@ auth.onAuthStateChanged(user=>{
 
 
 
-        loadUserStatus();
-
-
 
         console.log(
             "User:",
