@@ -1,6 +1,6 @@
 // =====================================
-// JobAI Script.js Version 2
-// Part 1: Firebase + Authentication + Core Resume System
+// JobAI Script.js Clean Version
+// Part 1: Firebase + Authentication + Core System
 // =====================================
 
 
@@ -10,31 +10,35 @@
 
 const firebaseConfig = {
 
-  apiKey: "AIzaSyCb3jYJiKDLwoCfg1jmljd4ui9NTWgrrYY",
+    apiKey: "AIzaSyCb3jYJiKDLwoCfg1jmljd4ui9NTWgrrYY",
 
-  authDomain: "jobai-c8a18.firebaseapp.com",
+    authDomain: "jobai-c8a18.firebaseapp.com",
 
-  projectId: "jobai-c8a18",
+    projectId: "jobai-c8a18",
 
-  storageBucket: "jobai-c8a18.firebasestorage.app",
+    storageBucket: "jobai-c8a18.firebasestorage.app",
 
-  messagingSenderId: "96307987386",
+    messagingSenderId: "96307987386",
 
-  appId: "1:96307987386:web:8ed517fd1e7f051e8dd383",
+    appId: "1:96307987386:web:8ed517fd1e7f051e8dd383",
 
-  measurementId: "G-96Y3NH2PYC"
+    measurementId: "G-96Y3NH2PYC"
 
 };
 
 
+
 // Initialize Firebase
 
-if(!firebase.apps.length){
+if (!firebase.apps.length) {
 
-  firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);
 
 }
 
+
+
+// Firebase Services
 
 const auth = firebase.auth();
 
@@ -63,9 +67,9 @@ let selectedTemplate = "modern";
 // ===============================
 
 
-function showMessage(msg){
+function showMessage(message){
 
-  alert(msg);
+    alert(message);
 
 }
 
@@ -73,15 +77,15 @@ function showMessage(msg){
 
 function getValue(id){
 
-  const el=document.getElementById(id);
+    const element = document.getElementById(id);
 
-  if(el){
+    if(element){
 
-    return el.value.trim();
+        return element.value.trim();
 
-  }
+    }
 
-  return "";
+    return "";
 
 }
 
@@ -89,156 +93,201 @@ function getValue(id){
 
 function setValue(id,value){
 
-  const el=document.getElementById(id);
+    const element = document.getElementById(id);
 
-  if(el){
+    if(element){
 
-    el.value=value;
+        element.value = value;
 
-  }
+    }
 
 }
 
 
-
-
-// Safe Text Update
 
 function setText(id,text){
 
-  const el=document.getElementById(id);
+    const element = document.getElementById(id);
 
-  if(el){
+    if(element){
 
-    el.innerText=text || "";
+        element.innerText = text || "";
 
-  }
+    }
 
 }
-
 
 
 
 
 // ===============================
-// Authentication
+// SIGN UP
 // ===============================
 
 
 function signUp(){
 
- const email=getValue("email");
 
- const password=getValue("password");
+    const email = getValue("email");
 
-
- if(!email || !password){
-
-   showMessage(
-    "Enter email and password"
-   );
-
-   return;
-
- }
+    const password = getValue("password");
 
 
- auth
- .createUserWithEmailAndPassword(
-   email,
-   password
- )
+    if(!email || !password){
 
- .then(result=>{
+        showMessage(
+            "Enter email and password"
+        );
 
+        return;
 
-   return db.collection("users")
-   .doc(result.user.uid)
-   .set({
-
-     email:result.user.email,
-
-     pro:false,
-
-     createdAt:new Date()
-
-   });
+    }
 
 
- })
 
- .then(()=>{
+    auth
+    .createUserWithEmailAndPassword(
+        email,
+        password
+    )
 
-   showMessage(
-    "Account created successfully"
-   );
-
- })
+    .then(result=>{
 
 
- .catch(error=>{
+        return db.collection("users")
+        .doc(result.user.uid)
+        .set({
 
-   showMessage(error.message);
+            email: result.user.email,
 
- });
+            pro:false,
+
+            createdAt:
+            firebase.firestore.FieldValue.serverTimestamp()
+
+        });
+
+
+    })
+
+
+    .then(()=>{
+
+
+        showMessage(
+            "Account created successfully"
+        );
+
+
+    })
+
+
+    .catch(error=>{
+
+
+        showMessage(
+            error.message
+        );
+
+
+    });
+
 
 
 }
 
 
+
+
+
+// ===============================
+// LOGIN
+// ===============================
 
 
 function login(){
 
- const email=getValue("email");
 
- const password=getValue("password");
+    const email = getValue("email");
 
-
- auth
- .signInWithEmailAndPassword(
-   email,
-   password
- )
-
- .then(()=>{
-
-   showMessage(
-    "Login successful"
-   );
-
- })
+    const password = getValue("password");
 
 
- .catch(error=>{
 
-   showMessage(error.message);
+    if(!email || !password){
 
- });
+        showMessage(
+            "Enter email and password"
+        );
+
+        return;
+
+    }
+
+
+
+    auth
+    .signInWithEmailAndPassword(
+        email,
+        password
+    )
+
+
+    .then(()=>{
+
+
+        showMessage(
+            "Login successful"
+        );
+
+
+    })
+
+
+    .catch(error=>{
+
+
+        showMessage(
+            error.message
+        );
+
+
+    });
+
 
 
 }
 
 
 
+
+
+
+// ===============================
+// LOGOUT
+// ===============================
 
 
 function logout(){
 
- auth.signOut()
 
- .then(()=>{
+    auth.signOut()
 
-
-   currentUser=null;
-
-   location.reload();
+    .then(()=>{
 
 
- });
+        currentUser = null;
+
+
+        location.reload();
+
+
+    });
 
 
 }
+
+
 
 
 
@@ -252,47 +301,79 @@ function logout(){
 auth.onAuthStateChanged(user=>{
 
 
- currentUser=user;
+    currentUser = user;
 
 
- if(user){
+
+    const authBox =
+    document.getElementById("auth");
 
 
-   const authBox=document.getElementById("auth");
-
-   const app=document.getElementById("app");
-
-
-   if(authBox){
-
-     authBox.style.display="none";
-
-   }
+    const app =
+    document.getElementById("app");
 
 
-   if(app){
-
-     app.style.display="block";
-
-   }
 
 
-   loadUserStatus();
-
-   loadResumes();
+    if(user){
 
 
- }
 
- else{
+        if(authBox){
 
+            authBox.style.display="none";
 
-   console.log(
-    "User not logged in"
-   );
+        }
 
 
- }
+
+        if(app){
+
+            app.style.display="block";
+
+        }
+
+
+
+        loadUserStatus();
+
+
+
+        console.log(
+            "User:",
+            user.email
+        );
+
+
+
+    }
+
+    else{
+
+
+        if(authBox){
+
+            authBox.style.display="block";
+
+        }
+
+
+
+        if(app){
+
+            app.style.display="none";
+
+        }
+
+
+
+        console.log(
+            "No user logged in"
+        );
+
+
+    }
+
 
 
 });
@@ -302,39 +383,53 @@ auth.onAuthStateChanged(user=>{
 
 
 
+
 // ===============================
-// User Status
+// Load User Status
 // ===============================
 
 
 function loadUserStatus(){
 
 
- if(!currentUser){
+    if(!currentUser){
 
-   return;
+        return;
 
- }
-
-
- db.collection("users")
- .doc(currentUser.uid)
- .get()
-
- .then(doc=>{
+    }
 
 
-   if(doc.exists){
 
-    const data=doc.data();
+    db.collection("users")
 
-    isProUser=data.pro===true;
+    .doc(currentUser.uid)
 
-
-   }
+    .get()
 
 
- });
+    .then(doc=>{
+
+
+        if(doc.exists){
+
+
+            const data =
+            doc.data();
+
+
+
+            isProUser =
+            data.pro === true;
+
+
+
+            updatePlanDisplay();
+
+
+        }
+
+
+    });
 
 
 }
@@ -344,59 +439,229 @@ function loadUserStatus(){
 
 
 
+// ===============================
+// Save User Profile
+// ===============================
+
+
+function saveUserProfile(){
+
+
+    if(!currentUser){
+
+        showMessage(
+            "Please login first"
+        );
+
+        return;
+
+    }
+
+
+
+    const profile = {
+
+
+        name:
+        getValue("profileName"),
+
+
+        phone:
+        getValue("profilePhone"),
+
+
+        location:
+        getValue("profileLocation"),
+
+
+        bio:
+        getValue("profileBio"),
+
+
+        updatedAt:
+        firebase.firestore.FieldValue.serverTimestamp()
+
+
+    };
+
+
+
+
+    db.collection("users")
+
+    .doc(currentUser.uid)
+
+    .set(
+
+        profile,
+
+        {
+
+            merge:true
+
+        }
+
+    )
+
+
+    .then(()=>{
+
+
+        showMessage(
+            "Profile saved"
+        );
+
+
+    });
+
+
+
+}
+
+
+
+
+
+
+// ===============================
+// Load User Profile
+// ===============================
+
+
+function loadUserProfile(){
+
+
+    if(!currentUser){
+
+        return;
+
+    }
+
+
+
+    db.collection("users")
+
+    .doc(currentUser.uid)
+
+    .get()
+
+
+    .then(doc=>{
+
+
+        if(doc.exists){
+
+
+            const data =
+            doc.data();
+
+
+
+            setValue(
+                "profileName",
+                data.name || ""
+            );
+
+
+            setValue(
+                "profilePhone",
+                data.phone || ""
+            );
+
+
+            setValue(
+                "profileLocation",
+                data.location || ""
+            );
+
+
+            setValue(
+                "profileBio",
+                data.bio || ""
+            );
+
+
+        }
+
+
+    });
+
+
+
+}
+
+
+
+
+
+console.log(
+"🚀 JobAI Part 1 Loaded Successfully"
+);
 // =====================================
+// JobAI Script.js Clean Version
+// Part 2: Resume Builder + AI Features
+// =====================================
+
+
+
+// ===============================
 // Resume Validation
-// =====================================
+// ===============================
 
 
 function validateResume(){
 
 
- const name=getValue("name");
-
- const job=getValue("jobTitle");
-
- const skills=getValue("skills");
+    const name =
+    getValue("name");
 
 
+    const jobTitle =
+    getValue("jobTitle");
 
- if(!name){
 
-   showMessage(
-    "Please enter your name"
-   );
-
-   return false;
-
- }
+    const skills =
+    getValue("skills");
 
 
 
- if(!job){
+    if(!name){
 
-   showMessage(
-    "Please enter Job Title"
-   );
+        showMessage(
+            "Please enter your name"
+        );
 
-   return false;
+        return false;
 
- }
-
-
-
- if(!skills){
-
-   showMessage(
-    "Please enter Skills"
-   );
-
-   return false;
-
- }
+    }
 
 
 
- return true;
+    if(!jobTitle){
+
+        showMessage(
+            "Please enter Job Title"
+        );
+
+        return false;
+
+    }
+
+
+
+    if(!skills){
+
+        showMessage(
+            "Please enter Skills"
+        );
+
+        return false;
+
+    }
+
+
+
+    return true;
 
 
 }
@@ -405,114 +670,120 @@ function validateResume(){
 
 
 
-
-// =====================================
-// Generate Resume (Fixed)
-// =====================================
+// ===============================
+// Generate Resume
+// ===============================
 
 
 function generateResume(){
 
 
- console.log(
-  "Generate Resume Started"
- );
+    if(!currentUser){
 
+        showMessage(
+            "Please login first"
+        );
 
- if(!currentUser){
+        return;
 
-   showMessage(
-    "Please login first"
-   );
-
-   return;
-
- }
+    }
 
 
 
- if(!validateResume()){
+    if(!validateResume()){
 
-   return;
+        return;
 
- }
-
-
-
- previewResume();
+    }
 
 
 
- const resumeData={
+    const resumeData = {
 
 
-   userId:currentUser.uid,
+        userId:
+        currentUser.uid,
 
 
-   name:getValue("name"),
+        name:
+        getValue("name"),
 
 
-   jobTitle:getValue("jobTitle"),
+        jobTitle:
+        getValue("jobTitle"),
 
 
-   email:getValue("email"),
+        email:
+        getValue("resumeEmail") ||
+        getValue("email"),
 
 
-   summary:getValue("summary"),
+        summary:
+        getValue("summary"),
 
 
-   skills:getValue("skills"),
+        skills:
+        getValue("skills"),
 
 
-   education:getValue("education"),
+        education:
+        getValue("education"),
 
 
-   experience:getValue("experience"),
+        experience:
+        getValue("experience"),
 
 
-   language:getValue("language"),
+        language:
+        getValue("language"),
 
 
-   template:selectedTemplate,
+        template:
+        selectedTemplate,
 
 
-   createdAt:new Date()
+        createdAt:
+        firebase.firestore.FieldValue.serverTimestamp()
 
 
- };
+    };
 
 
 
 
 
- db.collection("resumes")
+    db.collection("resumes")
 
- .add(resumeData)
-
-
- .then(()=>{
+    .add(resumeData)
 
 
-   showMessage(
-    "Resume created successfully"
-   );
+    .then(()=>{
 
 
-   loadResumes();
+        previewResume();
 
 
- })
+        showMessage(
+            "Resume created successfully"
+        );
 
 
- .catch(error=>{
+        loadResumes();
 
 
-   showMessage(
-    error.message
-   );
+    })
 
 
- });
+    .catch(error=>{
+
+
+        showMessage(
+            error.message
+        );
+
+
+    });
+
 
 
 }
@@ -521,60 +792,71 @@ function generateResume(){
 
 
 
-// =====================================
-// Preview Resume
-// =====================================
+
+
+// ===============================
+// Resume Preview
+// ===============================
 
 
 function previewResume(){
 
 
- setText(
-  "previewName",
-  getValue("name") || "Your Name"
- );
+
+    setText(
+        "previewName",
+        getValue("name") || "Your Name"
+    );
 
 
- setText(
-  "previewJob",
-  getValue("jobTitle") || "Job Title"
- );
+
+    setText(
+        "previewJob",
+        getValue("jobTitle") || "Job Title"
+    );
 
 
- setText(
-  "previewEmail",
-  getValue("email")
- );
+
+    setText(
+        "previewEmail",
+        getValue("resumeEmail") ||
+        getValue("email")
+    );
 
 
- setText(
-  "previewSummary",
-  getValue("summary")
- );
+
+    setText(
+        "previewSummary",
+        getValue("summary")
+    );
 
 
- setText(
-  "previewSkills",
-  getValue("skills")
- );
+
+    setText(
+        "previewSkills",
+        getValue("skills")
+    );
 
 
- setText(
-  "previewEducation",
-  getValue("education")
- );
+
+    setText(
+        "previewEducation",
+        getValue("education")
+    );
 
 
- setText(
-  "previewExperience",
-  getValue("experience")
- );
+
+    setText(
+        "previewExperience",
+        getValue("experience")
+    );
 
 
- setText(
-  "previewLanguage",
-  getValue("language")
- );
+
+    setText(
+        "previewLanguage",
+        getValue("language")
+    );
 
 
 }
@@ -584,34 +866,40 @@ function previewResume(){
 
 
 
+// ===============================
 // Auto Preview
+// ===============================
+
 
 document.addEventListener(
 "input",
-function(e){
+function(event){
 
 
- const ids=[
+    const fields=[
 
- "name",
- "jobTitle",
- "email",
- "summary",
- "skills",
- "education",
- "experience",
- "language"
+        "name",
+        "jobTitle",
+        "resumeEmail",
+        "email",
+        "summary",
+        "skills",
+        "education",
+        "experience",
+        "language"
 
- ];
-
-
- if(ids.includes(e.target.id)){
+    ];
 
 
-   previewResume();
+
+    if(fields.includes(event.target.id)){
 
 
- }
+        previewResume();
+
+
+    }
+
 
 
 });
@@ -620,84 +908,106 @@ function(e){
 
 
 
-// =====================================
+
+
+// ===============================
 // Load Resumes
-// =====================================
+// ===============================
 
 
 function loadResumes(){
 
 
- if(!currentUser){
+    if(!currentUser){
 
-  return;
+        return;
 
- }
-
-
- db.collection("resumes")
-
- .where(
- "userId",
- "==",
- currentUser.uid
- )
-
- .get()
-
- .then(snapshot=>{
-
-
- const box=document.getElementById(
- "resumeList"
- );
-
-
- if(!box){
-
-  return;
-
- }
-
-
- box.innerHTML="";
-
-
- snapshot.forEach(doc=>{
-
-
- const data=doc.data();
-
-
- box.innerHTML+=`
-
- <div class="resume-card">
-
- <h3>${data.name}</h3>
-
- <p>${data.jobTitle}</p>
-
- <p>${data.skills}</p>
-
-
- <button onclick="deleteResume('${doc.id}')">
-
- Delete
-
- </button>
-
-
- </div>
-
-
- `;
-
-
- });
+    }
 
 
 
- });
+    db.collection("resumes")
+
+    .where(
+        "userId",
+        "==",
+        currentUser.uid
+    )
+
+
+    .get()
+
+
+    .then(snapshot=>{
+
+
+        const box =
+        document.getElementById(
+            "resumeList"
+        );
+
+
+
+        if(!box){
+
+            return;
+
+        }
+
+
+
+        box.innerHTML="";
+
+
+
+        snapshot.forEach(doc=>{
+
+
+            const data =
+            doc.data();
+
+
+
+            box.innerHTML += `
+
+            <div class="resume-card">
+
+
+            <h3>
+            ${data.name}
+            </h3>
+
+
+            <p>
+            ${data.jobTitle}
+            </p>
+
+
+            <p>
+            ${data.skills}
+            </p>
+
+
+
+            <button onclick="deleteResume('${doc.id}')">
+
+            Delete
+
+            </button>
+
+
+            </div>
+
+            `;
+
+
+
+        });
+
+
+
+    });
+
 
 
 }
@@ -705,85 +1015,106 @@ function loadResumes(){
 
 
 
+
+
+
+// ===============================
+// Delete Resume
+// ===============================
 
 
 function deleteResume(id){
 
 
- db.collection("resumes")
+    db.collection("resumes")
 
- .doc(id)
+    .doc(id)
 
- .delete()
-
- .then(()=>{
+    .delete()
 
 
-  showMessage(
-   "Resume deleted"
-  );
+    .then(()=>{
 
 
-  loadResumes();
+        showMessage(
+            "Resume deleted"
+        );
 
 
- });
+        loadResumes();
 
 
-   }
-// =====================================
-// JobAI Script.js Version 2
-// Part 2: AI Assistant + Templates + Resume Score
-// =====================================
+    });
 
 
 
-// =====================================
-// AI Resume Summary Generator
-// =====================================
+}
+
+
+
+
+
+
+
+// ===============================
+// AI Summary Generator
+// ===============================
 
 
 function generateAISummary(){
 
 
- const jobTitle=getValue("jobTitle");
-
- const skills=getValue("skills");
-
- const box=document.getElementById(
- "summary"
- );
+    const job =
+    getValue("jobTitle");
 
 
- if(!box){
-
-   return;
-
- }
+    const skills =
+    getValue("skills");
 
 
 
- if(jobTitle && skills){
+    const box =
+    document.getElementById(
+        "summary"
+    );
 
 
- box.value =
- `Professional ${jobTitle} with skills in ${skills}. Experienced in teamwork, problem solving and continuous professional growth.`;
+
+    if(!box){
+
+        return;
+
+    }
 
 
 
- }
 
- else{
-
-
- box.value =
- "Motivated professional with strong skills and commitment to career development.";
+    if(job && skills){
 
 
- }
+        box.value =
+
+        `Professional ${job} with skills in ${skills}. 
+        Experienced, motivated and committed to professional growth.`;
 
 
- previewResume();
+
+    }
+
+    else{
+
+
+        box.value =
+
+        "Motivated professional with strong skills and career goals.";
+
+
+    }
+
+
+
+    previewResume();
+
 
 
 }
@@ -793,63 +1124,68 @@ function generateAISummary(){
 
 
 
-// =====================================
+
+// ===============================
 // AI Skill Suggestion
-// =====================================
+// ===============================
 
 
 function suggestSkills(){
 
 
- const job=getValue("jobTitle")
- .toLowerCase();
-
-
- let skills =
- "Communication, Teamwork, Problem Solving";
+    const job =
+    getValue("jobTitle")
+    .toLowerCase();
 
 
 
- if(job.includes("developer")){
+    let skills =
 
-
- skills =
- "HTML, CSS, JavaScript, React, Git";
-
-
- }
+    "Communication, Teamwork, Problem Solving";
 
 
 
- else if(job.includes("teacher")){
+
+    if(job.includes("developer")){
 
 
- skills =
- "Teaching, Research, Presentation, Communication";
+        skills =
+        "HTML, CSS, JavaScript, React, Git";
 
 
- }
+    }
+
+
+    else if(job.includes("teacher")){
+
+
+        skills =
+        "Teaching, Research, Presentation, Communication";
+
+
+    }
+
+
+    else if(job.includes("manager")){
+
+
+        skills =
+        "Leadership, Management, Planning, Organization";
+
+
+    }
 
 
 
- else if(job.includes("manager")){
-
-
- skills =
- "Leadership, Management, Planning, Organization";
-
-
- }
+    setValue(
+        "skills",
+        skills
+    );
 
 
 
- setValue(
- "skills",
- skills
- );
+    previewResume();
 
-
- previewResume();
 
 
 }
@@ -858,96 +1194,88 @@ function suggestSkills(){
 
 
 
-// =====================================
+
+
+// ===============================
 // Resume Score
-// =====================================
+// ===============================
 
 
 function calculateResumeScore(){
 
 
- let score=0;
-
-
- if(getValue("name")){
-
-  score+=25;
-
- }
-
-
- if(getValue("jobTitle")){
-
-  score+=25;
-
- }
-
-
- if(getValue("skills")){
-
-  score+=25;
-
- }
-
-
- if(getValue("summary")){
-
-  score+=25;
-
- }
+    let score=0;
 
 
 
- showResumeScore(score);
+    if(getValue("name")){
 
+        score +=25;
 
-}
-
-
-
-
-
-function showResumeScore(score){
-
-
- const box=document.getElementById(
- "resumeScore"
- );
-
-
- if(!box){
-
-  return;
-
- }
+    }
 
 
 
- box.innerHTML=`
+    if(getValue("jobTitle")){
 
- <h3>
- AI Resume Score
- </h3>
+        score +=25;
 
-
- <h2>
- ${score}%
- </h2>
+    }
 
 
- <p>
 
- ${
- score>=80
- ?
- "Excellent Resume"
- :
- "Improve Your Resume"
- }
+    if(getValue("skills")){
 
- </p>
+        score +=25;
 
- `;
+    }
+
+
+
+    if(getValue("summary")){
+
+        score +=25;
+
+    }
+
+
+
+    const box =
+    document.getElementById(
+        "resumeScore"
+    );
+
+
+
+    if(box){
+
+
+        box.innerHTML = `
+
+        <h3>
+        AI Resume Score
+        </h3>
+
+
+        <h2>
+        ${score}%
+        </h2>
+
+
+        <p>
+        ${
+        score>=80
+        ?
+        "Excellent Resume"
+        :
+        "Improve Resume"
+        }
+        </p>
+
+        `;
+
+
+    }
 
 
 }
@@ -958,191 +1286,19 @@ function showResumeScore(score){
 
 
 
-// =====================================
-// AI Suggestions
-// =====================================
-
-
-function getResumeSuggestions(){
-
-
- const box=document.getElementById(
- "suggestions"
- );
-
-
- if(!box){
-
- return;
-
- }
-
-
-
- box.innerHTML=`
-
-<h3>
-AI Suggestions
-</h3>
-
-
-<ul>
-
-<li>Add measurable achievements</li>
-
-<li>Use professional keywords</li>
-
-<li>Improve summary section</li>
-
-<li>Add certifications</li>
-
-
-</ul>
-
-
-`;
-
-
-
-}
-
-
-
-
-
-
-// =====================================
-// Cover Letter Generator
-// =====================================
-
-
-function generateCoverLetter(){
-
-
- const name=getValue("name");
-
- const job=getValue("jobTitle");
-
- const skills=getValue("skills");
-
-
- const box=document.getElementById(
- "coverLetter"
- );
-
-
- if(!box){
-
- return;
-
- }
-
-
-
- box.value=`
-
-Dear Hiring Manager,
-
-
-I am ${name} applying for the position of ${job}.
-
-
-I have skills in ${skills} and I believe my experience can bring value to your organization.
-
-
-I am motivated to contribute, learn and grow professionally.
-
-
-Thank you for considering my application.
-
-
-Sincerely,
-
-${name}
-
-`;
-
-
-
-}
-
-
-
-
-
-
-// =====================================
-// Save Cover Letter
-// =====================================
-
-
-function saveCoverLetter(){
-
-
- if(!currentUser){
-
-  showMessage(
-  "Please login first"
-  );
-
-  return;
-
- }
-
-
-
- db.collection("coverLetters")
-
- .add({
-
-
- userId:
- currentUser.uid,
-
-
- content:
- getValue("coverLetter"),
-
-
- createdAt:
- new Date()
-
-
- })
-
-
- .then(()=>{
-
-
- showMessage(
- "Cover letter saved"
- );
-
-
- });
-
-
-}
-
-
-
-
-
-
-
-// =====================================
+// ===============================
 // Resume Templates
-// =====================================
+// ===============================
 
 
-const templates={
+const templates = {
 
 
- modern:"modern",
+    modern:true,
 
- classic:"classic",
+    classic:true,
 
- creative:"creative"
+    creative:true
 
 
 };
@@ -1154,76 +1310,26 @@ const templates={
 function selectTemplate(name){
 
 
- if(templates[name]){
+    if(templates[name]){
 
 
- selectedTemplate=name;
+        selectedTemplate=name;
 
 
- previewResume();
-
-
- showMessage(
- "Template changed: "+name
- );
-
-
- }
-
-
-}
+        previewResume();
 
 
 
+        showMessage(
+
+        "Template changed: "
+        +
+        name
+
+        );
 
 
-
-// =====================================
-// Image Preview
-// =====================================
-
-
-function previewProfileImage(input){
-
-
- const img=document.getElementById(
- "previewPhoto"
- );
-
-
- if(!img){
-
- return;
-
- }
-
-
-
- if(input.files && input.files[0]){
-
-
- const reader=new FileReader();
-
-
-
- reader.onload=function(e){
-
-
- img.src=e.target.result;
-
-
- img.style.display="block";
-
-
- };
-
-
- reader.readAsDataURL(
- input.files[0]
- );
-
-
- }
+    }
 
 
 }
@@ -1233,119 +1339,117 @@ function previewProfileImage(input){
 
 
 
+console.log(
+"✅ JobAI Part 2 Loaded Successfully"
+);
 // =====================================
-// Update Preview Button
-// =====================================
-
-
-function updatePreview(){
-
-
- previewResume();
-
- calculateResumeScore();
-
-
-}
-// =====================================
-// JobAI Script.js Version 2
-// Part 3: PDF + Profile + Dashboard + Resume Management
+// JobAI Script.js Clean Version
+// Part 3: PDF + Profile + Dashboard
 // =====================================
 
 
-// =====================================
-// Professional PDF Download (Fixed)
-// =====================================
+
+// ===============================
+// Download PDF
+// ===============================
 
 
 function downloadPDF(){
 
 
- const element =
- document.getElementById("resume");
+    const element =
+    document.getElementById("resume");
 
 
 
- if(!element){
-
-  showMessage(
-   "Resume not found"
-  );
-
-  return;
-
- }
+    if(!element){
 
 
-
- html2canvas(element,{
-
- scale:3,
-
- useCORS:true,
-
- backgroundColor:"#ffffff"
-
- })
-
- .then(canvas=>{
+        showMessage(
+            "Resume not found"
+        );
 
 
- const imgData =
- canvas.toDataURL("image/png");
+        return;
+
+    }
 
 
 
- const pdf =
- new jspdf.jsPDF(
- "p",
- "mm",
- "a4"
- );
+    html2canvas(element,{
+
+        scale:3,
+
+        useCORS:true,
+
+        backgroundColor:"#ffffff"
+
+
+    })
+
+    .then(canvas=>{
+
+
+        const imgData =
+        canvas.toDataURL("image/png");
 
 
 
- const pageWidth =
- pdf.internal.pageSize.getWidth();
+        const pdf =
+        new jspdf.jsPDF(
+
+            "p",
+
+            "mm",
+
+            "a4"
+
+        );
 
 
 
- const imgWidth =
- pageWidth;
+        const width =
+        pdf.internal.pageSize.getWidth();
 
 
 
- const imgHeight =
- canvas.height *
- imgWidth /
- canvas.width;
+        const height =
+        canvas.height *
+        width /
+        canvas.width;
 
 
 
- pdf.addImage(
+        pdf.addImage(
 
- imgData,
+            imgData,
 
- "PNG",
+            "PNG",
 
- 0,
+            0,
 
- 0,
+            0,
 
- imgWidth,
+            width,
 
- imgHeight
+            height
 
- );
-
-
-
- pdf.save(
- "JobAI-Resume.pdf"
- );
+        );
 
 
- });
+
+        pdf.save(
+            "JobAI-Resume.pdf"
+        );
+
+
+        trackActivity(
+            "PDF Download"
+        );
+
+
+    });
+
 
 
 }
@@ -1355,109 +1459,127 @@ function downloadPDF(){
 
 
 
-
-// =====================================
+// ===============================
 // Upload Profile Image
-// =====================================
+// ===============================
 
 
 function uploadProfileImage(){
 
 
- if(!currentUser){
-
-  showMessage(
-  "Please login first"
-  );
-
-  return;
-
- }
+    if(!currentUser){
 
 
+        showMessage(
+            "Please login first"
+        );
 
- const input =
- document.getElementById(
- "profileImage"
- );
+
+        return;
+
+    }
 
 
 
- if(!input || !input.files[0]){
-
-
- showMessage(
- "Select image first"
- );
-
-
- return;
-
-
- }
+    const input =
+    document.getElementById(
+        "profileImage"
+    );
 
 
 
- const file =
- input.files[0];
+    if(!input || !input.files[0]){
+
+
+        showMessage(
+            "Select image first"
+        );
+
+
+        return;
+
+    }
 
 
 
- const ref =
- storage.ref(
- "profiles/"
- +
- currentUser.uid
- );
+
+    const file =
+    input.files[0];
 
 
 
- ref.put(file)
+    const ref =
+    storage.ref(
 
- .then(()=>{
+        "profiles/"
+        +
+        currentUser.uid
 
-
- return ref.getDownloadURL();
-
-
- })
-
-
- .then(url=>{
+    );
 
 
- return db.collection("users")
 
- .doc(currentUser.uid)
-
- .set({
-
- photoURL:url
-
- },
-
- {
-
- merge:true
-
- });
+    ref.put(file)
 
 
- })
+
+    .then(()=>{
 
 
- .then(()=>{
+        return ref.getDownloadURL();
 
 
- showMessage(
- "Profile image uploaded"
- );
+    })
 
 
- loadProfileImage();
+
+    .then(url=>{
 
 
- });
+        return db.collection("users")
+
+        .doc(currentUser.uid)
+
+        .set({
+
+            photoURL:url
+
+        },{
+
+            merge:true
+
+        });
+
+
+
+    })
+
+
+
+    .then(()=>{
+
+
+        showMessage(
+            "Profile image uploaded"
+        );
+
+
+        loadProfileImage();
+
+
+    })
+
+
+
+    .catch(error=>{
+
+
+        showMessage(
+            error.message
+        );
+
+
+    });
 
 
 
@@ -1469,148 +1591,63 @@ function uploadProfileImage(){
 
 
 
-// =====================================
+// ===============================
 // Load Profile Image
-// =====================================
+// ===============================
 
 
 function loadProfileImage(){
 
 
- if(!currentUser){
+    if(!currentUser){
 
- return;
+        return;
 
- }
+    }
 
 
 
- db.collection("users")
+    db.collection("users")
 
- .doc(currentUser.uid)
+    .doc(currentUser.uid)
 
- .get()
+    .get()
 
 
- .then(doc=>{
 
+    .then(doc=>{
 
- if(doc.exists){
 
+        if(doc.exists){
 
- const data =
- doc.data();
 
+            const data =
+            doc.data();
 
 
- const img =
- document.getElementById(
- "profilePreview"
- );
 
+            const img =
+            document.getElementById(
+                "profilePreview"
+            );
 
 
- if(img && data.photoURL){
 
+            if(img && data.photoURL){
 
- img.src =
- data.photoURL;
 
+                img.src =
+                data.photoURL;
 
- }
 
+            }
 
- }
 
+        }
 
 
- });
+    });
 
-
-}
-
-
-
-
-
-
-
-// =====================================
-// Save User Profile
-// =====================================
-
-
-function saveUserProfile(){
-
-
- if(!currentUser){
-
- showMessage(
- "Please login first"
- );
-
- return;
-
- }
-
-
-
- const profile={
-
-
- name:
- getValue("profileName"),
-
-
- phone:
- getValue("profilePhone"),
-
-
- location:
- getValue("profileLocation"),
-
-
- bio:
- getValue("profileBio"),
-
-
- updatedAt:
- new Date()
-
-
- };
-
-
-
-
-
- db.collection("users")
-
- .doc(currentUser.uid)
-
- .set(
-
- profile,
-
- {
-
- merge:true
-
- }
-
-
- )
-
-
- .then(()=>{
-
-
- showMessage(
- "Profile saved"
- );
-
-
- });
 
 
 }
@@ -1622,143 +1659,80 @@ function saveUserProfile(){
 
 
 
-// =====================================
-// Load User Profile
-// =====================================
-
-
-function loadUserProfile(){
-
-
- if(!currentUser){
-
- return;
-
- }
-
-
-
- db.collection("users")
-
- .doc(currentUser.uid)
-
- .get()
-
-
- .then(doc=>{
-
-
- if(doc.exists){
-
-
- const data =
- doc.data();
-
-
-
- setValue(
- "profileName",
- data.name || ""
- );
-
-
- setValue(
- "profilePhone",
- data.phone || ""
- );
-
-
- setValue(
- "profileLocation",
- data.location || ""
- );
-
-
- setValue(
- "profileBio",
- data.bio || ""
- );
-
-
- }
-
-
-
- });
-
-
-}
-
-
-
-
-
-
-
-// =====================================
+// ===============================
 // Dashboard
-// =====================================
+// ===============================
 
 
 function loadDashboard(){
 
 
- if(!currentUser){
+    if(!currentUser){
 
- return;
+        return;
 
- }
-
-
-
- const emailBox =
- document.getElementById(
- "dashboardEmail"
- );
+    }
 
 
 
- if(emailBox){
-
- emailBox.innerText =
- currentUser.email;
-
- }
+    const emailBox =
+    document.getElementById(
+        "dashboardEmail"
+    );
 
 
 
+    if(emailBox){
 
 
- db.collection("resumes")
-
- .where(
- "userId",
- "==",
- currentUser.uid
- )
+        emailBox.innerText =
+        currentUser.email;
 
 
- .get()
+    }
 
 
- .then(snapshot=>{
 
 
- const count =
- document.getElementById(
- "dashboardResumeCount"
- );
+
+    db.collection("resumes")
+
+    .where(
+
+        "userId",
+
+        "==",
+
+        currentUser.uid
+
+    )
 
 
- if(count){
-
- count.innerText =
- snapshot.size;
-
- }
+    .get()
 
 
- });
+
+    .then(snapshot=>{
+
+
+        const count =
+        document.getElementById(
+            "dashboardResumeCount"
+        );
+
+
+
+        if(count){
+
+
+            count.innerText =
+            snapshot.size;
+
+
+        }
+
+
+    });
 
 
 
@@ -1769,50 +1743,65 @@ function loadDashboard(){
 
 
 
-
-// =====================================
+// ===============================
 // Delete Account
-// =====================================
+// ===============================
 
 
 function deleteAccount(){
 
 
- if(!currentUser){
+    if(!currentUser){
 
- return;
+        return;
 
- }
-
-
-
- const ok =
- confirm(
- "Delete account?"
- );
+    }
 
 
 
- if(ok){
+
+    const confirmDelete =
+    confirm(
+        "Delete your account?"
+    );
 
 
- currentUser.delete()
 
- .then(()=>{
+    if(!confirmDelete){
 
+        return;
 
- showMessage(
- "Account deleted"
- );
+    }
 
 
- location.reload();
 
 
- });
+    currentUser.delete()
 
 
- }
+    .then(()=>{
+
+
+        showMessage(
+            "Account deleted"
+        );
+
+
+        location.reload();
+
+
+    })
+
+
+    .catch(error=>{
+
+
+        showMessage(
+            error.message
+        );
+
+
+    });
 
 
 
@@ -1823,55 +1812,82 @@ function deleteAccount(){
 
 
 
-
-// =====================================
-// Initialize User Dashboard
-// =====================================
+// ===============================
+// Initialize Dashboard
+// ===============================
 
 
 function initializeDashboard(){
 
 
- if(currentUser){
+
+    if(!currentUser){
+
+        return;
+
+    }
 
 
- loadDashboard();
+
+    loadDashboard();
 
 
- loadUserProfile();
+    loadUserProfile();
 
 
- loadProfileImage();
+    loadProfileImage();
 
 
- }
+    loadResumes();
+
 
 
 }
+
+
+
+
+
+
+console.log(
+"✅ JobAI Part 3 Loaded Successfully"
+);
 // =====================================
-// JobAI Script.js Version 2
-// Part 4: PRO System + Payment + Notifications + Support
+// JobAI Script.js Clean Version
+// Part 4: PRO + Payment + Notifications
 // =====================================
 
 
-// =====================================
+
+// ===============================
 // PRO Plans
-// =====================================
+// ===============================
+
 
 const proPlans = {
 
- monthly:{
-  name:"JobAI PRO Monthly",
-  price:5,
-  days:30
- },
+
+    monthly:{
+
+        name:"JobAI PRO Monthly",
+
+        price:5,
+
+        days:30
+
+    },
 
 
- yearly:{
-  name:"JobAI PRO Yearly",
-  price:50,
-  days:365
- }
+    yearly:{
+
+        name:"JobAI PRO Yearly",
+
+        price:50,
+
+        days:365
+
+    }
+
 
 };
 
@@ -1879,53 +1895,55 @@ const proPlans = {
 
 
 
-// =====================================
+
+
+// ===============================
 // Check PRO Status
-// =====================================
+// ===============================
 
 
 function checkPROStatus(){
 
 
- if(!currentUser){
+    if(!currentUser){
 
- return;
+        return;
 
- }
-
-
-
- db.collection("users")
-
- .doc(currentUser.uid)
-
- .get()
-
-
- .then(doc=>{
-
-
- if(doc.exists){
-
-
- const data =
- doc.data();
+    }
 
 
 
- isProUser =
- data.pro === true;
+    db.collection("users")
+
+    .doc(currentUser.uid)
+
+    .get()
 
 
 
- updatePlanDisplay();
+    .then(doc=>{
 
 
- }
+        if(doc.exists){
+
+
+            const data =
+            doc.data();
 
 
 
- });
+            isProUser =
+            data.pro === true;
+
+
+
+            updatePlanDisplay();
+
+
+        }
+
+
+    });
 
 
 
@@ -1937,39 +1955,42 @@ function checkPROStatus(){
 
 
 
-// =====================================
-// Display User Plan
-// =====================================
+// ===============================
+// Display Plan
+// ===============================
 
 
 function updatePlanDisplay(){
 
 
- const box =
- document.getElementById(
- "userPlan"
- );
+    const box =
+    document.getElementById(
+        "userPlan"
+    );
 
 
 
- if(!box){
+    if(!box){
 
- return;
+        return;
 
- }
+    }
 
 
 
- box.innerHTML =
- isProUser
 
- ?
+    box.innerHTML =
 
- "⭐ JobAI PRO"
+    isProUser
 
- :
+    ?
 
- "Free Plan";
+    "⭐ JobAI PRO"
+
+    :
+
+    "Free Plan";
+
 
 
 }
@@ -1980,64 +2001,73 @@ function updatePlanDisplay(){
 
 
 
-// =====================================
+// ===============================
 // Free Resume Limit
-// =====================================
+// ===============================
 
 
 function checkResumeLimit(){
 
 
- if(!currentUser){
+    if(!currentUser){
 
- return false;
+        return Promise.resolve(false);
 
- }
-
-
-
- if(isProUser){
-
- return true;
-
- }
+    }
 
 
 
- return db.collection("resumes")
+    if(isProUser){
 
- .where(
- "userId",
- "==",
- currentUser.uid
- )
+        return Promise.resolve(true);
 
- .get()
-
-
- .then(snapshot=>{
-
-
- if(snapshot.size >= 3){
-
-
- showMessage(
- "Free users can create only 3 resumes. Upgrade to PRO."
- );
-
-
- return false;
-
-
- }
+    }
 
 
 
- return true;
+
+
+    return db.collection("resumes")
+
+    .where(
+
+        "userId",
+
+        "==",
+
+        currentUser.uid
+
+    )
+
+    .get()
 
 
 
- });
+    .then(snapshot=>{
+
+
+        if(snapshot.size >=3){
+
+
+            showMessage(
+
+            "Free plan allows only 3 resumes. Upgrade to PRO."
+
+            );
+
+
+            return false;
+
+
+        }
+
+
+
+        return true;
+
+
+
+    });
 
 
 
@@ -2049,47 +2079,50 @@ function checkResumeLimit(){
 
 
 
-
-// =====================================
+// ===============================
 // Select PRO Plan
-// =====================================
+// ===============================
 
 
 function selectPROPlan(plan){
 
 
- const selected =
- proPlans[plan];
+    const selected =
+    proPlans[plan];
 
 
 
- if(!selected){
-
- showMessage(
- "Invalid plan"
- );
-
- return;
-
- }
+    if(!selected){
 
 
+        showMessage(
+            "Invalid plan"
+        );
 
- showMessage(
 
- selected.name +
+        return;
 
- "\nPrice: $" +
+    }
 
- selected.price +
 
- "\nDuration: " +
 
- selected.days +
 
- " days"
+    showMessage(
 
- );
+    selected.name +
+
+    "\nPrice: $" +
+
+    selected.price +
+
+    "\nDuration: " +
+
+    selected.days +
+
+    " days"
+
+    );
+
 
 
 }
@@ -2100,68 +2133,74 @@ function selectPROPlan(plan){
 
 
 
-
-// =====================================
+// ===============================
 // Payment Request
-// =====================================
+// ===============================
 
 
 function createPaymentRequest(method){
 
 
- if(!currentUser){
-
- showMessage(
- "Please login first"
- );
-
- return;
-
- }
+    if(!currentUser){
 
 
-
- db.collection("transactions")
-
- .add({
-
-
- userId:
- currentUser.uid,
+        showMessage(
+            "Please login first"
+        );
 
 
- email:
- currentUser.email,
+        return;
+
+    }
 
 
- method:
- method,
 
 
- amount:
- 5,
+
+    db.collection("transactions")
+
+    .add({
 
 
- status:
- "pending",
+
+        userId:
+        currentUser.uid,
 
 
- createdAt:
- new Date()
+        email:
+        currentUser.email,
 
 
- })
+        method:
+        method,
 
 
- .then(()=>{
+        amount:5,
 
 
- showMessage(
- "Payment request submitted"
- );
+        status:"pending",
 
 
- });
+
+        createdAt:
+        firebase.firestore.FieldValue.serverTimestamp()
+
+
+    })
+
+
+
+    .then(()=>{
+
+
+        showMessage(
+
+        "Payment request submitted"
+
+        );
+
+
+    });
 
 
 
@@ -2171,41 +2210,40 @@ function createPaymentRequest(method){
 
 
 
-
-
-// Payment Buttons
 
 
 function payWithUSDT(){
 
 
- createPaymentRequest(
- "USDT"
- );
+    createPaymentRequest(
+        "USDT"
+    );
 
 
 }
+
 
 
 
 function payWithPayPal(){
 
 
- createPaymentRequest(
- "PayPal"
- );
+    createPaymentRequest(
+        "PayPal"
+    );
 
 
 }
+
 
 
 
 function payWithBank(){
 
 
- createPaymentRequest(
- "Bank Transfer"
- );
+    createPaymentRequest(
+        "Bank Transfer"
+    );
 
 
 }
@@ -2216,68 +2254,83 @@ function payWithBank(){
 
 
 
-// =====================================
+// ===============================
 // Activate PRO
-// =====================================
+// ===============================
 
 
 function activatePRO(){
 
 
- if(!currentUser){
+    if(!currentUser){
 
- return;
+        return;
 
- }
-
-
-
- db.collection("users")
-
- .doc(currentUser.uid)
-
- .set({
-
- pro:true,
+    }
 
 
- subscription:"PRO",
 
 
- activatedAt:
- new Date(),
+    db.collection("users")
+
+    .doc(currentUser.uid)
+
+    .set({
 
 
- expiryDate:
- new Date(
- Date.now()
- +
- 30*24*60*60*1000
- )
+        pro:true,
 
 
- },{
-
- merge:true
-
- })
+        subscription:"PRO",
 
 
- .then(()=>{
+        activatedAt:
+
+        firebase.firestore.FieldValue.serverTimestamp(),
 
 
- isProUser=true;
+
+        expiryDate:
+
+        new Date(
+
+        Date.now()
+        +
+        30*24*60*60*1000
+
+        )
 
 
- updatePlanDisplay();
+    },{
 
 
- showMessage(
- "JobAI PRO Activated"
- );
+        merge:true
 
 
- });
+    })
+
+
+
+    .then(()=>{
+
+
+        isProUser=true;
+
+
+
+        updatePlanDisplay();
+
+
+
+        showMessage(
+
+        "JobAI PRO Activated"
+
+        );
+
+
+
+    });
 
 
 
@@ -2289,9 +2342,9 @@ function activatePRO(){
 
 
 
-// =====================================
+// ===============================
 // Notifications
-// =====================================
+// ===============================
 
 
 function createNotification(
@@ -2300,41 +2353,47 @@ type="info"
 ){
 
 
- if(!currentUser){
+    if(!currentUser){
 
- return;
+        return;
 
- }
-
-
-
- db.collection("notifications")
-
- .add({
-
- userId:
- currentUser.uid,
+    }
 
 
- message:
- message,
 
 
- type:
- type,
+    db.collection("notifications")
+
+    .add({
 
 
- read:false,
+
+        userId:
+        currentUser.uid,
 
 
- createdAt:
- new Date()
+        message:
+        message,
 
 
- });
+        type:
+        type,
+
+
+        read:false,
+
+
+        createdAt:
+        firebase.firestore.FieldValue.serverTimestamp()
+
+
+
+    });
+
 
 
 }
+
 
 
 
@@ -2345,72 +2404,80 @@ type="info"
 function loadNotifications(){
 
 
- if(!currentUser){
+    if(!currentUser){
 
- return;
+        return;
 
- }
-
-
-
- db.collection("notifications")
-
- .where(
- "userId",
- "==",
- currentUser.uid
- )
-
- .get()
-
-
- .then(snapshot=>{
-
-
- const box =
- document.getElementById(
- "notifications"
- );
-
-
- if(!box){
-
- return;
-
- }
+    }
 
 
 
- box.innerHTML="";
+
+    db.collection("notifications")
+
+    .where(
+
+        "userId",
+
+        "==",
+
+        currentUser.uid
+
+    )
+
+    .get()
 
 
 
- snapshot.forEach(doc=>{
+    .then(snapshot=>{
 
 
- const data =
- doc.data();
-
-
-
- box.innerHTML += `
-
- <div class="notification-card">
-
- ${data.message}
-
- </div>
-
-
- `;
+        const box =
+        document.getElementById(
+            "notifications"
+        );
 
 
 
- });
+        if(!box){
+
+            return;
+
+        }
 
 
 
- });
+
+        box.innerHTML="";
+
+
+
+        snapshot.forEach(doc=>{
+
+
+            const data =
+            doc.data();
+
+
+
+            box.innerHTML += `
+
+            <div class="notification-card">
+
+            ${data.message}
+
+            </div>
+
+            `;
+
+
+
+        });
+
+
+
+    });
+
 
 
 }
@@ -2421,103 +2488,114 @@ function loadNotifications(){
 
 
 
-
-// =====================================
-// Support Chat
-// =====================================
+// ===============================
+// Support System
+// ===============================
 
 
 function sendSupportMessage(){
 
 
- if(!currentUser){
-
- showMessage(
- "Please login first"
- );
-
- return;
-
- }
+    if(!currentUser){
 
 
+        showMessage(
+            "Please login first"
+        );
 
- const box =
- document.getElementById(
- "supportMessage"
- );
+
+        return;
+
+    }
 
 
 
- if(!box){
 
- return;
-
- }
-
-
-
- const message =
- box.value.trim();
+    const box =
+    document.getElementById(
+        "supportMessage"
+    );
 
 
 
- if(!message){
+    if(!box){
 
- showMessage(
- "Write message"
- );
+        return;
 
- return;
-
- }
+    }
 
 
 
- db.collection("supportMessages")
 
- .add({
-
-
- userId:
- currentUser.uid,
+    const message =
+    box.value.trim();
 
 
- email:
- currentUser.email,
+
+    if(!message){
 
 
- message:
- message,
+        showMessage(
+            "Write message"
+        );
 
 
- sender:
- "user",
+        return;
+
+    }
 
 
- status:
- "open",
 
 
- createdAt:
- new Date()
+
+    db.collection("supportMessages")
+
+    .add({
 
 
- })
+
+        userId:
+        currentUser.uid,
 
 
- .then(()=>{
+        email:
+        currentUser.email,
 
 
- box.value="";
+        message:
+        message,
 
 
- showMessage(
- "Message sent"
- );
+        sender:"user",
 
 
- });
+        status:"open",
+
+
+
+        createdAt:
+        firebase.firestore.FieldValue.serverTimestamp()
+
+
+
+    })
+
+
+
+    .then(()=>{
+
+
+        box.value="";
+
+
+
+        showMessage(
+            "Message sent"
+        );
+
+
+
+    });
 
 
 
@@ -2529,34 +2607,33 @@ function sendSupportMessage(){
 
 
 
-// =====================================
-// Security Functions
-// =====================================
+
+// ===============================
+// Security Helpers
+// ===============================
 
 
 function requireLogin(){
 
 
- if(!currentUser){
+    if(!currentUser){
 
 
- showMessage(
- "Please login first"
- );
+        showMessage(
+            "Please login first"
+        );
 
 
- return false;
+        return false;
 
 
- }
+    }
 
 
- return true;
+    return true;
 
 
 }
-
-
 
 
 
@@ -2565,157 +2642,158 @@ function requireLogin(){
 function requirePRO(){
 
 
- if(!requireLogin()){
+    if(!requireLogin()){
 
- return false;
+        return false;
 
- }
-
-
-
- if(!isProUser){
-
-
- showMessage(
- "This feature is only for PRO users"
- );
-
-
- return false;
-
-
- }
+    }
 
 
 
- return true;
+    if(!isProUser){
 
 
-}
+        showMessage(
+
+        "This feature requires JobAI PRO"
+
+        );
+
+
+        return false;
+
+
+    }
 
 
 
-
-
-
-
-// Secure PDF
-
-function secureDownloadPDF(){
-
-
- if(requirePRO()){
-
-
- downloadPDF();
-
-
- }
+    return true;
 
 
 }
+
+
+
+
+
+console.log(
+"✅ JobAI Part 4 Loaded Successfully"
+);
 // =====================================
-// JobAI Script.js Version 2
-// Part 5: Public Resume + SEO + Referral + Analytics + Final Start
+// JobAI Script.js Clean Version
+// Part 5: Public Resume + SEO + Analytics
 // =====================================
 
 
 
-// =====================================
-// Public Resume Sharing
-// =====================================
+// ===============================
+// Create Public Resume
+// ===============================
 
 
 function createPublicResume(){
 
 
- if(!currentUser){
-
-  showMessage(
-   "Please login first"
-  );
-
-  return;
-
- }
+    if(!currentUser){
 
 
-
- const data={
-
-
- userId:
- currentUser.uid,
+        showMessage(
+            "Please login first"
+        );
 
 
- name:
- getValue("name"),
+        return;
 
-
- jobTitle:
- getValue("jobTitle"),
-
-
- skills:
- getValue("skills"),
-
-
- summary:
- getValue("summary"),
-
-
- public:true,
-
-
- createdAt:
- new Date()
-
-
- };
+    }
 
 
 
 
-
- db.collection("publicResumes")
-
- .add(data)
+    const data = {
 
 
- .then(doc=>{
+        userId:
+        currentUser.uid,
 
 
- const link =
- window.location.origin
- +
- "/resume.html?id="
- +
- doc.id;
+        name:
+        getValue("name"),
 
 
-
- const box =
- document.getElementById(
- "publicLink"
- );
+        jobTitle:
+        getValue("jobTitle"),
 
 
-
- if(box){
-
-  box.value=link;
-
- }
+        skills:
+        getValue("skills"),
 
 
+        summary:
+        getValue("summary"),
 
- showMessage(
- "Public resume created"
- );
+
+        public:true,
+
+
+        createdAt:
+        firebase.firestore.FieldValue.serverTimestamp()
+
+
+    };
 
 
 
- });
+
+
+    db.collection("publicResumes")
+
+    .add(data)
+
+
+
+    .then(doc=>{
+
+
+        const link =
+
+        window.location.origin
+
+        +
+
+        "/resume.html?id="
+
+        +
+
+        doc.id;
+
+
+
+
+        const box =
+        document.getElementById(
+            "publicLink"
+        );
+
+
+
+        if(box){
+
+
+            box.value = link;
+
+
+        }
+
+
+
+
+        showMessage(
+            "Public Resume Created"
+        );
+
+
+
+    });
 
 
 
@@ -2724,32 +2802,40 @@ function createPublicResume(){
 
 
 
+
+
+
+// ===============================
+// Copy Resume Link
+// ===============================
 
 
 function copyResumeLink(){
 
 
- const box =
- document.getElementById(
- "publicLink"
- );
+    const box =
+    document.getElementById(
+        "publicLink"
+    );
 
 
 
- if(box){
+    if(box && box.value){
 
 
- navigator.clipboard.writeText(
- box.value
- );
+
+        navigator.clipboard.writeText(
+            box.value
+        );
 
 
- showMessage(
- "Link copied"
- );
+
+        showMessage(
+            "Link copied"
+        );
 
 
- }
+    }
 
 
 
@@ -2761,92 +2847,111 @@ function copyResumeLink(){
 
 
 
-// =====================================
+// ===============================
 // Professional Profile
-// =====================================
+// ===============================
 
 
 function createProfessionalProfile(){
 
 
- if(!currentUser){
+    if(!currentUser){
 
- return;
-
- }
-
-
-
- const profile={
+        showMessage(
+            "Please login first"
+        );
 
 
- userId:
- currentUser.uid,
+        return;
 
-
- name:
- getValue("profileName"),
-
-
- title:
- getValue("jobTitle"),
-
-
- skills:
- getValue("skills"),
-
-
- public:true,
-
-
- createdAt:
- new Date()
-
-
- };
+    }
 
 
 
 
 
- db.collection("professionalProfiles")
-
- .add(profile)
+    const profile={
 
 
- .then(doc=>{
+        userId:
+        currentUser.uid,
 
 
- const link =
- window.location.origin
- +
- "/profile.html?id="
- +
- doc.id;
+        name:
+        getValue("profileName")
+        ||
+        getValue("name"),
 
 
-
- const box =
- document.getElementById(
- "profileLink"
- );
+        title:
+        getValue("jobTitle"),
 
 
- if(box){
+        skills:
+        getValue("skills"),
 
- box.value=link;
 
- }
+        public:true,
+
+
+        createdAt:
+        firebase.firestore.FieldValue.serverTimestamp()
 
 
 
- showMessage(
- "Professional profile created"
- );
+    };
 
 
 
- });
+
+
+    db.collection("professionalProfiles")
+
+    .add(profile)
+
+
+
+    .then(doc=>{
+
+
+        const link =
+
+        window.location.origin
+
+        +
+
+        "/profile.html?id="
+
+        +
+
+        doc.id;
+
+
+
+
+
+        const box =
+        document.getElementById(
+            "profileLink"
+        );
+
+
+
+        if(box){
+
+            box.value = link;
+
+        }
+
+
+
+        showMessage(
+            "Professional profile created"
+        );
+
+
+
+    });
 
 
 
@@ -2858,52 +2963,57 @@ function createProfessionalProfile(){
 
 
 
-// =====================================
-// SEO Description Generator
-// =====================================
+// ===============================
+// SEO Description
+// ===============================
 
 
 function generateSEODescription(){
 
 
- const box =
- document.getElementById(
- "seoDescription"
- );
+
+    const box =
+    document.getElementById(
+        "seoDescription"
+    );
 
 
 
- if(!box){
+    if(!box){
 
- return;
+        return;
 
- }
+    }
 
 
 
- box.value =
 
- getValue("name")
+    box.value =
 
- +
 
- " - "
+    getValue("name")
 
- +
+    +
 
- getValue("jobTitle")
+    " - "
 
- +
+    +
 
- ". Professional skills: "
+    getValue("jobTitle")
 
- +
+    +
 
- getValue("skills")
+    ". Skills: "
 
- +
+    +
 
- ". Created with JobAI.";
+    getValue("skills")
+
+    +
+
+    ". Created with JobAI.";
+
+
 
 
 
@@ -2915,68 +3025,76 @@ function generateSEODescription(){
 
 
 
-// =====================================
+// ===============================
 // Referral System
-// =====================================
+// ===============================
 
 
 function createReferralCode(){
 
 
- if(!currentUser){
+    if(!currentUser){
 
- return;
+        return;
 
- }
-
-
-
- const code =
-
- "JOBAI-"
-
- +
-
- currentUser.uid
- .substring(0,6)
- .toUpperCase();
+    }
 
 
 
 
-
- db.collection("users")
-
- .doc(currentUser.uid)
-
- .set({
-
- referralCode:
- code
+    const code =
 
 
- },{
+    "JOBAI-"
 
- merge:true
+    +
 
- })
+    currentUser.uid
+    .substring(0,6)
+    .toUpperCase();
 
 
 
- .then(()=>{
 
 
- setValue(
- "referralCode",
- code
- );
+
+    db.collection("users")
+
+    .doc(currentUser.uid)
+
+    .set({
 
 
- });
+        referralCode:
+        code
+
+
+    },{
+
+
+        merge:true
+
+
+    })
+
+
+
+    .then(()=>{
+
+
+        setValue(
+            "referralCode",
+            code
+        );
+
+
+    });
 
 
 
 }
+
+
 
 
 
@@ -2986,65 +3104,67 @@ function createReferralCode(){
 function applyReferralCode(){
 
 
- if(!currentUser){
+    if(!currentUser){
 
- return;
+        return;
 
- }
-
-
-
- const code =
- getValue(
- "enterReferral"
- );
+    }
 
 
 
- if(!code){
 
-
- showMessage(
- "Enter referral code"
- );
-
-
- return;
-
-
- }
+    const code =
+    getValue(
+        "enterReferral"
+    );
 
 
 
- db.collection("referrals")
-
- .add({
+    if(!code){
 
 
- userId:
- currentUser.uid,
+        showMessage(
+            "Enter referral code"
+        );
 
 
- code:
- code,
+        return;
+
+    }
 
 
- createdAt:
- new Date()
 
 
- })
+    db.collection("referrals")
+
+    .add({
 
 
- .then(()=>{
+        userId:
+        currentUser.uid,
 
 
- showMessage(
- "Referral applied"
- );
+        code:
+        code,
 
 
- });
+        createdAt:
+        firebase.firestore.FieldValue.serverTimestamp()
+
+
+    })
+
+
+
+    .then(()=>{
+
+
+        showMessage(
+            "Referral applied"
+        );
+
+
+    });
 
 
 
@@ -3056,48 +3176,52 @@ function applyReferralCode(){
 
 
 
-// =====================================
+// ===============================
 // Analytics
-// =====================================
+// ===============================
 
 
 function trackActivity(action){
 
 
- if(!currentUser){
+    if(!currentUser){
 
- return;
+        return;
 
- }
-
-
-
- db.collection("analytics")
-
- .add({
+    }
 
 
- userId:
- currentUser.uid,
 
 
- email:
- currentUser.email,
+    db.collection("analytics")
+
+    .add({
 
 
- action:
- action,
+
+        userId:
+        currentUser.uid,
 
 
- createdAt:
- new Date()
+        email:
+        currentUser.email,
 
 
- });
+        action:
+        action,
+
+
+        createdAt:
+        firebase.firestore.FieldValue.serverTimestamp()
+
+
+
+    });
 
 
 
 }
+
 
 
 
@@ -3106,12 +3230,13 @@ function trackActivity(action){
 function trackResumeCreated(){
 
 
- trackActivity(
- "Resume Created"
- );
+    trackActivity(
+        "Resume Created"
+    );
 
 
 }
+
 
 
 
@@ -3119,9 +3244,9 @@ function trackResumeCreated(){
 function trackPDFDownload(){
 
 
- trackActivity(
- "PDF Downloaded"
- );
+    trackActivity(
+        "PDF Download"
+    );
 
 
 }
@@ -3132,21 +3257,23 @@ function trackPDFDownload(){
 
 
 
-// =====================================
+// ===============================
 // Refresh Dashboard
-// =====================================
+// ===============================
 
 
 function refreshDashboard(){
 
 
- loadDashboard();
+    loadDashboard();
 
+    loadUserProfile();
 
- loadNotifications();
+    loadProfileImage();
 
+    loadResumes();
 
- loadResumes();
+    loadNotifications();
 
 
 }
@@ -3157,39 +3284,51 @@ function refreshDashboard(){
 
 
 
-// =====================================
-// Final System Starter
-// =====================================
+// ===============================
+// Start JobAI System
+// ===============================
 
 
 function startJobAI(){
 
 
- if(currentUser){
+
+    if(currentUser){
 
 
-  loadUserStatus();
+        loadUserStatus();
 
 
-  loadResumes();
+        loadDashboard();
 
 
-  loadDashboard();
+        loadUserProfile();
 
 
-  loadNotifications();
+        loadProfileImage();
 
 
-  createReferralCode();
+        loadResumes();
 
 
- }
+        loadNotifications();
+
+
+        checkPROStatus();
+
+
+        createReferralCode();
 
 
 
- console.log(
- "JobAI Version 2 System Ready"
- );
+    }
+
+
+
+    console.log(
+        "🚀 JobAI System Ready"
+    );
+
 
 
 }
@@ -3199,11 +3338,31 @@ function startJobAI(){
 
 
 
-// =====================================
-// Auto Start
-// =====================================
+// Auto Start After Firebase Login
+
+
+auth.onAuthStateChanged(user=>{
+
+
+    if(user){
+
+
+        currentUser=user;
+
+
+        startJobAI();
+
+
+    }
+
+
+});
+
+
+
+
 
 
 console.log(
-"🚀 JobAI Script.js Version 2 Loaded Successfully"
+"🎉 JobAI All Parts Loaded Successfully"
 );
