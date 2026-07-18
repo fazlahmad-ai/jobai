@@ -6,43 +6,131 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>JobAI | AI Professional Resume Builder</title>
+<title>JobAI | AI Resume Builder</title>
 
 <meta name="description"
-content="Create professional ATS-friendly resumes with AI in seconds.">
+content="Create professional AI powered resumes with JobAI">
 
+
+<!-- CSS -->
 <link rel="stylesheet" href="style.css">
 
-<!-- Font Awesome -->
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 <!-- Google Font -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
+
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
 rel="stylesheet">
 
+
+<!-- Font Awesome -->
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+
 <!-- Firebase -->
+
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
-<!-- html2canvas -->
+
+<!-- PDF -->
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-<!-- jsPDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 
 </head>
 
+
 <body>
 
-<div id="app">
+
+<!-- =========================
+AUTH SECTION
+========================= -->
+
+
+<div id="auth" class="auth-container">
+
+
+<div class="auth-card">
+
+
+<h1>
+🤖 JobAI
+</h1>
+
+
+<p>
+AI Professional Resume Builder
+</p>
+
+
+
+<input
+id="email"
+type="email"
+placeholder="Email">
+
+
+<input
+id="password"
+type="password"
+placeholder="Password">
+
+
+
+<div class="auth-buttons">
+
+
+<button onclick="login()">
+
+Login
+
+</button>
+
+
+
+<button onclick="signUp()">
+
+Create Account
+
+</button>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<!-- =========================
+MAIN APP
+========================= -->
+
+
+<div id="app" style="display:none;">
+
+
 
 <header class="header">
+
 
 <div class="logo">
 
@@ -50,296 +138,272 @@ rel="stylesheet">
 
 </div>
 
+
+
 <nav>
 
-<a href="#home">Home</a>
 
-<a href="#features">Features</a>
+<a href="#home">
+Home
+</a>
 
-<a href="#create">Create Resume</a>
 
-<a href="#preview">Preview</a>
+<a href="#create">
+Create Resume
+</a>
 
-<a href="#saved">My Resumes</a>
+
+<a href="#preview">
+Preview
+</a>
+
+
+<a href="#saved">
+My Resumes
+</a>
+
 
 </nav>
 
+
+
 <div class="header-buttons">
 
-<button class="login-btn" onclick="login()">
-Login
+
+<button onclick="logout()">
+
+Logout
+
 </button>
 
-<button class="signup-btn" onclick="signUp()">
-Create Account
-</button>
 
 </div>
+
+
 
 </header>
 
+
+
+
+
+<!-- HOME -->
+
 <section id="home" class="hero">
 
-<div class="hero-left">
 
 <h1>
 
-Create Your Professional Resume With AI
+Create Professional Resume With AI
 
 </h1>
 
+
 <p>
 
-Build modern ATS-friendly resumes in seconds.
-
-Generate AI summaries, improve your resume score,
-download professional PDF files and manage
-all resumes in one place.
+Build ATS friendly resumes, generate AI summaries,
+download PDF and manage your career documents.
 
 </p>
 
-<div class="hero-buttons">
 
-<a href="#create" class="primary-btn">
+<a href="#create">
 
-Create Resume
+Start Creating
 
 </a>
 
-<a href="#features" class="secondary-btn">
-
-Learn More
-
-</a>
-
-</div>
-
-</div>
-
-<div class="hero-right">
-
-<img
-src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=700"
-alt="Resume">
-
-</div>
 
 </section>
+<!-- =========================
+CREATE RESUME SECTION
+========================= -->
 
-<section id="features" class="features">
-
-<h2>
-
-Why Choose JobAI?
-
-</h2>
-
-<div class="feature-grid">
-
-<div class="feature-card">
-
-<i class="fa-solid fa-robot"></i>
-
-<h3>AI Resume Builder</h3>
-
-<p>
-
-Generate professional resumes instantly using AI.
-
-</p>
-
-</div>
-
-<div class="feature-card">
-
-<i class="fa-solid fa-file-pdf"></i>
-
-<h3>Professional PDF</h3>
-
-<p>
-
-Download clean ATS-friendly PDF resumes.
-
-</p>
-
-</div>
-
-<div class="feature-card">
-
-<i class="fa-solid fa-chart-line"></i>
-
-<h3>Resume Score</h3>
-
-<p>
-
-Analyze your resume and improve your chances.
-
-</p>
-
-</div>
-
-<div class="feature-card">
-
-<i class="fa-solid fa-cloud"></i>
-
-<h3>Cloud Storage</h3>
-
-<p>
-
-Save your resumes securely with Firebase.
-
-</p>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- Create Resume Section Starts Here -->
-  <!-- Create Resume -->
 
 <section id="create" class="resume-builder">
 
+
 <div class="section-title">
 
-<h2>Create Your Resume</h2>
+<h2>
+Create Your Resume
+</h2>
 
 <p>
-Fill your information and let JobAI build your professional resume.
+Fill your information and generate your professional resume.
 </p>
 
 </div>
+
 
 
 <div class="resume-form">
 
 
-<div class="form-group">
-
-<label>Profile Photo</label>
-
-<input 
-type="file"
-id="profilePhoto"
-accept="image/*">
-
-</div>
-
-
-
-<div class="form-grid">
-
 
 <div class="form-group">
 
-<label>Full Name</label>
+<label>
+Full Name
+</label>
+
 
 <input
-type="text"
 id="name"
+type="text"
 placeholder="Enter your full name">
 
+
 </div>
+
+
 
 
 
 <div class="form-group">
 
-<label>Job Title</label>
+<label>
+Job Title
+</label>
+
 
 <input
-type="text"
 id="jobTitle"
+type="text"
 placeholder="Example: Software Developer">
 
-</div>
-
 
 </div>
+
 
 
 
 
 <div class="form-group">
 
-<label>Email</label>
+<label>
+Email
+</label>
+
 
 <input
-type="email"
 id="resumeEmail"
+type="email"
 placeholder="example@email.com">
+
 
 </div>
 
 
 
+
+
 <div class="form-group">
 
-<label>Professional Summary</label>
+<label>
+Professional Summary
+</label>
+
 
 <textarea
 id="summary"
-placeholder="Write your professional summary"></textarea>
+placeholder="Your professional summary">
+</textarea>
+
+
+<button onclick="generateAISummary()">
+
+🤖 Generate AI Summary
+
+</button>
+
 
 </div>
 
 
 
 
+
 <div class="form-group">
 
-<label>Skills</label>
+<label>
+Skills
+</label>
+
 
 <textarea
 id="skills"
-placeholder="HTML, CSS, JavaScript, Communication"></textarea>
+placeholder="HTML, CSS, JavaScript, Communication">
+</textarea>
+
+
+<button onclick="suggestSkills()">
+
+✨ Suggest Skills
+
+</button>
+
 
 </div>
 
 
 
 
-<div class="form-grid">
-
 
 <div class="form-group">
 
-<label>Education</label>
+<label>
+Education
+</label>
+
 
 <textarea
 id="education"
-placeholder="Bachelor Degree..."></textarea>
+placeholder="Bachelor Degree, University...">
+</textarea>
+
 
 </div>
 
 
 
+
+
 <div class="form-group">
 
-<label>Work Experience</label>
+<label>
+Work Experience
+</label>
+
 
 <textarea
 id="experience"
-placeholder="Your work experience"></textarea>
+placeholder="Your work experience">
+</textarea>
+
 
 </div>
 
-
-</div>
 
 
 
 
 <div class="form-group">
 
-<label>Languages</label>
+<label>
+Languages
+</label>
+
 
 <textarea
 id="language"
-placeholder="English, Persian"></textarea>
+placeholder="English, Persian">
+</textarea>
+
 
 </div>
+
+
 
 
 
@@ -347,17 +411,9 @@ placeholder="English, Persian"></textarea>
 <div class="ai-buttons">
 
 
-<button onclick="generateAISummary()">
-
-🤖 AI Generate Summary
-
-</button>
-
-
-
 <button onclick="generateResume()">
 
-✨ Generate Resume
+🚀 Generate Resume
 
 </button>
 
@@ -365,23 +421,31 @@ placeholder="English, Persian"></textarea>
 </div>
 
 
+
 </div>
 
+
 </section>
-<!-- Resume Preview -->
+<!-- =========================
+RESUME PREVIEW SECTION
+========================= -->
+
 
 <section id="preview" class="preview-section">
 
 
 <div class="section-title">
 
-<h2>Resume Preview</h2>
+<h2>
+Resume Preview
+</h2>
 
 <p>
-Your professional resume preview will appear here.
+Your professional resume appears here.
 </p>
 
 </div>
+
 
 
 
@@ -389,45 +453,34 @@ Your professional resume preview will appear here.
 
 
 
-<div class="resume-top">
-
-
-<div class="profile-area">
-
-
-<img 
-id="previewPhoto"
-src=""
-alt="Profile Photo"
-style="display:none;">
-
-
-</div>
-
-
-
-<div class="name-area">
+<div class="resume-header">
 
 
 <h1 id="previewName">
+
 Your Name
+
 </h1>
 
 
 <h2 id="previewJob">
+
 Job Title
+
 </h2>
 
 
 <p id="previewEmail">
+
 Email Address
+
 </p>
 
 
+
 </div>
 
 
-</div>
 
 
 
@@ -435,16 +488,22 @@ Email Address
 
 
 
+
+
 <div class="resume-section">
 
 
 <h3>
+
 Professional Summary
+
 </h3>
 
 
 <p id="previewSummary">
-Professional Summary
+
+Professional summary will appear here.
+
 </p>
 
 
@@ -453,16 +512,22 @@ Professional Summary
 
 
 
+
+
 <div class="resume-section">
 
 
 <h3>
+
 Skills
+
 </h3>
 
 
 <p id="previewSkills">
-Skills
+
+Skills will appear here.
+
 </p>
 
 
@@ -472,16 +537,22 @@ Skills
 
 
 
+
+
 <div class="resume-section">
 
 
 <h3>
+
 Education
+
 </h3>
 
 
 <p id="previewEducation">
-Education
+
+Education information.
+
 </p>
 
 
@@ -491,20 +562,29 @@ Education
 
 
 
+
+
 <div class="resume-section">
 
 
 <h3>
+
 Work Experience
+
 </h3>
 
 
 <p id="previewExperience">
-Experience
+
+Experience information.
+
 </p>
 
 
 </div>
+
+
+
 
 
 
@@ -514,16 +594,22 @@ Experience
 
 
 <h3>
+
 Languages
+
 </h3>
 
 
 <p id="previewLanguage">
-Languages
+
+Language information.
+
 </p>
 
 
 </div>
+
+
 
 
 
@@ -537,7 +623,11 @@ Created with 🤖 JobAI
 
 
 
+
 </div>
+
+
+
 
 
 
@@ -549,6 +639,7 @@ Export Resume
 </h3>
 
 
+
 <button onclick="downloadPDF()">
 
 📄 Download PDF
@@ -556,11 +647,17 @@ Export Resume
 </button>
 
 
+
 </div>
 
 
+
+
 </section>
-<!-- Saved Resumes -->
+<!-- =========================
+MY RESUMES SECTION
+========================= -->
+
 
 <section id="saved" class="saved-section">
 
@@ -571,11 +668,63 @@ Export Resume
 My Resumes
 </h2>
 
+
 <p>
-Manage your saved professional resumes.
+Manage your saved resumes.
 </p>
 
+
 </div>
+
+
+
+
+
+<div class="dashboard-card">
+
+
+<h3>
+Dashboard
+</h3>
+
+
+
+<p>
+
+Email:
+
+<span id="dashboardEmail">
+
+User
+
+</span>
+
+
+</p>
+
+
+
+
+<p>
+
+Total Resumes:
+
+<span id="dashboardResumeCount">
+
+0
+
+</span>
+
+
+</p>
+
+
+
+</div>
+
+
+
+
 
 
 
@@ -584,9 +733,11 @@ Manage your saved professional resumes.
 
 <div class="empty-state">
 
+
 <p>
 No saved resumes yet.
 </p>
+
 
 </div>
 
@@ -601,26 +752,149 @@ No saved resumes yet.
 
 
 
-<!-- Account Settings -->
 
-<section class="account-section">
+
+
+
+<!-- =========================
+PROFILE SECTION
+========================= -->
+
+
+<section class="profile-section">
+
 
 
 <div class="section-title">
 
+
 <h2>
-Account Settings
+
+Profile Settings
+
 </h2>
 
+
 <p>
-Manage your JobAI account.
+
+Manage your personal information.
+
 </p>
+
 
 </div>
 
 
 
+
+
+
+<div class="profile-card">
+
+
+
+<input
+
+id="profileName"
+
+type="text"
+
+placeholder="Full Name">
+
+
+<br>
+
+
+
+<input
+
+id="profilePhone"
+
+type="text"
+
+placeholder="Phone Number">
+
+
+
+<br>
+
+
+
+
+<input
+
+id="profileLocation"
+
+type="text"
+
+placeholder="Location">
+
+
+
+<br>
+
+
+
+
+<textarea
+
+id="profileBio"
+
+placeholder="About yourself">
+
+</textarea>
+
+
+
+
+
+<br>
+
+
+
+
+<button onclick="saveUserProfile()">
+
+Save Profile
+
+</button>
+
+
+
+</div>
+
+
+
+
+</section>
+
+
+
+
+
+
+
+
+<!-- =========================
+ACCOUNT SECTION
+========================= -->
+
+
+<section class="account-section">
+
+
+
 <div class="account-card">
+
+
+
+<h3>
+
+Account
+
+</h3>
+
+
 
 
 <p id="userEmail">
@@ -631,6 +905,19 @@ User Account
 
 
 
+
+
+<div id="userPlan">
+
+Free Plan
+
+</div>
+
+
+
+
+
+
 <button onclick="logout()">
 
 Logout
@@ -638,7 +925,160 @@ Logout
 </button>
 
 
+
+<button onclick="deleteAccount()">
+
+Delete Account
+
+</button>
+
+
+
+
 </div>
+
+
+
+</section>
+<!-- =========================
+JOBAI PRO SECTION
+========================= -->
+
+
+<section class="pro-section">
+
+
+<div class="section-title">
+
+<h2>
+⭐ JobAI PRO
+</h2>
+
+
+<p>
+Unlock advanced resume features.
+</p>
+
+
+</div>
+
+
+
+
+
+<div class="pro-cards">
+
+
+
+<div class="pro-card">
+
+
+<h3>
+Monthly PRO
+</h3>
+
+
+<h2>
+$5
+</h2>
+
+
+<p>
+30 Days Access
+</p>
+
+
+
+<button onclick="selectPROPlan('monthly')">
+
+Choose Plan
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+<div class="pro-card">
+
+
+<h3>
+Yearly PRO
+</h3>
+
+
+<h2>
+$50
+</h2>
+
+
+<p>
+365 Days Access
+</p>
+
+
+
+<button onclick="selectPROPlan('yearly')">
+
+Choose Plan
+
+</button>
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="payment-box">
+
+
+<h3>
+Payment
+
+</h3>
+
+
+
+<button onclick="payWithUSDT()">
+
+💰 Pay with USDT
+
+</button>
+
+
+
+<button onclick="payWithPayPal()">
+
+PayPal
+
+</button>
+
+
+
+
+<button onclick="payWithBank()">
+
+Bank Transfer
+
+</button>
+
+
+
+</div>
+
 
 
 </section>
@@ -647,16 +1087,107 @@ Logout
 
 
 
-<!-- Footer -->
+
+
+
+
+<!-- =========================
+NOTIFICATIONS
+========================= -->
+
+
+<section class="notification-section">
+
+
+<h2>
+
+Notifications
+
+</h2>
+
+
+
+<div id="notifications">
+
+
+<p>
+No notifications
+</p>
+
+
+</div>
+
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<!-- =========================
+SUPPORT
+========================= -->
+
+
+<section class="support-section">
+
+
+<h2>
+
+Support
+
+</h2>
+
+
+
+<textarea
+
+id="supportMessage"
+
+placeholder="Write your message">
+
+</textarea>
+
+
+
+
+<button onclick="sendSupportMessage()">
+
+Send Message
+
+</button>
+
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<!-- =========================
+FOOTER
+========================= -->
+
 
 <footer class="main-footer">
 
 
-<h3>
+<h2>
 
 🤖 JobAI
 
-</h3>
+</h2>
+
 
 
 <p>
@@ -664,6 +1195,7 @@ Logout
 AI Professional Resume Builder
 
 </p>
+
 
 
 <p>
@@ -679,13 +1211,21 @@ AI Professional Resume Builder
 
 
 
-</div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<!-- JavaScript -->
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+
 
 <script src="script.js"></script>
 
 
+
+
 </body>
+
 
 </html>
