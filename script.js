@@ -10,19 +10,19 @@
 
 const firebaseConfig = {
 
-    apiKey: "AIzaSyCb3jYJiKDLwoCfg1jmljd4ui9NTWgrrYY",
+    apiKey: "AIzaSyDC3687Efw3U-_W4lAOF4cQ3j1YyKSyXO0",
 
-    authDomain: "jobai-c8a18.firebaseapp.com",
+    authDomain: "jobai-pro.firebaseapp.com",
 
-    projectId: "jobai-c8a18",
+    projectId: "jobai-pro",
 
-    storageBucket: "jobai-c8a18.firebasestorage.app",
+    storageBucket: "jobai-pro.firebasestorage.app",
 
-    messagingSenderId: "96307987386",
+    messagingSenderId: "352101125474",
 
-    appId: "1:96307987386:web:8ed517fd1e7f051e8dd383",
+    appId: "1:352101125474:web:24e03ef92409d1fd9ff03b",
 
-    measurementId: "G-96Y3NH2PYC"
+    measurementId: "G-1B6YZGL4TG"
 
 };
 
