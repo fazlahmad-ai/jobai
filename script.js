@@ -43,7 +43,8 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 
 const db = firebase.firestore();
-
+console.log("Firebase loaded");
+console.log(firebase.app().options);
 const storage = null;
 
 
