@@ -1356,24 +1356,14 @@ console.log(
 
 function downloadPDF(){
 
-
-    const element =
-    document.getElementById("resume");
-
-
+    const element = document.getElementById("resume");
 
     if(!element){
 
-
-        showMessage(
-            "Resume not found"
-        );
-
-
+        showMessage("Resume not found");
         return;
 
     }
-
 
 
     html2canvas(element,{
@@ -1382,75 +1372,86 @@ function downloadPDF(){
 
         useCORS:true,
 
-        backgroundColor:"#ffffff"
+        backgroundColor:"#ffffff",
 
+        windowWidth: element.scrollWidth,
+
+        windowHeight: element.scrollHeight
 
     })
 
     .then(canvas=>{
 
 
-        const imgData =
-        canvas.toDataURL("image/png");
+        const imgData = canvas.toDataURL("image/png");
 
 
-
-        const pdf =
-        new jspdf.jsPDF(
-
+        const pdf = new jspdf.jsPDF(
             "p",
-
             "mm",
-
             "a4"
-
         );
 
 
-
-        const width =
+        const pageWidth =
         pdf.internal.pageSize.getWidth();
 
 
+        const pageHeight =
+        pdf.internal.pageSize.getHeight();
 
-        const height =
+
+        const imgHeight =
         canvas.height *
-        width /
+        pageWidth /
         canvas.width;
 
 
+        let heightLeft = imgHeight;
+
+        let position = 0;
+
 
         pdf.addImage(
-
             imgData,
-
             "PNG",
-
             0,
-
-            0,
-
-            width,
-
-            height
-
+            position,
+            pageWidth,
+            imgHeight
         );
 
 
-
-        pdf.save(
-            "JobAI-Resume.pdf"
-        );
+        heightLeft -= pageHeight;
 
 
-        trackActivity(
-            "PDF Download"
-        );
+        while(heightLeft > 0){
+
+            position = heightLeft - imgHeight;
+
+            pdf.addPage();
+
+            pdf.addImage(
+                imgData,
+                "PNG",
+                0,
+                position,
+                pageWidth,
+                imgHeight
+            );
+
+            heightLeft -= pageHeight;
+
+        }
+
+
+        pdf.save("JobAI-Resume.pdf");
+
+
+        trackActivity("PDF Download");
 
 
     });
-
-
 
 }
 
