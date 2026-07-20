@@ -586,7 +586,7 @@ textarea{
 
     width:210mm;
 
-    min-height:297mm;
+    min-height:auto;
 
     max-width:100%;
 
