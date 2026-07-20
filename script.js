@@ -1353,22 +1353,24 @@ console.log(
 // Download PDF
 // ===============================
 
-
 function downloadPDF(){
 
     const element = document.getElementById("resume");
 
+
     if(!element){
 
         showMessage("Resume not found");
+
         return;
 
     }
 
 
+
     html2canvas(element,{
 
-        scale:2
+        scale:2,
 
         useCORS:true,
 
@@ -1380,25 +1382,34 @@ function downloadPDF(){
 
     })
 
+
     .then(canvas=>{
 
 
         const imgData = canvas.toDataURL("image/png");
 
 
+
         const pdf = new jspdf.jsPDF(
+
             "p",
+
             "mm",
+
             "a4"
+
         );
+
 
 
         const pageWidth =
         pdf.internal.pageSize.getWidth();
 
 
+
         const pageHeight =
         pdf.internal.pageSize.getHeight();
+
 
 
         const imgHeight =
@@ -1407,51 +1418,99 @@ function downloadPDF(){
         canvas.width;
 
 
+
         let heightLeft = imgHeight;
 
         let position = 0;
 
 
+
         pdf.addImage(
+
             imgData,
+
             "PNG",
+
             0,
+
             position,
+
             pageWidth,
+
             imgHeight
+
         );
+
 
 
         heightLeft -= pageHeight;
 
 
+
         while(heightLeft > 0){
+
 
             position = heightLeft - imgHeight;
 
+
             pdf.addPage();
 
+
+
             pdf.addImage(
+
                 imgData,
+
                 "PNG",
+
                 0,
+
                 position,
+
                 pageWidth,
+
                 imgHeight
+
             );
 
+
             heightLeft -= pageHeight;
+
 
         }
 
 
-        pdf.save("JobAI-Resume.pdf");
+
+        pdf.save(
+
+            "JobAI-Resume.pdf"
+
+        );
 
 
-        trackActivity("PDF Download");
+
+        trackActivity(
+
+            "PDF Download"
+
+        );
+
+
+    })
+
+    .catch(error=>{
+
+
+        showMessage(
+
+            error.message
+
+        );
 
 
     });
+
+
 
 }
 
