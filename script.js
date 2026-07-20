@@ -1368,7 +1368,7 @@ function downloadPDF(){
 
     html2canvas(element,{
 
-        scale:3,
+        scale:2
 
         useCORS:true,
 
