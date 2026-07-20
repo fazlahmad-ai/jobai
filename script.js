@@ -1366,11 +1366,17 @@ function downloadPDF(){
 
     }
 
-const footer = element.querySelector("footer");
 
-if (footer) {
-    footer.style.display = "none";
-}
+    const footer = element.querySelector("footer");
+
+
+    if(footer){
+
+        footer.style.display = "none";
+
+    }
+
+
 
     html2canvas(element,{
 
@@ -1378,20 +1384,14 @@ if (footer) {
 
         useCORS:true,
 
-        backgroundColor:"#ffffff",
-
-        windowWidth: element.scrollWidth,
-
-        windowHeight: element.scrollHeight
+        backgroundColor:"#ffffff"
 
     })
-
 
     .then(canvas=>{
 
 
         const imgData = canvas.toDataURL("image/png");
-
 
 
         const pdf = new jspdf.jsPDF(
@@ -1405,27 +1405,14 @@ if (footer) {
         );
 
 
-
         const pageWidth =
         pdf.internal.pageSize.getWidth();
-
-
-
-        const pageHeight =
-        pdf.internal.pageSize.getHeight();
-
 
 
         const imgHeight =
         canvas.height *
         pageWidth /
         canvas.width;
-
-
-
-        let heightLeft = imgHeight;
-
-        let position = 0;
 
 
 
@@ -1437,7 +1424,7 @@ if (footer) {
 
             0,
 
-            position,
+            0,
 
             pageWidth,
 
@@ -1446,54 +1433,20 @@ if (footer) {
         );
 
 
-
-        heightLeft -= pageHeight;
-
-
-
-        while(heightLeft > 0){
-
-
-            position = heightLeft - imgHeight;
-
-
-            pdf.addPage();
-
-
-
-            pdf.addImage(
-
-                imgData,
-
-                "PNG",
-
-                0,
-
-                position,
-
-                pageWidth,
-
-                imgHeight
-
-            );
-
-
-            heightLeft -= pageHeight;
-
-
-        }
-
-
-
         pdf.save(
 
             "JobAI-Resume.pdf"
 
         );
 
-if (footer) {
-    footer.style.display = "block";
-}
+
+
+        if(footer){
+
+            footer.style.display = "block";
+
+        }
+
 
         trackActivity(
 
@@ -1507,6 +1460,13 @@ if (footer) {
     .catch(error=>{
 
 
+        if(footer){
+
+            footer.style.display = "block";
+
+        }
+
+
         showMessage(
 
             error.message
@@ -1515,7 +1475,6 @@ if (footer) {
 
 
     });
-
 
 
 }
