@@ -3365,3 +3365,37 @@ console.log(
 "🎉 JobAI All Parts Loaded Successfully"
 );
 console.log("SCRIPT JS RUNNING");
+
+// ===============================
+// Profile Photo Preview
+// ===============================
+
+const profilePhoto = document.getElementById("profilePhoto");
+
+if(profilePhoto){
+
+    profilePhoto.addEventListener("change", function(){
+
+        const file = this.files[0];
+
+        if(!file){
+            return;
+        }
+
+
+        const reader = new FileReader();
+
+
+        reader.onload = function(e){
+
+            document.getElementById("previewPhoto").src = e.target.result;
+
+        };
+
+
+        reader.readAsDataURL(file);
+
+
+    });
+
+}
