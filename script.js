@@ -1366,7 +1366,11 @@ function downloadPDF(){
 
     }
 
+const footer = element.querySelector("footer");
 
+if (footer) {
+    footer.style.display = "none";
+}
 
     html2canvas(element,{
 
@@ -1487,7 +1491,9 @@ function downloadPDF(){
 
         );
 
-
+if (footer) {
+    footer.style.display = "block";
+}
 
         trackActivity(
 
