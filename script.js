@@ -857,7 +857,21 @@ function previewResume(){
         "previewLanguage",
         getValue("language")
     );
+const file = document.getElementById("profilePhoto").files[0];
 
+if(file){
+
+    const reader = new FileReader();
+
+    reader.onload = function(e){
+
+        document.getElementById("previewPhoto").src = e.target.result;
+
+    };
+
+    reader.readAsDataURL(file);
+
+}
 
 }
 
