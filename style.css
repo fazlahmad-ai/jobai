@@ -1150,3 +1150,32 @@ textarea{
 
 
 }
+.profile-area{
+
+    width:120px;
+
+    height:120px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+#previewPhoto{
+
+    width:120px;
+
+    height:120px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:3px solid #2563eb;
+
+    display:block;
+
+} 
