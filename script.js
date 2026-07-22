@@ -3384,32 +3384,26 @@ console.log("SCRIPT JS RUNNING");
 // Profile Photo Preview
 // ===============================
 
-const profilePhoto = document.getElementById("profilePhoto");
+document
+.getElementById("profilePhoto")
+.addEventListener("change", function(){
 
-if(profilePhoto){
+    const file = this.files[0];
 
-    profilePhoto.addEventListener("change", function(){
+    if(!file){
+        return;
+    }
 
-        const file = this.files[0];
+    const reader = new FileReader();
 
-        if(!file){
-            return;
-        }
+    reader.onload = function(e){
 
+        const img = document.getElementById("previewPhoto");
 
-        const reader = new FileReader();
+        img.src = e.target.result;
 
+    };
 
-        reader.onload = function(e){
+    reader.readAsDataURL(file);
 
-            document.getElementById("previewPhoto").src = e.target.result;
-
-        };
-
-
-        reader.readAsDataURL(file);
-
-
-    });
-
-}
+});
