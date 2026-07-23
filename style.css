@@ -620,17 +620,26 @@ textarea{
 
 }
 
-.profile-area img{
-
-    width:100px;
-
-    height:100px;
-
-    border-radius:50%;
-
-    object-fit:cover;
-
+.resume-top{
+    display:flex;
+    align-items:center;
+    gap:20px;
 }
+
+.profile-area{
+    width:100px;
+    height:100px;
+    flex-shrink:0;
+}
+
+.profile-area img{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    object-fit:cover;
+    display:block;
+    border:3px solid #2563eb;
+} 
 
 .name-area h1{
 
