@@ -3407,3 +3407,32 @@ document
     reader.readAsDataURL(file);
 
 });
+
+window.addEventListener("load", function () {
+
+    const photoInput = document.getElementById("profilePhoto");
+    const previewPhoto = document.getElementById("previewPhoto");
+
+    if (!photoInput || !previewPhoto) {
+        console.log("Photo elements not found");
+        return;
+    }
+
+    photoInput.addEventListener("change", function () {
+
+        const file = this.files[0];
+
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            previewPhoto.src = e.target.result;
+            console.log("Photo loaded successfully");
+        };
+
+        reader.readAsDataURL(file);
+
+    });
+
+});
