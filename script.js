@@ -3387,4 +3387,8 @@ document
 
 });
 
+console.log("SCRIPT JS LOADED");
 
+function testLogin(){
+    alert("JS is working");
+}
