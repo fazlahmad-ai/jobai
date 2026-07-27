@@ -4094,3 +4094,20 @@ console.log(
 console.log(
 "🚀 SCRIPT JS READY"
 );
+
+// ===============================
+// HTML Button Compatibility
+// ===============================
+
+function testLogin(){
+
+    login();
+
+}
+
+
+function logoutUser(){
+
+    logout();
+
+}
