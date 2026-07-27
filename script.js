@@ -208,56 +208,33 @@ function signUp(){
 // ===============================
 
 
-function login(){
+function login() {
 
+    alert("Login started");
 
     const email = getValue("email");
-
     const password = getValue("password");
 
+    console.log("Email:", email);
+    console.log("Password:", password);
 
-
-    if(!email || !password){
-
-        showMessage(
-            "Enter email and password"
-        );
-
+    if (!email || !password) {
+        showMessage("Enter email and password");
         return;
-
     }
 
+    auth.signInWithEmailAndPassword(email, password)
 
-
-    auth
-    .signInWithEmailAndPassword(
-        email,
-        password
-    )
-
-
-    .then(()=>{
-
-
-        showMessage(
-            "Login successful"
-        );
-
-
+    .then((userCredential) => {
+        console.log(userCredential);
+        showMessage("Login successful");
     })
 
-
-    .catch(error=>{
-
-
-        showMessage(
-            error.message
-        );
-
-
+    .catch((error) => {
+        console.error(error);
+        alert(error.code);
+        showMessage(error.message);
     });
-
-
 
 }
 
