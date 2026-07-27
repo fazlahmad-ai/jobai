@@ -4,14 +4,9 @@
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>JobAI | AI Resume Builder</title>
-
-
-<meta name="description"
-content="Create professional AI powered resumes with JobAI">
 
 
 <link rel="stylesheet" href="style.css">
@@ -20,7 +15,6 @@ content="Create professional AI powered resumes with JobAI">
 <!-- Google Font -->
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -60,26 +54,79 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 <body>
 
 
+<!-- NAVBAR -->
 
-<!-- =========================
-LOGIN / SIGNUP
-========================= -->
+<nav class="navbar">
+
+<h2>
+🤖 JobAI
+</h2>
 
 
-<div id="auth" class="auth-container">
+<div>
+
+<button>
+Home
+</button>
+
+<button>
+Create Resume
+</button>
+
+<button>
+My Resumes
+</button>
 
 
-<div class="auth-card">
+<button onclick="logoutUser()">
+Logout
+</button>
+
+
+</div>
+
+
+</nav>
+
+
+
+
+
+<!-- HERO -->
+
+
+<section class="hero">
 
 
 <h1>
-🤖 JobAI
+Build Your Professional Resume With AI
 </h1>
 
 
 <p>
-AI Professional Resume Builder
+Create modern resumes, cover letters and professional CVs in minutes.
 </p>
+
+
+
+</section>
+
+
+
+
+
+<!-- AUTH -->
+
+
+<section class="container">
+
+
+<div class="card auth-card">
+
+
+<h2>
+Login To JobAI
+</h2>
 
 
 
@@ -101,12 +148,17 @@ placeholder="Password">
 
 
 <button onclick="testLogin()">
+
 Login
+
 </button>
 
 
+
 <button onclick="signUp()">
+
 Create Account
+
 </button>
 
 
@@ -120,351 +172,6 @@ Create Account
 </div>
 
 
-</div>
-
-
-
-
-
-
-<!-- =========================
-MAIN APP
-========================= -->
-
-
-<div id="app" style="display:none;">
-
-
-
-
-
-<!-- HEADER -->
-
-
-<header class="header">
-
-
-<div class="logo">
-
-🤖 <span>JobAI</span>
-
-</div>
-
-
-
-<nav>
-
-
-<a href="#home">
-Home
-</a>
-
-
-<a href="#create">
-Create Resume
-</a>
-
-
-<a href="#preview">
-Preview
-</a>
-
-
-<a href="#saved">
-My Resumes
-</a>
-
-
-</nav>
-
-
-
-
-<button onclick="logout()">
-
-Logout
-
-</button>
-
-
-
-</header>
-
-
-
-
-
-
-<!-- HOME -->
-
-
-<section id="home" class="hero">
-
-
-<h1>
-Create Professional Resume With AI
-</h1>
-
-
-
-<p>
-Build ATS friendly resumes, generate AI summaries,
-download PDF and manage your career documents.
-</p>
-
-
-
-<a href="#create">
-
-Start Creating
-
-</a>
-
-
-
-</section>
-<!-- =========================
-CREATE RESUME
-========================= -->
-
-
-<section id="create" class="resume-builder">
-
-
-<div class="section-title">
-
-
-<h2>
-Create Your Resume
-</h2>
-
-
-<p>
-Fill your information and generate your professional resume.
-</p>
-
-
-</div>
-
-
-
-
-
-<div class="resume-form">
-
-
-
-<div class="form-group">
-
-<label>
-Full Name
-</label>
-
-
-<input
-id="name"
-type="text"
-placeholder="Enter your full name">
-
-</div>
-
-
-
-
-
-<div class="form-group">
-
-<label>
-Profile Photo
-</label>
-
-
-<input
-id="profilePhoto"
-type="file"
-accept="image/*">
-
-</div>
-
-
-
-
-
-<div class="form-group">
-
-<label>
-Job Title
-</label>
-
-
-<input
-id="jobTitle"
-type="text"
-placeholder="Example: Software Developer">
-
-</div>
-
-
-
-
-
-<div class="form-group">
-
-<label>
-Email
-</label>
-
-
-<input
-id="resumeEmail"
-type="email"
-placeholder="example@email.com">
-
-</div>
-
-
-
-
-
-<div class="form-group">
-
-
-<label>
-Professional Summary
-</label>
-
-
-<textarea
-id="summary"
-placeholder="Your professional summary">
-</textarea>
-
-
-
-<button onclick="generateAISummary()">
-
-🤖 Generate AI Summary
-
-</button>
-
-
-</div>
-
-
-
-
-
-
-
-<div class="form-group">
-
-
-<label>
-Skills
-</label>
-
-
-<textarea
-id="skills"
-placeholder="HTML, CSS, JavaScript, Communication">
-</textarea>
-
-
-
-<button onclick="suggestSkills()">
-
-✨ Suggest Skills
-
-</button>
-
-
-</div>
-
-
-
-
-
-
-
-<div class="form-group">
-
-
-<label>
-Education
-</label>
-
-
-<textarea
-id="education"
-placeholder="Bachelor Degree, University...">
-</textarea>
-
-
-</div>
-
-
-
-
-
-
-
-<div class="form-group">
-
-
-<label>
-Work Experience
-</label>
-
-
-<textarea
-id="experience"
-placeholder="Your work experience">
-</textarea>
-
-
-</div>
-
-
-
-
-
-
-
-<div class="form-group">
-
-
-<label>
-Languages
-</label>
-
-
-<textarea
-id="language"
-placeholder="English, Persian, Dari">
-</textarea>
-
-
-</div>
-
-
-
-
-
-
-
-<button 
-class="ai-buttons"
-onclick="generateResume()">
-
-🚀 Generate Resume
-
-</button>
-
-
-
-</div>
-
-
 </section>
 
 
@@ -473,218 +180,59 @@ onclick="generateResume()">
 
 
 
-<!-- =========================
-RESUME PREVIEW
-========================= -->
+<!-- RESUME BUILDER -->
 
 
-<section id="preview" class="container">
-
-
-
-<div 
-id="resume"
-class="resume-preview">
-
-
-
-
-
-<img
-id="previewPhoto"
-class="profile-photo"
-src=""
-alt="Profile Photo">
-
-
-
-
-
-
-<h1 id="previewName">
-
-Your Name
-
-</h1>
-
-
-
-
-
-<h3 id="previewJob">
-
-Job Title
-
-</h3>
-
-
-
-
-
-
-<p id="previewEmail">
-
-Email
-
-</p>
-
-
-
-
-
-
-
-<div class="resume-section">
-
-
-<h2>
-Professional Summary
-</h2>
-
-
-<p id="previewSummary">
-
-Your summary will appear here
-
-</p>
-
-
-</div>
-
-
-
-
-
-
-
-<div class="resume-section">
-
-
-<h2>
-Education
-</h2>
-
-
-<p id="previewEducation">
-
-Education details
-
-</p>
-
-
-</div>
-
-
-
-
-
-
-
-<div class="resume-section">
-
-
-<h2>
-Experience
-</h2>
-
-
-<p id="previewExperience">
-
-Work experience
-
-</p>
-
-
-</div>
-
-
-
-
-
-
-
-<div class="resume-section">
-
-
-<h2>
-Skills
-</h2>
-
-
-<p id="previewSkills">
-
-Skills
-
-</p>
-
-
-</div>
-
-
-
-
-
-
-
-<div class="resume-section">
-
-
-<h2>
-Languages
-</h2>
-
-
-<p id="previewLanguage">
-
-Languages
-
-</p>
-
-
-</div>
-
-
-
-
-
-</div>
-
-
-
-
-
-
-<button onclick="downloadPDF()">
-
-Download PDF
-
-</button>
-
-
-
-</section>
-<!-- =========================
-MY RESUMES
-========================= -->
-
-
-<section id="saved" class="container">
+<section class="container">
 
 
 <div class="card">
 
 
 <h2>
-My Resumes
+Create Resume
 </h2>
 
 
 
-<div id="resumeList">
+<input id="fullName"
+placeholder="Full Name">
 
-<!-- Saved resumes appear here -->
 
-</div>
+<input id="jobTitle"
+placeholder="Job Title">
+
+
+<textarea id="summary"
+placeholder="Professional Summary"></textarea>
+
+
+
+<textarea id="education"
+placeholder="Education"></textarea>
+
+
+
+<textarea id="experience"
+placeholder="Experience"></textarea>
+
+
+
+<textarea id="skills"
+placeholder="Skills"></textarea>
+
+
+
+<textarea id="language"
+placeholder="Languages"></textarea>
+
+
+
+<button onclick="generateResume()">
+
+Generate Resume
+
+</button>
 
 
 
@@ -699,9 +247,73 @@ My Resumes
 
 
 
-<!-- =========================
-AI TOOLS
-========================= -->
+<!-- RESUME PREVIEW -->
+
+
+<section class="container">
+
+
+<div id="resume" class="resume-preview">
+
+
+<h1 id="previewName">
+Your Name
+</h1>
+
+
+<h3 id="previewJob">
+Job Title
+</h3>
+
+
+
+<p id="previewSummary"></p>
+
+
+<h3>
+Education
+</h3>
+
+<p id="previewEducation"></p>
+
+
+
+<h3>
+Experience
+</h3>
+
+<p id="previewExperience"></p>
+
+
+
+<h3>
+Skills
+</h3>
+
+<p id="previewSkills"></p>
+
+
+
+<h3>
+Languages
+</h3>
+
+<p id="previewLanguage"></p>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+<!-- AI TOOLS -->
 
 
 <section class="container">
@@ -724,13 +336,11 @@ AI Resume Assistant
 
 
 
-
 <button onclick="generateCoverLetter()">
 
 📝 Generate Cover Letter
 
 </button>
-
 
 
 
@@ -749,21 +359,18 @@ AI Resume Assistant
 
 
 
-<!-- =========================
-JOBAI PRO
-========================= -->
+<!-- PRO -->
 
 
 <section class="container">
 
 
-<div class="card">
+<div class="card pro-card">
 
 
 <h2>
 ⭐ JobAI PRO
 </h2>
-
 
 
 <p>
@@ -779,7 +386,6 @@ Upgrade PRO
 </button>
 
 
-
 </div>
 
 
@@ -790,19 +396,11 @@ Upgrade PRO
 
 
 
-
-<!-- =========================
-FOOTER
-========================= -->
-
-
 <footer>
 
 
 <p>
-
 © 2026 JobAI - AI Resume Builder
-
 </p>
 
 
@@ -814,36 +412,10 @@ FOOTER
 
 
 
-</div>
-<!-- END APP -->
-
-
-
-
-
-
-
-<!-- =========================
-PDF LIBRARY
-========================= -->
-
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 
-
-
-
-
-
-<!-- =========================
-MAIN SCRIPT
-========================= -->
-
-
 <script src="script.js"></script>
-
-
 
 
 
