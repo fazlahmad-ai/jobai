@@ -1,3 +1,4 @@
+console.log("JOBAI SCRIPT LOADED");
 // =====================================
 // JobAI Script.js Professional Version
 // Part 1/5
