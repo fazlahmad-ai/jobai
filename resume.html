@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
@@ -9,170 +10,304 @@
 
 <link rel="stylesheet" href="style.css">
 
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 
 <style>
 
 body{
-    font-family:Arial,sans-serif;
-    background:#f5f5f5;
-    margin:0;
+
+font-family:Arial,sans-serif;
+background:#f5f5f5;
+margin:0;
+
 }
+
 
 .container{
-    max-width:800px;
-    margin:40px auto;
-    background:#fff;
-    padding:30px;
-    border-radius:10px;
-    box-shadow:0 5px 20px rgba(0,0,0,.1);
+
+max-width:800px;
+margin:40px auto;
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0 5px 20px rgba(0,0,0,.1);
+
 }
 
-img{
-    width:140px;
-    height:140px;
-    border-radius:50%;
-    object-fit:cover;
-    display:block;
-    margin:auto;
-}
 
 h1,h2{
-    text-align:center;
+
+text-align:center;
+
 }
 
+
 .section{
-    margin-top:20px;
+
+margin-top:25px;
+
 }
+
+
+#photo{
+
+width:140px;
+height:140px;
+border-radius:50%;
+object-fit:cover;
+display:none;
+margin:auto;
+
+}
+
 
 </style>
 
+
 </head>
+
 
 <body>
 
+
 <div class="container">
 
-<img id="photo" src="" style="display:none;">
 
-<h1 id="name">Loading...</h1>
+<img id="photo">
+
+
+<h1 id="name">
+Loading...
+</h1>
+
 
 <h2 id="job"></h2>
 
+
 <p id="email"></p>
+
+
 
 <div class="section">
 
-<h3>Professional Summary</h3>
+<h3>
+Professional Summary
+</h3>
 
 <p id="summary"></p>
 
 </div>
 
+
+
 <div class="section">
 
-<h3>Education</h3>
+<h3>
+Education
+</h3>
 
 <p id="education"></p>
 
 </div>
 
+
+
 <div class="section">
 
-<h3>Experience</h3>
+<h3>
+Work Experience
+</h3>
 
 <p id="experience"></p>
 
 </div>
 
+
+
 <div class="section">
 
-<h3>Skills</h3>
+<h3>
+Skills
+</h3>
 
 <p id="skills"></p>
 
 </div>
 
+
+
 <div class="section">
 
-<h3>Languages</h3>
+<h3>
+Languages
+</h3>
 
-<p id="languages"></p>
+<p id="language"></p>
 
 </div>
 
+
+
+<p style="text-align:center;margin-top:40px;">
+
+Created with JobAI
+<br>
+AI Resume Builder © 2026
+
+</p>
+
+
 </div>
+
+
+
+
 
 <script>
 
+
 const firebaseConfig = {
 
-apiKey:"YOUR_API_KEY",
 
-authDomain:"jobai-pro.firebaseapp.com",
+apiKey: "AIzaSyDC3687Efw3U-_W4lAOF4cQ3j1YyKSyXO0",
 
-projectId:"jobai-pro",
+authDomain: "jobai-pro.firebaseapp.com",
 
-storageBucket:"jobai-pro.appspot.com",
+projectId: "jobai-pro",
 
-messagingSenderId:"",
+storageBucket: "jobai-pro.appspot.com",
 
-appId:""
+messagingSenderId: "352101125474",
+
+appId: "1:352101125474:web:24e03ef92409d1fd9ff03b"
 
 };
 
+
+
 firebase.initializeApp(firebaseConfig);
 
-const db=firebase.firestore();
 
-const params=new URLSearchParams(window.location.search);
+const db = firebase.firestore();
 
-const id=params.get("id");
+
+
+const params = new URLSearchParams(
+window.location.search
+);
+
+
+const id = params.get("id");
+
+
 
 if(id){
 
-db.collection("resumes").doc(id).get().then(doc=>{
+
+db.collection("publicResumes")
+
+.doc(id)
+
+.get()
+
+
+.then(doc=>{
+
 
 if(doc.exists){
 
-const d=doc.data();
 
-document.getElementById("name").textContent=d.name||"";
+const data = doc.data();
 
-document.getElementById("job").textContent=d.job||"";
 
-document.getElementById("email").textContent=d.email||"";
 
-document.getElementById("summary").textContent=d.summary||"";
+document.getElementById("name").innerText =
+data.name || "";
 
-document.getElementById("education").textContent=d.education||"";
 
-document.getElementById("experience").textContent=d.experience||"";
+document.getElementById("job").innerText =
+data.jobTitle || "";
 
-document.getElementById("skills").textContent=d.skills||"";
 
-document.getElementById("languages").textContent=d.languages||"";
+document.getElementById("email").innerText =
+data.email || "";
 
-if(d.photo){
 
-document.getElementById("photo").src=d.photo;
+document.getElementById("summary").innerText =
+data.summary || "";
 
-document.getElementById("photo").style.display="block";
+
+document.getElementById("education").innerText =
+data.education || "";
+
+
+document.getElementById("experience").innerText =
+data.experience || "";
+
+
+document.getElementById("skills").innerText =
+data.skills || "";
+
+
+document.getElementById("language").innerText =
+data.language || "";
+
+
+
+if(data.photoURL){
+
+
+const img =
+document.getElementById("photo");
+
+
+img.src=data.photoURL;
+
+img.style.display="block";
+
 
 }
 
-}else{
 
-document.body.innerHTML="<h2>Resume Not Found</h2>";
 
 }
+
+else{
+
+
+document.body.innerHTML =
+"<h2 style='text-align:center;margin-top:50px;'>Profile Not Found</h2>";
+
+
+}
+
+
+
+})
+
+.catch(error=>{
+
+
+console.error(error);
+
+
+document.body.innerHTML =
+"<h2 style='text-align:center;margin-top:50px;'>Error Loading Profile</h2>";
+
 
 });
 
+
 }
+
 
 </script>
 
+
 </body>
+
 </html>
