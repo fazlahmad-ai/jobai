@@ -12,7 +12,6 @@
 
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 
@@ -32,16 +31,27 @@ margin:0;
 max-width:800px;
 margin:40px auto;
 background:white;
-padding:30px;
-border-radius:10px;
+padding:35px;
+border-radius:12px;
 box-shadow:0 5px 20px rgba(0,0,0,.1);
 
 }
 
 
-h1,h2{
+.profile{
 
 text-align:center;
+
+}
+
+
+#photo{
+
+width:150px;
+height:150px;
+border-radius:50%;
+object-fit:cover;
+display:none;
 
 }
 
@@ -53,14 +63,18 @@ margin-top:25px;
 }
 
 
-#photo{
+h1,h2{
 
-width:140px;
-height:140px;
-border-radius:50%;
-object-fit:cover;
-display:none;
-margin:auto;
+margin:5px;
+
+}
+
+
+.footer{
+
+text-align:center;
+margin-top:40px;
+color:#777;
 
 }
 
@@ -71,10 +85,14 @@ margin:auto;
 </head>
 
 
+
 <body>
 
 
 <div class="container">
+
+
+<div class="profile">
 
 
 <img id="photo">
@@ -89,6 +107,9 @@ Loading...
 
 
 <p id="email"></p>
+
+
+</div>
 
 
 
@@ -152,13 +173,14 @@ Languages
 
 
 
-<p style="text-align:center;margin-top:40px;">
+<div class="footer">
 
 Created with JobAI
 <br>
 AI Resume Builder © 2026
 
-</p>
+</div>
+
 
 
 </div>
@@ -192,16 +214,20 @@ appId: "1:352101125474:web:24e03ef92409d1fd9ff03b"
 firebase.initializeApp(firebaseConfig);
 
 
+
 const db = firebase.firestore();
 
 
 
-const params = new URLSearchParams(
+const params =
+new URLSearchParams(
 window.location.search
 );
 
 
-const id = params.get("id");
+
+const id =
+params.get("id");
 
 
 
@@ -221,7 +247,8 @@ db.collection("publicResumes")
 if(doc.exists){
 
 
-const data = doc.data();
+const data =
+doc.data();
 
 
 
@@ -229,32 +256,41 @@ document.getElementById("name").innerText =
 data.name || "";
 
 
+
 document.getElementById("job").innerText =
 data.jobTitle || "";
+
 
 
 document.getElementById("email").innerText =
 data.email || "";
 
 
+
 document.getElementById("summary").innerText =
 data.summary || "";
+
 
 
 document.getElementById("education").innerText =
 data.education || "";
 
 
+
 document.getElementById("experience").innerText =
 data.experience || "";
+
 
 
 document.getElementById("skills").innerText =
 data.skills || "";
 
 
+
 document.getElementById("language").innerText =
 data.language || "";
+
+
 
 
 
@@ -265,9 +301,12 @@ const img =
 document.getElementById("photo");
 
 
-img.src=data.photoURL;
+img.src =
+data.photoURL;
 
-img.style.display="block";
+
+img.style.display =
+"block";
 
 
 }
@@ -280,6 +319,7 @@ else{
 
 
 document.body.innerHTML =
+
 "<h2 style='text-align:center;margin-top:50px;'>Profile Not Found</h2>";
 
 
@@ -289,6 +329,7 @@ document.body.innerHTML =
 
 })
 
+
 .catch(error=>{
 
 
@@ -296,13 +337,15 @@ console.error(error);
 
 
 document.body.innerHTML =
-"<h2 style='text-align:center;margin-top:50px;'>Error Loading Profile</h2>";
+
+"<h2 style='text-align:center;margin-top:50px;'>Error Loading Resume</h2>";
 
 
 });
 
 
 }
+
 
 
 </script>
