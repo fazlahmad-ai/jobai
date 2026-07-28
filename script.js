@@ -3338,39 +3338,56 @@ function createPublicResume(){
 
 
 
+const data = {
 
-    const data = {
-
-
-        userId:
-        currentUser.uid,
+    userId:
+    currentUser.uid,
 
 
-
-        name:
-        getValue("name"),
-
+    name:
+    getValue("name"),
 
 
-        jobTitle:
-        getValue("jobTitle"),
+    jobTitle:
+    getValue("jobTitle"),
 
 
-
-        skills:
-        getValue("skills"),
-
+    email:
+    getValue("resumeEmail"),
 
 
-        summary:
-        getValue("summary"),
+    summary:
+    getValue("summary"),
 
 
+    education:
+    getValue("education"),
 
-        public:
-        true,
+
+    experience:
+    getValue("experience"),
 
 
+    skills:
+    getValue("skills"),
+
+
+    language:
+    getValue("language"),
+
+
+    photoURL:
+    document.getElementById("previewPhoto")?.src || "",
+
+
+    public:
+    true,
+
+
+    createdAt:
+    firebase.firestore.FieldValue.serverTimestamp()
+
+};
 
         createdAt:
 
