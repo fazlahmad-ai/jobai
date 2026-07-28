@@ -1210,6 +1210,21 @@ function loadResumes(){
 
             const data =
             doc.data();
+            setText("previewName", data.name);
+
+setText("previewJob", data.jobTitle);
+
+setText("previewEmail", data.email);
+
+setText("previewSummary", data.summary);
+
+setText("previewEducation", data.education);
+
+setText("previewExperience", data.experience);
+
+setText("previewSkills", data.skills);
+
+setText("previewLanguage", data.language);
 
 
 
