@@ -3389,19 +3389,6 @@ const data = {
 
 };
 
-        createdAt:
-
-        firebase.firestore.FieldValue.serverTimestamp()
-
-
-
-    };
-
-
-
-
-
-
 
     db.collection("publicResumes")
 
