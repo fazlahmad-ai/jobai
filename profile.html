@@ -10,112 +10,115 @@
 
 <link rel="stylesheet" href="style.css">
 
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 
 <style>
 
 body{
-
     margin:0;
-
     font-family:Arial,sans-serif;
-
     background:#f5f5f5;
-
 }
+
 
 .profile{
 
     max-width:900px;
-
     margin:40px auto;
-
-    background:#fff;
-
-    border-radius:12px;
-
+    background:white;
     padding:35px;
-
+    border-radius:15px;
     box-shadow:0 10px 25px rgba(0,0,0,.1);
 
 }
 
+
 .photo{
 
     width:160px;
-
     height:160px;
-
     border-radius:50%;
-
     object-fit:cover;
-
     display:block;
-
     margin:auto;
 
-    border:4px solid #0d6efd;
-
 }
+
 
 h1{
 
-    text-align:center;
-
-    margin-top:20px;
+text-align:center;
 
 }
+
 
 h2{
 
-    text-align:center;
-
-    color:#666;
+text-align:center;
+color:#666;
 
 }
+
 
 .section{
 
-    margin-top:25px;
+margin-top:25px;
 
 }
+
 
 .section h3{
 
-    color:#0d6efd;
-
-    border-bottom:2px solid #eee;
-
-    padding-bottom:8px;
+color:#0d6efd;
+border-bottom:2px solid #eee;
+padding-bottom:8px;
 
 }
+
 
 .footer{
 
-    margin-top:40px;
-
-    text-align:center;
-
-    color:#777;
+margin-top:40px;
+text-align:center;
+color:#777;
 
 }
+
+
+.error{
+
+text-align:center;
+color:red;
+font-size:20px;
+
+}
+
 
 </style>
 
 </head>
 
+
 <body>
+
 
 <div class="profile">
 
-<img id="photo" class="photo" src="" style="display:none;">
+
+<img id="photo" class="photo" style="display:none;">
+
 
 <h1 id="name">Loading...</h1>
 
 <h2 id="job"></h2>
 
-<p style="text-align:center;" id="email"></p>
+
+<p style="text-align:center" id="email"></p>
+
+
 
 <div class="section">
 
@@ -125,6 +128,8 @@ h2{
 
 </div>
 
+
+
 <div class="section">
 
 <h3>Education</h3>
@@ -132,6 +137,8 @@ h2{
 <p id="education"></p>
 
 </div>
+
+
 
 <div class="section">
 
@@ -141,6 +148,8 @@ h2{
 
 </div>
 
+
+
 <div class="section">
 
 <h3>Skills</h3>
@@ -148,6 +157,8 @@ h2{
 <p id="skills"></p>
 
 </div>
+
+
 
 <div class="section">
 
@@ -157,6 +168,8 @@ h2{
 
 </div>
 
+
+
 <div class="footer">
 
 <b>Created with JobAI</b><br>
@@ -165,81 +178,167 @@ AI Resume Builder © 2026
 
 </div>
 
+
 </div>
+
+
 
 <script>
 
+
+// Firebase Configuration
 const firebaseConfig = {
 
-apiKey:"YOUR_API_KEY",
 
-authDomain:"jobai-pro.firebaseapp.com",
+apiKey: "YOUR_API_KEY",
 
-projectId:"jobai-pro",
+authDomain: "jobai-pro.firebaseapp.com",
 
-storageBucket:"jobai-pro.appspot.com",
+projectId: "jobai-pro",
 
-messagingSenderId:"",
+storageBucket: "jobai-pro.appspot.com",
 
-appId:""
+messagingSenderId: "YOUR_SENDER_ID",
+
+appId: "YOUR_APP_ID"
+
 
 };
 
+
+
 firebase.initializeApp(firebaseConfig);
+
 
 const db = firebase.firestore();
 
+
+
+// Get Profile ID
+
 const params = new URLSearchParams(window.location.search);
 
-const id = params.get("id");
+const profileId = params.get("id");
 
-if(id){
 
-db.collection("profiles").doc(id).get()
 
-.then(doc=>{
+console.log("Profile ID:", profileId);
 
-if(doc.exists){
 
-const d = doc.data();
 
-document.getElementById("name").textContent = d.name || "";
+if(!profileId){
 
-document.getElementById("job").textContent = d.job || "";
 
-document.getElementById("email").textContent = d.email || "";
+document.body.innerHTML =
+"<h2 class='error'>No Profile ID Found</h2>";
 
-document.getElementById("summary").textContent = d.summary || "";
-
-document.getElementById("education").textContent = d.education || "";
-
-document.getElementById("experience").textContent = d.experience || "";
-
-document.getElementById("skills").textContent = d.skills || "";
-
-document.getElementById("languages").textContent = d.languages || "";
-
-if(d.photo){
-
-const img = document.getElementById("photo");
-
-img.src = d.photo;
-
-img.style.display = "block";
-
-}
 
 }else{
 
-document.body.innerHTML="<h2 style='text-align:center'>Profile Not Found</h2>";
+
+
+db.collection("profiles")
+.doc(profileId)
+.get()
+
+
+.then((doc)=>{
+
+
+
+console.log("Document exists:",doc.exists);
+
+
+
+if(doc.exists){
+
+
+
+const d = doc.data();
+
+
+
+console.log("Profile Data:",d);
+
+
+
+document.getElementById("name").textContent =
+d.name || "";
+
+document.getElementById("job").textContent =
+d.job || "";
+
+document.getElementById("email").textContent =
+d.email || "";
+
+document.getElementById("summary").textContent =
+d.summary || "";
+
+document.getElementById("education").textContent =
+d.education || "";
+
+document.getElementById("experience").textContent =
+d.experience || "";
+
+document.getElementById("skills").textContent =
+d.skills || "";
+
+document.getElementById("languages").textContent =
+d.languages || "";
+
+
+
+if(d.photo){
+
+
+const img=document.getElementById("photo");
+
+img.src=d.photo;
+
+img.style.display="block";
+
 
 }
+
+
+
+}else{
+
+
+document.body.innerHTML=
+
+"<h2 class='error'>Profile Not Found</h2>";
+
+
+}
+
+
+
+})
+
+.catch(error=>{
+
+
+console.error(error);
+
+
+document.body.innerHTML=
+
+"<h2 class='error'>Firebase Error: "+error.message+"</h2>";
+
+
 
 });
 
+
+
 }
 
+
+
 </script>
+
+
 
 </body>
 
