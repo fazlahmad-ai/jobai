@@ -6,98 +6,70 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Professional Profile | JobAI</title>
-
-<link rel="stylesheet" href="style.css">
-
-
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<title>JobAI Professional Profile</title>
 
 
 <style>
 
 body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#f5f5f5;
-}
 
-
-.profile{
-
-    max-width:900px;
-    margin:40px auto;
-    background:white;
-    padding:35px;
-    border-radius:15px;
-    box-shadow:0 10px 25px rgba(0,0,0,.1);
+font-family: Arial, sans-serif;
+background:#f4f6f8;
+padding:30px;
 
 }
 
 
-.photo{
+.profile-card{
 
-    width:160px;
-    height:160px;
-    border-radius:50%;
-    object-fit:cover;
-    display:block;
-    margin:auto;
+max-width:600px;
+margin:auto;
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 5px 20px rgba(0,0,0,.1);
+text-align:center;
+
+}
+
+
+.profile-card img{
+
+width:120px;
+height:120px;
+border-radius:50%;
+object-fit:cover;
 
 }
 
 
 h1{
 
-text-align:center;
+color:#2563eb;
 
 }
 
 
-h2{
+.skill{
 
-text-align:center;
-color:#666;
-
-}
-
-
-.section{
-
-margin-top:25px;
+background:#eef2ff;
+padding:10px;
+border-radius:8px;
+margin-top:10px;
 
 }
 
 
-.section h3{
+.not-found{
 
-color:#0d6efd;
-border-bottom:2px solid #eee;
-padding-bottom:8px;
-
-}
-
-
-.footer{
-
-margin-top:40px;
-text-align:center;
-color:#777;
-
-}
-
-
-.error{
-
-text-align:center;
 color:red;
-font-size:20px;
+font-size:22px;
 
 }
 
 
 </style>
+
 
 </head>
 
@@ -105,92 +77,39 @@ font-size:20px;
 <body>
 
 
-<div class="profile">
+
+<div id="profile" class="profile-card">
 
 
-<img id="photo" class="photo" style="display:none;">
-
-
-<h1 id="name">Loading...</h1>
-
-<h2 id="job"></h2>
-
-
-<p style="text-align:center" id="email"></p>
-
-
-
-<div class="section">
-
-<h3>Professional Summary</h3>
-
-<p id="summary"></p>
-
-</div>
-
-
-
-<div class="section">
-
-<h3>Education</h3>
-
-<p id="education"></p>
-
-</div>
-
-
-
-<div class="section">
-
-<h3>Work Experience</h3>
-
-<p id="experience"></p>
-
-</div>
-
-
-
-<div class="section">
-
-<h3>Skills</h3>
-
-<p id="skills"></p>
-
-</div>
-
-
-
-<div class="section">
-
-<h3>Languages</h3>
-
-<p id="languages"></p>
-
-</div>
-
-
-
-<div class="footer">
-
-<b>Created with JobAI</b><br>
-
-AI Resume Builder © 2026
-
-</div>
+<h2>
+Loading Profile...
+</h2>
 
 
 </div>
+
+
+
+
+
+
+<!-- Firebase -->
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+
 
 
 
 <script>
 
 
-// Firebase Configuration
 const firebaseConfig = {
 
 
-apiKey: "YOUR_API_KEY",
+apiKey: "AIzaSyDC3687Efw3U-_W4lAOF4cQ3j1YyKSyXO0",
 
 authDomain: "jobai-pro.firebaseapp.com",
 
@@ -198,10 +117,9 @@ projectId: "jobai-pro",
 
 storageBucket: "jobai-pro.appspot.com",
 
-messagingSenderId: "YOUR_SENDER_ID",
+messagingSenderId: "352101125474",
 
-appId: "YOUR_APP_ID"
-
+appId: "1:352101125474:web:24e03ef92409d1fd9ff03b"
 
 };
 
@@ -210,104 +128,186 @@ appId: "YOUR_APP_ID"
 firebase.initializeApp(firebaseConfig);
 
 
+
 const db = firebase.firestore();
 
 
 
-// Get Profile ID
-
-const params = new URLSearchParams(window.location.search);
-
-const profileId = params.get("id");
 
 
-
-console.log("Profile ID:", profileId);
-
+// گرفتن ID از لینک
 
 
-if(!profileId){
+const params = new URLSearchParams(
+window.location.search
+);
 
 
-document.body.innerHTML =
-"<h2 class='error'>No Profile ID Found</h2>";
-
-
-}else{
+const id = params.get("id");
 
 
 
-db.collection("profiles")
-.doc(profileId)
+
+
+const profileBox =
+document.getElementById("profile");
+
+
+
+
+
+if(!id){
+
+
+profileBox.innerHTML = `
+
+<div class="not-found">
+
+Profile Not Found
+
+</div>
+
+`;
+
+
+
+}
+
+else{
+
+
+db.collection("professionalProfiles")
+
+.doc(id)
+
 .get()
 
 
-.then((doc)=>{
 
-
-
-console.log("Document exists:",doc.exists);
-
+.then(doc=>{
 
 
 if(doc.exists){
 
 
 
-const d = doc.data();
+const data = doc.data();
 
 
 
-console.log("Profile Data:",d);
+profileBox.innerHTML = `
 
 
+${data.photoURL ? 
 
-document.getElementById("name").textContent =
-d.name || "";
+`<img src="${data.photoURL}">`
 
-document.getElementById("job").textContent =
-d.job || "";
+:
 
-document.getElementById("email").textContent =
-d.email || "";
-
-document.getElementById("summary").textContent =
-d.summary || "";
-
-document.getElementById("education").textContent =
-d.education || "";
-
-document.getElementById("experience").textContent =
-d.experience || "";
-
-document.getElementById("skills").textContent =
-d.skills || "";
-
-document.getElementById("languages").textContent =
-d.languages || "";
-
-
-
-if(d.photo){
-
-
-const img=document.getElementById("photo");
-
-img.src=d.photo;
-
-img.style.display="block";
-
+""
 
 }
 
 
 
-}else{
+<h1>
+
+${data.name || "No Name"}
+
+</h1>
 
 
-document.body.innerHTML=
 
-"<h2 class='error'>Profile Not Found</h2>";
+<h3>
+
+${data.title || ""}
+
+</h3>
+
+
+
+<p>
+
+${data.email || ""}
+
+</p>
+
+
+
+<div class="skill">
+
+Skills:
+
+<br>
+
+${data.skills || ""}
+
+</div>
+
+
+
+<div class="skill">
+
+Education:
+
+<br>
+
+${data.education || ""}
+
+</div>
+
+
+
+<div class="skill">
+
+Experience:
+
+<br>
+
+${data.experience || ""}
+
+</div>
+
+
+
+<div class="skill">
+
+Language:
+
+<br>
+
+${data.language || ""}
+
+</div>
+
+
+
+<p>
+
+Created with JobAI
+
+</p>
+
+
+`;
+
+
+
+}
+
+else{
+
+
+profileBox.innerHTML = `
+
+<div class="not-found">
+
+Profile Not Found
+
+</div>
+
+`;
+
 
 
 }
@@ -316,15 +316,22 @@ document.body.innerHTML=
 
 })
 
+
 .catch(error=>{
 
 
 console.error(error);
 
 
-document.body.innerHTML=
+profileBox.innerHTML = `
 
-"<h2 class='error'>Firebase Error: "+error.message+"</h2>";
+<div class="not-found">
+
+Error Loading Profile
+
+</div>
+
+`;
 
 
 
