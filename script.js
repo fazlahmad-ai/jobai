@@ -3524,44 +3524,46 @@ function createProfessionalProfile(){
 
 
 
-    const profile = {
+   const profile = {
 
+    userId:
+    currentUser.uid,
 
+    name:
+    getValue("profileName")
+    ||
+    getValue("name"),
 
-        userId:
-        currentUser.uid,
+    title:
+    getValue("jobTitle"),
 
+    email:
+    getValue("resumeEmail")
+    ||
+    currentUser.email,
 
+    skills:
+    getValue("skills"),
 
-        name:
-        getValue("profileName")
-        ||
-        getValue("name"),
+    education:
+    getValue("education"),
 
+    experience:
+    getValue("experience"),
 
+    language:
+    getValue("language"),
 
-        title:
-        getValue("jobTitle"),
+    photoURL:
+    document.getElementById("previewPhoto")?.src || "",
 
+    public:
+    true,
 
+    createdAt:
+    firebase.firestore.FieldValue.serverTimestamp()
 
-        skills:
-        getValue("skills"),
-
-
-
-        public:
-        true,
-
-
-
-        createdAt:
-
-        firebase.firestore.FieldValue.serverTimestamp()
-
-
-
-    };
+};
 
 
 
