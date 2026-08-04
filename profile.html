@@ -319,24 +319,19 @@ Profile Not Found
 
 .catch(error=>{
 
-
 console.error(error);
-
 
 profileBox.innerHTML = `
 
 <div class="not-found">
 
-Error Loading Profile
+${error.message}
 
 </div>
 
 `;
 
-
-
 });
-
 
 
 }
