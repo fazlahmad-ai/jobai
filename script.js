@@ -1409,7 +1409,60 @@ function generateAISummary(){
 }
 
 
+// ===============================
+// AI Cover Letter Generator
+// ===============================
 
+function generateCoverLetter(){
+
+
+    const name =
+    getValue("name");
+
+
+    const job =
+    getValue("jobTitle");
+
+
+    const skills =
+    getValue("skills");
+
+
+    const box =
+    document.getElementById(
+        "coverLetter"
+    );
+
+
+    if(!box){
+
+        showMessage(
+            "Cover Letter box not found"
+        );
+
+        return;
+
+    }
+
+
+
+    box.value =
+
+`Dear Hiring Manager,
+
+I am ${name}, applying for the position of ${job}.
+
+I have strong skills in ${skills} and I am motivated to contribute my knowledge and experience to your organization.
+
+I believe my skills, dedication and professional attitude make me a strong candidate for this position.
+
+Thank you for considering my application.
+
+Sincerely,
+${name}`;
+
+
+}
 
 
 
