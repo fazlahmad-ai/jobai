@@ -3544,6 +3544,9 @@ function createProfessionalProfile(){
 
     skills:
     getValue("skills"),
+       
+       summary:
+getValue("summary"),
 
     education:
     getValue("education"),
