@@ -852,8 +852,11 @@ function generateResume(){
         summary:
         getValue("summary"),
 
+        
+coverLetter:
+getValue("coverLetter"),
 
-
+        
         skills:
         getValue("skills"),
 
