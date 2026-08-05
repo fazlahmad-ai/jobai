@@ -985,7 +985,10 @@ function previewResume(){
         getValue("summary")
     );
 
-
+setText(
+    "previewCoverLetter",
+    getValue("coverLetter")
+);
 
     setText(
         "previewSkills",
