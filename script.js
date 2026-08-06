@@ -1741,61 +1741,30 @@ console.log(
 
 function downloadPDF(){
 
-
     const element =
-    document.getElementById(
-        "resume"
-    );
-
+    document.getElementById("resume");
 
 
     if(!element){
 
-
         showMessage(
             "Resume preview not found"
         );
-
 
         return;
 
     }
 
 
-
-
-    const footer =
-    element.querySelector(
-        "footer"
-    );
-
-
-
-    if(footer){
-
-        footer.style.display="none";
-
-    }
-
-
-
-
-
-
     html2canvas(element,{
-
 
         scale:3,
 
-
         useCORS:true,
-
 
         allowTaint:true,
 
-
         backgroundColor:"#ffffff"
-
 
     })
 
@@ -1804,82 +1773,83 @@ function downloadPDF(){
 
 
         const imgData =
-        canvas.toDataURL(
-            "image/png"
-        );
-
-
+        canvas.toDataURL("image/png");
 
 
         const pdf =
         new jspdf.jsPDF(
-
             "p",
-
             "mm",
-
             "a4"
-
         );
 
 
+        const pageWidth =
+        pdf.internal.pageSize.getWidth();
 
 
-
-        const width =
-        pdf.internal
-        .pageSize
-        .getWidth();
+        const pageHeight =
+        pdf.internal.pageSize.getHeight();
 
 
-
-
-        const height =
-
+        const imgHeight =
         canvas.height *
-        width /
+        pageWidth /
         canvas.width;
 
 
 
+        let heightLeft = imgHeight;
+
+
+        let position = 0;
+
 
 
         pdf.addImage(
-
             imgData,
-
             "PNG",
-
             0,
-
-            0,
-
-            width,
-
-            height
-
+            position,
+            pageWidth,
+            imgHeight
         );
 
 
+        heightLeft -= pageHeight;
+
+
+
+        while(heightLeft > 0){
+
+
+            position =
+            heightLeft - imgHeight;
+
+
+            pdf.addPage();
+
+
+            pdf.addImage(
+                imgData,
+                "PNG",
+                0,
+                position,
+                pageWidth,
+                imgHeight
+            );
+
+
+            heightLeft -= pageHeight;
+
+
+        }
 
 
 
         pdf.save(
             "JobAI-Resume.pdf"
         );
-
-
-
-
-
-        if(footer){
-
-            footer.style.display="block";
-
-        }
-
-
-
 
 
         if(typeof trackPDFDownload === "function"){
@@ -1895,21 +1865,11 @@ function downloadPDF(){
 
     .catch(error=>{
 
-
-        if(footer){
-
-            footer.style.display="block";
-
-        }
-
-
         showMessage(
             error.message
         );
 
-
     });
-
 
 
 }
